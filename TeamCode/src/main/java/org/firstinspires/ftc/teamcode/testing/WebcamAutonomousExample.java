@@ -20,8 +20,6 @@ public class WebcamAutonomousExample extends LinearOpMode {
     FtcDashboard dashboard;
 
     // Public static variables for HSV bounds
-
-
     public static double thetaM = 5;
     public static Scalar LOWER_RED1 = new Scalar(0, 120, 100);
     public static Scalar UPPER_RED1 = new Scalar(10, 255, 255);
@@ -33,6 +31,8 @@ public class WebcamAutonomousExample extends LinearOpMode {
 
     public static Scalar LOWER_BLUE = new Scalar(100, 150, 20);
     public static Scalar UPPER_BLUE = new Scalar(130, 255, 255);
+
+    public static double PERCENTAGE_THRESHOLD = 10;
 
     public static double CONTOUR_SIZE = 5000.0; // Minimum contour area size to be considered
     public static boolean OUTPUT_IMAGE = true; // Toggle for output image
@@ -73,16 +73,7 @@ public class WebcamAutonomousExample extends LinearOpMode {
         // Autonomous logic starts here
         while (opModeIsActive()) {
             // Send telemetry data to Driver Station
-            telemetry.addData("Frame Count", webcam.getFrameCount());
-            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
 
-            // Create a telemetry packet to send to FTC Dashboard
-            TelemetryPacket packet = new TelemetryPacket();
-            packet.put("Frame Count", webcam.getFrameCount());
-            packet.put("FPS", webcam.getFps());
-
-            // Send the telemetry packet to FTC Dashboard
-            dashboard.sendTelemetryPacket(packet);
 
             // Stop streaming after a certain condition is met
             if (webcam.getFrameCount() > 1000) {
@@ -117,23 +108,55 @@ public class WebcamAutonomousExample extends LinearOpMode {
             Mat combinedMaskRed = new Mat();
             Core.bitwise_or(maskRed1, maskRed2, combinedMaskRed);
 
-            // Find contours for each color
-            List<MatOfPoint> redContours = new ArrayList<>();
-            List<MatOfPoint> yellowContours = new ArrayList<>();
-            List<MatOfPoint> blueContours = new ArrayList<>();
+            // Calculate total pixel count in the image
+            double totalPixels = input.rows() * input.cols();
 
-            Mat hierarchy = new Mat();
-            Imgproc.findContours(combinedMaskRed, redContours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-            Imgproc.findContours(maskYellow, yellowContours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-            Imgproc.findContours(maskBlue, blueContours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            // Calculate pixel areas for each color
+            double redArea = Core.countNonZero(combinedMaskRed);
+            double yellowArea = Core.countNonZero(maskYellow);
+            double blueArea = Core.countNonZero(maskBlue);
+
+            // Calculate percentage of the image each color covers
+            double redPercentage = (redArea / totalPixels) * 100;
+            double yellowPercentage = (yellowArea / totalPixels) * 100;
+            double bluePercentage = (blueArea / totalPixels) * 100;
+
+            TelemetryPacket packet = new TelemetryPacket();
+
+
+            // Output dominant color to telemetry if it covers more than 10%
+            if (redPercentage > PERCENTAGE_THRESHOLD || yellowPercentage > PERCENTAGE_THRESHOLD || bluePercentage > PERCENTAGE_THRESHOLD) {
+                if (redPercentage > yellowPercentage && redPercentage > bluePercentage) {
+                    telemetry.addData("Dominant Color", "Red");
+                    packet.put("Dominant Color", "Red");
+
+                } else if (yellowPercentage > redPercentage && yellowPercentage > bluePercentage) {
+                    telemetry.addData("Dominant Color", "Yellow");
+                    packet.put("Dominant Color", "Yellow");
+
+                } else {
+                    telemetry.addData("Dominant Color", "Blue");
+                    packet.put("Dominant Color", "Blue");
+
+                }
+            } else {
+                telemetry.addData("Dominant Color", "None");
+                packet.put("Dominant Color", "None");
+
+            }
+
+            // Update telemetry
+            telemetry.update();
+            dashboard.sendTelemetryPacket(packet);
+
 
             // Create a blank output image
             Mat output = new Mat(input.size(), input.type(), new Scalar(255, 255, 255)); // Start with a white image
 
-            // Draw contours for each color, filtering by size
-            drawContours(input, redContours, new Scalar(255, 0, 0)); // Blue for red contours
-            drawContours(input, yellowContours, new Scalar(255, 255, 0)); // Yellow for yellow contours
-            drawContours(input, blueContours, new Scalar(0, 0, 255)); // Red for blue contours
+            // Draw contours for each color, filtering by size (contours are only for visualization)
+            drawContours(input, combinedMaskRed, new Scalar(255, 0, 0)); // Blue for red contours
+            drawContours(input, maskYellow, new Scalar(255, 255, 0)); // Yellow for yellow contours
+            drawContours(input, maskBlue, new Scalar(0, 0, 255)); // Red for blue contours
 
             // Apply color mapping based on detected color
             colorMap(hsvImage, output, LOWER_RED1, UPPER_RED1, new Scalar(255, 0, 0)); // Red
@@ -144,7 +167,11 @@ public class WebcamAutonomousExample extends LinearOpMode {
             return OUTPUT_IMAGE ? output : input;
         }
 
-        private void drawContours(Mat image, List<MatOfPoint> contours, Scalar color) {
+        private void drawContours(Mat image, Mat mask, Scalar color) {
+            List<MatOfPoint> contours = new ArrayList<>();
+            Mat hierarchy = new Mat();
+            Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
             for (MatOfPoint contour : contours) {
                 MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
                 RotatedRect rotatedRect = Imgproc.minAreaRect(contour2f);
@@ -157,24 +184,21 @@ public class WebcamAutonomousExample extends LinearOpMode {
                     double width = rotatedRect.size.width;
                     double height = rotatedRect.size.height;
 
-                    double distance = (1.5*405)/(Math.min(width,height));
-                    distance*=1.2804;
+                    double distance = (1.5 * 405) / (Math.min(width, height));
+                    distance *= 1.2804;
 
-                    double theta = (rotatedRect.center.x-160)/320;
-                    theta *= (thetaM);
+                    double theta = (rotatedRect.center.x - 160) / 320;
+                    theta *= thetaM;
 
-                    double x = distance*Math.cos(theta);
-                    double y = distance*Math.sin(theta);
-
-
-
+                    double x = distance * Math.cos(theta);
+                    double y = distance * Math.sin(theta);
 
                     // Send the width and height to telemetry
                     telemetry.addData("Contour Width (px)", width);
                     telemetry.addData("Contour Height (px)", height);
                     telemetry.addData("Distance (in)", distance);
-                    telemetry.addData("cols",image.cols());
-                    telemetry.addData("wid",rotatedRect.center.x);
+                    telemetry.addData("cols", image.cols());
+                    telemetry.addData("wid", rotatedRect.center.x);
                     telemetry.addData("x (in)", x);
                     telemetry.addData("y (in)", y);
 
@@ -191,7 +215,7 @@ public class WebcamAutonomousExample extends LinearOpMode {
             Mat mask = new Mat();
             Core.inRange(hsvImage, lowerBound, upperBound, mask);
             Mat colored = new Mat(output.size(), output.type(), color);
-            Core.copyTo(colored, output, mask);
+            colored.copyTo(output, mask);
         }
     }
 }
