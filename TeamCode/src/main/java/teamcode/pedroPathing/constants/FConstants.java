@@ -11,6 +11,19 @@ public class FConstants {
         // Select our localizer
         FollowerConstants.localizers = Localizers.PINPOINT;
 
+        FollowerConstants.leftFrontMotorName = "frontLeft";
+        FollowerConstants.leftRearMotorName = "backLeft";
+        FollowerConstants.rightFrontMotorName = "frontRight";
+        FollowerConstants.rightRearMotorName = "backRight";
+
+        FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
+        FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
+        FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
+        FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.REVERSE;
+
+        FollowerConstants.useBrakeModeInTeleOp = true;
+
+
         // We can change the value of any variable/constant of FollowerConstants.
         FollowerConstants.mass = 10; // In kg
         //TODO: Update the mass

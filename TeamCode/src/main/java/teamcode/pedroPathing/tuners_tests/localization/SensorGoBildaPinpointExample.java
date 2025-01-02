@@ -35,7 +35,7 @@ import java.util.Locale;
 
 /*
 This opmode shows how to use the goBILDA® Pinpoint Odometry Computer.
-The goBILDA Odometry Computer is a device designed to solve the Pose Exponential calculation
+The goBILDA Odometry Computer is a device designed to solve the Poses Exponential calculation
 commonly associated with Dead Wheel Odometry systems. It reads two encoders, and an integrated
 system of senors to determine the robot's current heading, X position, and Y position.
 
@@ -51,7 +51,7 @@ the pods are from the "tracking point", usually the center of rotation of the ro
 Dead Wheel pods should both increase in count when moved forwards and to the left.
 The gyro will report an increase in heading when rotated counterclockwise.
 
-The Pose Exponential algorithm used is described on pg 181 of this book:
+The Poses Exponential algorithm used is described on pg 181 of this book:
 https://github.com/calcmogul/controls-engineering-in-frc
 
 For support, contact tech@gobilda.com

@@ -1,4 +1,4 @@
-package teamcode.Teleop;
+package teamcode.Teleop.Old;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,8 +18,9 @@ import teamcode.Teleop.Singletons.GamepadJoystickCurve;
 import teamcode.Teleop.Singletons.MotorWeights;
 
 @Config
+@Disabled
 @TeleOp
-public class Drive extends LinearOpMode {
+public class Drive_Old extends LinearOpMode {
     private static MultipleTelemetry TELE;
 
     public static String CURVE = "LINEAR";

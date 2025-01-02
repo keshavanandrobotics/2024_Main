@@ -44,10 +44,10 @@ public class ExampleBucketAuto extends OpMode {
      * Lets assume our robot is 18 by 18 inches
      * Lets assume the Robot is facing the human player and we want to score in the bucket */
 
-    /** Start Pose of our robot */
+    /** Start Poses of our robot */
     private final Pose startPose = new Pose(9, 111, Math.toRadians(270));
 
-    /** Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle. */
+    /** Scoring Poses of our robot. It is facing the submersible at a -45 degree (315 degree) angle. */
     private final Pose scorePose = new Pose(14, 129, Math.toRadians(315));
 
     /** Lowest (First) Sample from the Spike Mark */
@@ -59,10 +59,10 @@ public class ExampleBucketAuto extends OpMode {
     /** Highest (Third) Sample from the Spike Mark */
     private final Pose pickup3Pose = new Pose(49, 135, Math.toRadians(0));
 
-    /** Park Pose for our robot, after we do all of the scoring. */
+    /** Park Poses for our robot, after we do all of the scoring. */
     private final Pose parkPose = new Pose(60, 98, Math.toRadians(90));
 
-    /** Park Control Pose for our robot, this is used to manipulate the bezier curve that we will create for the parking.
+    /** Park Control Poses for our robot, this is used to manipulate the bezier curve that we will create for the parking.
      * The Robot will not go to this pose, it is used a control point for our bezier curve. */
     private final Pose parkControlPose = new Pose(60, 98, Math.toRadians(90));
 
