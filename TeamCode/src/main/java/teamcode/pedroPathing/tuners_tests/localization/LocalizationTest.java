@@ -27,7 +27,7 @@ import com.pedropathing.util.Drawing;
 import java.util.Arrays;
 import java.util.List;
 
-import pedroPathing.constants.*;
+import teamcode.pedroPathing.constants.*;
 import teamcode.pedroPathing.constants.FConstants;
 import teamcode.pedroPathing.constants.LConstants;
 
