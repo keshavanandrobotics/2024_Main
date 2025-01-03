@@ -52,6 +52,9 @@ public class Drive_V2 extends LinearOpMode{
     public boolean linearAutomation = false;
     public boolean startPressToggle = false;
     public boolean dpadDownToggle = false;
+    public boolean dpadUpToggle = false;
+    public boolean backPressToggle = false;
+
 
 
     public double slidesZeroPower = 0;
@@ -60,6 +63,8 @@ public class Drive_V2 extends LinearOpMode{
     public double bPressTimestamp = 0.0;
     public double startPressTimestamp = 0.0;
     public double dpadDownTimestamp = 0.0;
+    public double dpadUpTimestamp = 0.0;
+    public double backPressTimestamp = 0.0;
 
 
     public boolean extendoIn = false;
@@ -118,8 +123,16 @@ public class Drive_V2 extends LinearOpMode{
                 g2, GamepadKeys.Button.START
         );
 
+        ButtonReader BACK_PRESS = new ButtonReader(
+                g2, GamepadKeys.Button.BACK
+        );
+
         ButtonReader DPAD_DOWN_PRESS = new ButtonReader(
                 g2, GamepadKeys.Button.DPAD_DOWN
+        );
+
+        ButtonReader DPAD_UP_PRESS = new ButtonReader(
+                g2, GamepadKeys.Button.DPAD_UP
         );
 
         waitForStart();
@@ -367,7 +380,7 @@ public class Drive_V2 extends LinearOpMode{
                 robot.clawPivot.setPosition(PIVOT_OUTTAKE);
             }
 
-            //AUTOMATION FOR START --> PICKUP FROM WALL
+            //AUTOMATION FOR START --> EXTEND TO WALL
 
             if (START_PRESS.wasJustPressed()){
                 startPressToggle = true;
@@ -392,6 +405,45 @@ public class Drive_V2 extends LinearOpMode{
                     extendoOut = false;
                     extendoHoldOut = true;
                     startPressToggle = false;
+                }
+            }
+
+            //AUTOMATION FOR BACK --> PICKUP FROM WALL
+
+            if (BACK_PRESS.wasJustPressed()){
+                backPressToggle = true;
+                backPressTimestamp = getRuntime();
+            }
+
+            BACK_PRESS.readValue();
+
+            if (backPressToggle) {
+                double automationTime = getRuntime() - backPressTimestamp;
+
+                if (automationTime < 0.2){
+                    robot.claw.setPosition(0.65);
+                } else if (automationTime < 0.5){
+                    extendoIn = true;
+                    robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                } else if (automationTime < 0.8){
+                    extendoIn = true;
+                    robot.clawRotate.setPosition(0.3906);
+                } else if (automationTime < 1.5){
+
+                    robot.claw.setPosition(CLAW_CLOSED);
+
+                    robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                    robot.clawMove.setPosition(MOVE_OUTTAKE);
+                    robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+                    extendoIn = true;
+                } else {
+                    extendoIn = false;
+                    extendoHoldIn = true;
+
+                    robot.clawRotate.setPosition(ROTATE_FLIP);
+
+                    backPressToggle = false;
+
                 }
             }
 
@@ -445,6 +497,53 @@ public class Drive_V2 extends LinearOpMode{
 
 
 
+            }
+
+            //AUTOMATION FOR DPAD UP --> GRAB SPECIMEN
+
+            if (DPAD_UP_PRESS.wasJustPressed()){
+                dpadUpToggle = true;
+
+                if (linearSlidePosition > linearSlideZeroPosition + 50) {
+                    dpadUpTimestamp = getRuntime() + 0.3;
+                }
+
+            }
+
+            DPAD_UP_PRESS.readValue();
+
+            if (dpadUpToggle){
+
+                double automationTime = getRuntime() - dpadUpTimestamp;
+
+
+
+                if (automationTime < -0.1){
+
+                    robot.leftSlide.setPower(-0.5);
+                    robot.rightSlide.setPower(-0.5);
+                    robot.centerSlide.setPower(-0.5);
+                } else if (automationTime < 0){
+                    robot.leftSlide.setPower(0);
+                    robot.rightSlide.setPower(0);
+                    robot.centerSlide.setPower(0);
+
+                } else if (automationTime < 0.3) {
+                    robot.claw.setPosition(CLAW_CLOSED);
+                    linearAutomation = false;
+                } else if (automationTime < 1){
+
+                    robot.claw.setPosition(CLAW_CLOSED);
+
+                    robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                    robot.clawMove.setPosition(MOVE_OUTTAKE);
+                    robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+                    extendoIn = true;
+                } else {
+                    extendoIn = false;
+                    extendoHoldIn = true;
+                    dpadUpToggle = false;
+                }
             }
 
 
