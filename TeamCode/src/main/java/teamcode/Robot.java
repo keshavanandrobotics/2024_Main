@@ -28,6 +28,7 @@ public class Robot {
     public DcMotorEx rightPod;
     public DcMotorEx sidePod;
     public DcMotorEx extendoEncoder;
+    public DcMotorEx linearSlideEncoder;
     public Servo testServo;
     public Servo clawRotate;
     public Servo claw;
@@ -93,6 +94,7 @@ public class Robot {
         sidePod = backRightMotor;
 
         extendoEncoder=extendo;
+        linearSlideEncoder = rightSlide;
 
         //Misc
 
