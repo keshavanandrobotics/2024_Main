@@ -48,14 +48,26 @@ public class Drive_V2 extends LinearOpMode{
 
 
     public double linearSlideZeroPosition = 0;
+    public double extendoZeroPosition = 0;
     public boolean linearAutomation = false;
-    public double slidesZeroPower = 0;
+    public boolean startPressToggle = false;
+    public boolean dpadDownToggle = false;
 
+
+    public double slidesZeroPower = 0;
     public boolean slideResetToggle = false;
     public double slideResetTimestamp = 0.0;
     public double bPressTimestamp = 0.0;
+    public double startPressTimestamp = 0.0;
+    public double dpadDownTimestamp = 0.0;
+
 
     public boolean extendoIn = false;
+    public boolean extendoOut = false;
+    public boolean extendoHoldIn = false;
+
+    public boolean extendoHoldOut = false;
+
 
 
 
@@ -72,6 +84,16 @@ public class Drive_V2 extends LinearOpMode{
         robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        robot.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.centerSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.centerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
@@ -90,6 +112,14 @@ public class Drive_V2 extends LinearOpMode{
 
         ButtonReader B_PRESS = new ButtonReader(
                 g2, GamepadKeys.Button.B
+        );
+
+        ButtonReader START_PRESS = new ButtonReader(
+                g2, GamepadKeys.Button.START
+        );
+
+        ButtonReader DPAD_DOWN_PRESS = new ButtonReader(
+                g2, GamepadKeys.Button.DPAD_DOWN
         );
 
         waitForStart();
@@ -192,6 +222,29 @@ public class Drive_V2 extends LinearOpMode{
             if (gamepad2.right_stick_x!=0){
                 robot.clawRotate.setPosition(robot.clawRotate.getPosition()+(4*gamepad2.right_stick_x/180));
             }
+            
+            //EXTENDO
+
+            if ((gamepad2.right_bumper||extendoOut)){robot.extendo.setPower(1);} 
+            
+            else if ((gamepad2.left_bumper||extendoIn)){robot.extendo.setPower(-1);}
+
+            else if (extendoHoldOut){robot.extendo.setPower(0.3);}
+
+            else if (extendoHoldIn){robot.extendo.setPower(-0.3);}
+            
+            else {robot.extendo.setPower(0);}
+
+            if (gamepad2.left_bumper||gamepad2.back||gamepad2.dpad_up){
+                extendoOut = false;
+                extendoHoldOut = false;
+            }
+
+            if (gamepad2.right_bumper||gamepad2.start||gamepad2.dpad_down){
+                extendoIn = false;
+                extendoHoldIn = false;
+            }
+
 
 
             //AUTOMATION FOR SLIDE RESET
@@ -208,6 +261,7 @@ public class Drive_V2 extends LinearOpMode{
             if (slideResetToggle){
 
                 double automationTime = getRuntime() - slideResetTimestamp;
+                linearAutomation = true;
 
                 if (automationTime < 0.25){
 
@@ -268,6 +322,9 @@ public class Drive_V2 extends LinearOpMode{
                     robot.clawMove.setPosition(MOVE_NEUTRAL);
                     robot.clawPivot.setPosition(PIVOT_NEUTRAL);
                     linearSlideZeroPosition = linearSlidePosition;
+                    extendoZeroPosition = robot.extendoEncoder.getCurrentPosition();
+
+                    linearAutomation = false;
                     slideResetToggle = false;
                 }
             }
@@ -290,6 +347,107 @@ public class Drive_V2 extends LinearOpMode{
             }
 
             if(gamepad2.x) robot.claw.setPosition(CLAW_CLOSED);
+
+            //CLAW POSITIONS
+
+            if (gamepad2.x&&(robot.extendoEncoder.getCurrentPosition()>(extendoZeroPosition+500))){
+
+                robot.claw.setPosition(CLAW_CLOSED);
+
+                robot.clawMove.setPosition(MOVE_INTAKE);
+                robot.clawPivot.setPosition(PIVOT_INTAKE);
+            }
+
+            if (gamepad2.y){
+
+                robot.claw.setPosition(CLAW_CLOSED);
+
+                robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                robot.clawMove.setPosition(MOVE_OUTTAKE);
+                robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+            }
+
+            //AUTOMATION FOR START --> PICKUP FROM WALL
+
+            if (START_PRESS.wasJustPressed()){
+                startPressToggle = true;
+                startPressTimestamp = getRuntime();
+            }
+
+            START_PRESS.readValue();
+
+            if (startPressToggle){
+                double automationTime = getRuntime() - startPressTimestamp;
+
+                if (automationTime < 0.3){
+                    robot.claw.setPosition(CLAW_CLOSED);
+                    robot.clawRotate.setPosition(ROTATE_FLIP);
+                    robot.clawMove.setPosition(MOVE_NEUTRAL);
+                    robot.clawPivot.setPosition(PIVOT_NEUTRAL);
+                } else if (automationTime < 0.7){
+                    extendoOut = true;
+                } else if (automationTime < 1){
+                    robot.claw.setPosition(CLAW_OPEN);
+                } else {
+                    extendoOut = false;
+                    extendoHoldOut = true;
+                    startPressToggle = false;
+                }
+            }
+
+            //AUTOMATION FOR DPAD DOWN --> PICKUP
+
+            if (DPAD_DOWN_PRESS.wasJustPressed()){
+                dpadDownToggle = true;
+                dpadDownTimestamp = getRuntime();
+            }
+
+            DPAD_DOWN_PRESS.readValue();
+
+            if (dpadDownToggle){
+
+                double automationTime = getRuntime() - dpadDownTimestamp;
+
+                if (automationTime<0.5){
+                    extendoOut = true;
+
+                    robot.claw.setPosition(CLAW_CLOSED);
+
+
+                    robot.clawPivot.setPosition(PIVOT_NEUTRAL);
+                    robot.clawMove.setPosition(MOVE_NEUTRAL);
+                } else if (automationTime<0.7){
+                    extendoOut = true;
+
+                    linearAutomation = true;
+
+                    robot.leftSlide.setPower(1);
+                    robot.rightSlide.setPower(1);
+                    robot.centerSlide.setPower(1);
+                } else {
+                    extendoOut = false;
+                    extendoHoldOut = true;
+
+
+                    robot.leftSlide.setPower(0);
+                    robot.rightSlide.setPower(0);
+                    robot.centerSlide.setPower(0);
+
+                    robot.clawMove.setPosition(MOVE_INTAKE);
+                    robot.clawPivot.setPosition(PIVOT_INTAKE);
+                    robot.claw.setPosition(CLAW_OPEN);
+                    robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+
+                    linearAutomation = false;
+
+                    dpadDownToggle=false;
+                }
+
+
+
+            }
+
+
 
 
 
