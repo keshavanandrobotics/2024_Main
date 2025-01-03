@@ -546,6 +546,12 @@ public class Drive_V2 extends LinearOpMode{
                 }
             }
 
+            //TELEMETRY:
+
+            TELE.addData("Linear Slide Position", linearSlidePosition);
+            TELE.addData("Linear Slide Zero Position", linearSlideZeroPosition);
+
+
 
 
 
