@@ -553,16 +553,6 @@ public class Drive_V2 extends LinearOpMode{
 
 
 
-
-
-
-
-
-
-
-
-
-
             TELE.update();
 
 
