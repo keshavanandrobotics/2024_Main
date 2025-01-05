@@ -8,20 +8,17 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.localization.Pose;
-import com.pedropathing.util.Constants;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import java.util.Objects;
 
-import teamcode.Autonomous.Poses;
+
 import teamcode.Robot;
 import teamcode.Teleop.Singletons.MotorWeights;
-import teamcode.pedroPathing.constants.FConstants;
-import teamcode.pedroPathing.constants.LConstants;
+
 
 
 @Config
@@ -32,14 +29,13 @@ public class Drive_V2 extends LinearOpMode{
 
     public static String MODE = "SAM";
 
-    public static boolean PEDRO = false;
 
-    private Follower follower;
-    private final Pose startPose = Poses.AUTON_END;
+
+
 
     private PIDController controller;
     public static double p = 0.0006, i = 0, d = 0.00001;
-    public static double f = 0.08;
+
     public static int target = 30000;
 
 
@@ -105,12 +101,7 @@ public class Drive_V2 extends LinearOpMode{
 
 
 
-        if (PEDRO) {
 
-            Constants.setConstants(FConstants.class, LConstants.class);
-            follower = new Follower(hardwareMap);
-            follower.setStartingPose(startPose);
-        }
 
         controller = new PIDController(p, i, d);
 
@@ -149,7 +140,6 @@ public class Drive_V2 extends LinearOpMode{
 
         if (isStopRequested()) return;
 
-        if (PEDRO) follower.startTeleopDrive();
 
         while (opModeIsActive()) {
 
@@ -178,32 +168,25 @@ public class Drive_V2 extends LinearOpMode{
             x*=slowFactor;
             y*=slowFactor;
 
-            if (PEDRO){
-                follower.setTeleOpMovementVectors(y, x, rx, true);
-                follower.update();
 
-                TELE.addData("X", follower.getPose().getX());
-                TELE.addData("Y", follower.getPose().getY());
-                TELE.addData("Heading in Degrees", Math.toDegrees(follower.getPose().getHeading()));
-            } else {
-                double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                double frontLeftPower = (y + x + rx) / denominator;
-                double backLeftPower = (y - x + rx) / denominator;
-                double frontRightPower = (y - x - rx) / denominator;
-                double backRightPower = (y + x - rx) / denominator;
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+            double frontLeftPower = (y + x + rx) / denominator;
+            double backLeftPower = (y - x + rx) / denominator;
+            double frontRightPower = (y - x - rx) / denominator;
+            double backRightPower = (y + x - rx) / denominator;
 
-                frontLeftPower *= MotorWeights.FRONT_LEFT;
-                frontRightPower *= MotorWeights.FRONT_RIGHT;
-                backLeftPower *= MotorWeights.BACK_LEFT;
-                backRightPower *= MotorWeights.BACK_RIGHT;
+            frontLeftPower *= MotorWeights.FRONT_LEFT;
+            frontRightPower *= MotorWeights.FRONT_RIGHT;
+            backLeftPower *= MotorWeights.BACK_LEFT;
+            backRightPower *= MotorWeights.BACK_RIGHT;
 
 
-                robot.frontLeftMotor.setPower(frontLeftPower);
-                robot.backLeftMotor.setPower(backLeftPower);
-                robot.frontRightMotor.setPower(frontRightPower);
-                robot.backRightMotor.setPower(backRightPower);
+            robot.frontLeftMotor.setPower(frontLeftPower);
+            robot.backLeftMotor.setPower(backLeftPower);
+            robot.frontRightMotor.setPower(frontRightPower);
+            robot.backRightMotor.setPower(backRightPower);
 
-            }
+
 
             //LINEAR SLIDES:
 

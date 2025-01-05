@@ -46,16 +46,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import teamcode.Autonomous.RoadRunner.messages.DriveCommandMessage;
-import teamcode.Autonomous.RoadRunner.messages.PoseMessage;
-import teamcode.Autonomous.RoadRunner.messages.TankCommandMessage;
-import teamcode.Autonomous.RoadRunner.messages.TankLocalizerInputsMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import teamcode.Autonomous.RoadRunner.messages.DriveCommandMessage;
+import teamcode.Autonomous.RoadRunner.messages.PoseMessage;
+import teamcode.Autonomous.RoadRunner.messages.TankCommandMessage;
+import teamcode.Autonomous.RoadRunner.messages.TankLocalizerInputsMessage;
 
 @Config
 public final class TankDrive {
@@ -100,7 +101,7 @@ public final class TankDrive {
     public final TankKinematics kinematics = new TankKinematics(PARAMS.inPerTick * PARAMS.trackWidthTicks);
 
     public final TurnConstraints defaultTurnConstraints = new TurnConstraints(
-            PARAMS.maxAngVel, -PARAMS.maxAngVel, PARAMS.maxAngAccel);
+            PARAMS.maxAngVel, -PARAMS.maxAngAccel, PARAMS.maxAngAccel);
     public final VelConstraint defaultVelConstraint =
             new MinVelConstraint(Arrays.asList(
                     kinematics.new WheelVelConstraint(PARAMS.maxWheelVel),
@@ -243,7 +244,7 @@ public final class TankDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new DriveLocalizer();
+        localizer = new TankDrive.DriveLocalizer();
 
         FlightRecorder.write("TANK_PARAMS", PARAMS);
     }
