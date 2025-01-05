@@ -50,12 +50,14 @@ public class Drive_V2 extends LinearOpMode{
     public boolean dpadDownToggle = false;
     public boolean dpadUpToggle = false;
     public boolean backPressToggle = false;
+    public boolean dpadDownServoLock = false;
 
 
 
     public double slidesZeroPower = 0.1;
     public boolean slideResetToggle = false;
     public double slideResetTimestamp = 0.0;
+
     public double bPressTimestamp = 0.0;
     public double startPressTimestamp = 0.0;
     public double dpadDownTimestamp = 0.0;
@@ -246,6 +248,9 @@ public class Drive_V2 extends LinearOpMode{
 
             if (-gamepad2.left_stick_y>0){
                 target = (int) linearSlideZeroPosition + HIGH_SAMPLE_POS;
+                robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+                robot.clawMove.setPosition(MOVE_OUTTAKE);
+
                 PID_MODE = true;
 
             }
@@ -315,7 +320,7 @@ public class Drive_V2 extends LinearOpMode{
                 maximumExtension = false;
             }
 
-            TELE.addData("n", maximumExtension);
+
 
 
 
@@ -446,6 +451,11 @@ public class Drive_V2 extends LinearOpMode{
                 startPressTimestamp = getRuntime();
             }
 
+            if (START_PRESS.wasJustReleased()){
+                target = HIGH_SPECIMEN_POS;
+                PID_MODE = true;
+            }
+
             START_PRESS.readValue();
 
             if (startPressToggle){
@@ -457,8 +467,6 @@ public class Drive_V2 extends LinearOpMode{
                     robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
                     robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                    target = HIGH_SPECIMEN_POS;
-                    PID_MODE = true;
                     startPressToggle = false;
                 }
             }
@@ -471,7 +479,7 @@ public class Drive_V2 extends LinearOpMode{
             }
 
             if (BACK_PRESS.wasJustReleased()){
-                target = 0;
+                target = (int) linearSlideZeroPosition;
                 PID_MODE = true;
             }
 
@@ -481,12 +489,14 @@ public class Drive_V2 extends LinearOpMode{
                 double automationTime = getRuntime() - backPressTimestamp;
 
                 if (automationTime < 0.2){
-                    robot.claw.setPosition(0.65);
+                    robot.claw.setPosition(CLAW_OPEN);
                 } else if (automationTime < 0.5){
                     extendoIn = true;
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+
                 } else if (automationTime < 0.8){
                     extendoIn = true;
+                    robot.claw.setPosition(CLAW_CLOSED);
                 } else if (automationTime < 1.5){
 
                     robot.claw.setPosition(CLAW_CLOSED);
@@ -510,8 +520,21 @@ public class Drive_V2 extends LinearOpMode{
             //AUTOMATION FOR DPAD DOWN --> PICKUP
 
             if (DPAD_DOWN_PRESS.wasJustPressed()){
+
+                target = (int) ( 0 + linearSlideZeroPosition);
+                PID_MODE = true;
                 dpadDownToggle = true;
                 dpadDownTimestamp = getRuntime();
+                dpadDownServoLock = false;
+            }
+
+            if (DPAD_DOWN_PRESS.wasJustReleased()){
+
+                dpadDownServoLock = true;
+
+                robot.claw.setPosition(CLAW_OPEN);
+                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             }
 
             DPAD_DOWN_PRESS.readValue();
@@ -520,37 +543,41 @@ public class Drive_V2 extends LinearOpMode{
 
                 double automationTime = getRuntime() - dpadDownTimestamp;
 
-                if (automationTime<0.5){
-                    extendoOut = true;
+                if (automationTime<0.6){
+
 
                     robot.claw.setPosition(CLAW_CLOSED);
 
+                    if (!dpadDownServoLock) {
+                        robot.clawPivot.setPosition(PIVOT_ALL_OUT);
+                        robot.clawMove.setPosition(MOVE_ALL_OUT);
+                        robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                        robot.claw.setPosition(CLAW_CLOSED);
+                    } else {
+                        robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                        robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+                        robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                        robot.claw.setPosition(CLAW_CLOSED);
+                    }
 
-                    robot.clawPivot.setPosition(PIVOT_NEUTRAL);
-                    robot.clawMove.setPosition(MOVE_NEUTRAL);
-                } else if (automationTime<0.7){
+                } else {
                     extendoOut = true;
 
-                    linearAutomation = true;
-
-                    robot.leftSlide.setPower(1);
-                    robot.rightSlide.setPower(1);
-                    robot.centerSlide.setPower(1);
-                } else {
-                    extendoOut = false;
-                    extendoHoldOut = true;
 
 
-                    robot.leftSlide.setPower(0);
-                    robot.rightSlide.setPower(0);
-                    robot.centerSlide.setPower(0);
 
-                    robot.clawMove.setPosition(MOVE_INTAKE);
-                    robot.clawPivot.setPosition(PIVOT_INTAKE);
-                    robot.claw.setPosition(CLAW_OPEN);
-                    robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                    if (!dpadDownServoLock) {
+                        robot.clawPivot.setPosition(PIVOT_ALL_OUT);
+                        robot.clawMove.setPosition(MOVE_ALL_OUT);
+                        robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                        robot.claw.setPosition(CLAW_CLOSED);
+                    } else {
+                        robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                        robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+                        robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                        robot.claw.setPosition(CLAW_OPEN);
+                    }
 
-                    linearAutomation = false;
 
                     dpadDownToggle=false;
                 }
@@ -562,11 +589,21 @@ public class Drive_V2 extends LinearOpMode{
             //AUTOMATION FOR DPAD UP --> GRAB SPECIMEN
 
             if (DPAD_UP_PRESS.wasJustPressed()){
-                dpadUpToggle = true;
 
-                dpadUpTimestamp = getRuntime() + 0.3;
+                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
 
             }
+
+            if (DPAD_UP_PRESS.wasJustReleased()){
+
+                dpadUpToggle = true;
+
+                dpadUpTimestamp = getRuntime();
+
+            }
+
+
 
             DPAD_UP_PRESS.readValue();
 
@@ -576,30 +613,22 @@ public class Drive_V2 extends LinearOpMode{
 
 
 
-                if (automationTime < -0.1){
+                if (automationTime<0.3){
 
-                    robot.leftSlide.setPower(-0.5);
-                    robot.rightSlide.setPower(-0.5);
-                    robot.centerSlide.setPower(-0.5);
-                } else if (automationTime < 0){
-                    robot.leftSlide.setPower(0);
-                    robot.rightSlide.setPower(0);
-                    robot.centerSlide.setPower(0);
-
-                } else if (automationTime < 0.3) {
                     robot.claw.setPosition(CLAW_CLOSED);
-                    linearAutomation = false;
                 } else if (automationTime < 1){
 
                     robot.claw.setPosition(CLAW_CLOSED);
 
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                    robot.clawMove.setPosition(MOVE_OUTTAKE);
-                    robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+                    robot.clawMove.setPosition(MOVE_ALL_OUT);
+                    robot.clawPivot.setPosition(PIVOT_ALL_OUT);
                     extendoIn = true;
                 } else {
                     extendoIn = false;
                     extendoHoldIn = true;
+
+
                     dpadUpToggle = false;
                 }
             }
