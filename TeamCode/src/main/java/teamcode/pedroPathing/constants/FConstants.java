@@ -23,9 +23,19 @@ public class FConstants {
 
         FollowerConstants.useBrakeModeInTeleOp = true;
 
+        FollowerConstants.xMovement = 79.106;
+        FollowerConstants.yMovement = 62.44759662476308;
+
+        FollowerConstants.forwardZeroPowerAcceleration = -31.108;
+        FollowerConstants.lateralZeroPowerAcceleration = -65.53;
+
+        FollowerConstants.useSecondaryTranslationalPID = true;
+        FollowerConstants.useSecondaryHeadingPID = true;
+        FollowerConstants.useSecondaryDrivePID = true;
+
+
 
         // We can change the value of any variable/constant of FollowerConstants.
-        FollowerConstants.mass = 10; // In kg
-        //TODO: Update the mass
+        FollowerConstants.mass = 15.25; // In kg
     }
 }

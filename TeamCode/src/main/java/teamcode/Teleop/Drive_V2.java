@@ -1,32 +1,25 @@
 package teamcode.Teleop;
-import static teamcode.Teleop.Singletons.ServoPositions.*;
+import static teamcode.Teleop.Singletons.Positions.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.util.Constants;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
-
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 import java.util.Objects;
 
 import teamcode.Autonomous.Poses;
 import teamcode.Robot;
-import teamcode.Teleop.Singletons.DeadZones;
-import teamcode.Teleop.Singletons.GamepadJoystickCurve;
 import teamcode.Teleop.Singletons.MotorWeights;
-import teamcode.Teleop.Singletons.ServoPositions;
 import teamcode.pedroPathing.constants.FConstants;
 import teamcode.pedroPathing.constants.LConstants;
 
@@ -44,6 +37,12 @@ public class Drive_V2 extends LinearOpMode{
     private Follower follower;
     private final Pose startPose = Poses.AUTON_END;
 
+    private PIDController controller;
+    public static double p = 0.0006, i = 0, d = 0.00001;
+    public static double f = 0.08;
+    public static int target = 30000;
+
+
 
 
 
@@ -51,13 +50,14 @@ public class Drive_V2 extends LinearOpMode{
     public double extendoZeroPosition = 0;
     public boolean linearAutomation = false;
     public boolean startPressToggle = false;
+    public boolean maximumExtension = false;
     public boolean dpadDownToggle = false;
     public boolean dpadUpToggle = false;
     public boolean backPressToggle = false;
 
 
 
-    public double slidesZeroPower = 0;
+    public double slidesZeroPower = 0.1;
     public boolean slideResetToggle = false;
     public double slideResetTimestamp = 0.0;
     public double bPressTimestamp = 0.0;
@@ -66,12 +66,15 @@ public class Drive_V2 extends LinearOpMode{
     public double dpadUpTimestamp = 0.0;
     public double backPressTimestamp = 0.0;
 
+    public double rightBumperPressTimestamp = 0.0;
+
 
     public boolean extendoIn = false;
     public boolean extendoOut = false;
     public boolean extendoHoldIn = false;
 
     public boolean extendoHoldOut = false;
+    public boolean PID_MODE = false;
 
 
 
@@ -109,14 +112,21 @@ public class Drive_V2 extends LinearOpMode{
             follower.setStartingPose(startPose);
         }
 
-        GamepadEx g2 = new GamepadEx(gamepad2);
+        controller = new PIDController(p, i, d);
 
-        ButtonReader LEFT_STICK_PRESS = new ButtonReader(
-                g2, GamepadKeys.Button.LEFT_STICK_BUTTON
+        GamepadEx g2 = new GamepadEx(gamepad2);
+        GamepadEx g1 = new GamepadEx(gamepad1);
+
+        ButtonReader G1_START_PRESS = new ButtonReader(
+                g1, GamepadKeys.Button.START
         );
 
         ButtonReader B_PRESS = new ButtonReader(
                 g2, GamepadKeys.Button.B
+        );
+
+        ButtonReader RIGHT_BUMPER_PRESS = new ButtonReader(
+                g2, GamepadKeys.Button.RIGHT_BUMPER
         );
 
         ButtonReader START_PRESS = new ButtonReader(
@@ -162,7 +172,7 @@ public class Drive_V2 extends LinearOpMode{
                 y = -gamepad1.right_stick_y;
             }
 
-            double slowFactor = gamepad1.left_trigger*0.8;
+            double slowFactor = 1 - gamepad1.left_trigger*0.8;
 
             rx*=slowFactor;
             x*=slowFactor;
@@ -197,8 +207,8 @@ public class Drive_V2 extends LinearOpMode{
 
             //LINEAR SLIDES:
 
-            double linearSlidePosition = robot.leftSlide.getCurrentPosition() + robot.rightSlide.getCurrentPosition() + robot.centerSlide.getCurrentPosition();
-            linearSlidePosition *= (1.0 /3);
+            double linearSlidePosition = -robot.linearSlideEncoder.getCurrentPosition();
+
 
             double linearSlidePower = 0;
 
@@ -216,7 +226,7 @@ public class Drive_V2 extends LinearOpMode{
                 }
             }
 
-            if (!linearAutomation) {
+            if (!linearAutomation && !PID_MODE) {
                 if ((linearSlidePosition > linearSlideZeroPosition + 50) && gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
                     robot.leftSlide.setPower(slidesZeroPower);
                     robot.rightSlide.setPower(slidesZeroPower);
@@ -230,6 +240,34 @@ public class Drive_V2 extends LinearOpMode{
                 }
             }
 
+            //LINEAR SLIDE AUTOMATION
+
+
+            if (!linearAutomation && PID_MODE){
+                controller.setPID(p,i,d);
+                double PID = controller.calculate(linearSlidePosition, target);
+                PID += 0.08;
+
+                robot.rightSlide.setPower(PID);
+                robot.leftSlide.setPower(PID);
+                robot.centerSlide.setPower(PID);
+
+            }
+
+            if (gamepad2.left_trigger!= 0|| gamepad2.right_trigger!= 0) {PID_MODE = false;}
+
+            if (-gamepad2.left_stick_y<0){
+                target = (int) linearSlideZeroPosition;
+                PID_MODE = true;
+            }
+
+            if (-gamepad2.left_stick_y>0){
+                target = (int) linearSlideZeroPosition + HIGH_SAMPLE_POS;
+                PID_MODE = true;
+
+            }
+
+
             //ROTATE CLAW
 
             if (gamepad2.right_stick_x!=0){
@@ -238,15 +276,32 @@ public class Drive_V2 extends LinearOpMode{
             
             //EXTENDO
 
-            if ((gamepad2.right_bumper||extendoOut)){robot.extendo.setPower(1);} 
-            
-            else if ((gamepad2.left_bumper||extendoIn)){robot.extendo.setPower(-1);}
+            if ((robot.extendo.getCurrentPosition()-extendoZeroPosition)<=23500){
 
-            else if (extendoHoldOut){robot.extendo.setPower(0.3);}
 
-            else if (extendoHoldIn){robot.extendo.setPower(-0.3);}
-            
-            else {robot.extendo.setPower(0);}
+
+                if ((gamepad2.right_bumper||extendoOut)){robot.extendo.setPower(1);}
+
+                else if (extendoHoldOut){robot.extendo.setPower(0.3);}
+                else if ((gamepad2.left_bumper||extendoIn)){robot.extendo.setPower(-1);}
+
+                else if (extendoHoldIn){robot.extendo.setPower(-0.3);}
+
+                else {robot.extendo.setPower(0);}
+            } else {
+
+                if (maximumExtension&&gamepad2.right_bumper){
+                    robot.extendo.setPower(1);
+                }
+                else if ((gamepad2.left_bumper || extendoIn)) {
+                    robot.extendo.setPower(-1);
+                } else if (extendoHoldIn) {
+                    robot.extendo.setPower(-0.3);
+                } else {
+                    robot.extendo.setPower(0);
+                }
+
+            }
 
             if (gamepad2.left_bumper||gamepad2.back||gamepad2.dpad_up){
                 extendoOut = false;
@@ -258,18 +313,39 @@ public class Drive_V2 extends LinearOpMode{
                 extendoHoldIn = false;
             }
 
+            if (gamepad1.back){
+                extendoZeroPosition = robot.extendo.getCurrentPosition();
+            }
+
+            RIGHT_BUMPER_PRESS.readValue();
+
+            if (RIGHT_BUMPER_PRESS.wasJustPressed()){
+
+                if ((getRuntime()-rightBumperPressTimestamp)<0.5){
+                    maximumExtension = true;
+
+                }
+                rightBumperPressTimestamp = getRuntime();
+            }
+
+            if (maximumExtension && !gamepad2.right_bumper){
+                maximumExtension = false;
+            }
+
+            TELE.addData("n", maximumExtension);
+
 
 
             //AUTOMATION FOR SLIDE RESET
 
-            if (LEFT_STICK_PRESS.wasJustPressed()){
+            if (G1_START_PRESS.wasJustPressed()){
 
                 slideResetToggle = true;
                 slideResetTimestamp = getRuntime();
 
             }
 
-            LEFT_STICK_PRESS.readValue();
+            G1_START_PRESS.readValue();
 
             if (slideResetToggle){
 
@@ -359,7 +435,7 @@ public class Drive_V2 extends LinearOpMode{
                 bPressTimestamp = getRuntime();
             }
 
-            if(gamepad2.x) robot.claw.setPosition(CLAW_CLOSED);
+            if(gamepad2.a) robot.claw.setPosition(CLAW_CLOSED);
 
             //CLAW POSITIONS
 
@@ -380,7 +456,7 @@ public class Drive_V2 extends LinearOpMode{
                 robot.clawPivot.setPosition(PIVOT_OUTTAKE);
             }
 
-            //AUTOMATION FOR START --> EXTEND TO WALL
+            //AUTOMATION FOR START --> EXTEND TO SCORE FROM WALL
 
             if (START_PRESS.wasJustPressed()){
                 startPressToggle = true;
@@ -392,27 +468,28 @@ public class Drive_V2 extends LinearOpMode{
             if (startPressToggle){
                 double automationTime = getRuntime() - startPressTimestamp;
 
-                if (automationTime < 0.3){
+                if (automationTime < 0.4){
                     robot.claw.setPosition(CLAW_CLOSED);
-                    robot.clawRotate.setPosition(ROTATE_FLIP);
-                    robot.clawMove.setPosition(MOVE_NEUTRAL);
-                    robot.clawPivot.setPosition(PIVOT_NEUTRAL);
-                } else if (automationTime < 0.7){
-                    extendoOut = true;
-                } else if (automationTime < 1){
-                    robot.claw.setPosition(CLAW_OPEN);
                 } else {
-                    extendoOut = false;
-                    extendoHoldOut = true;
+                    robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
+                    robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
+                    robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                    target = HIGH_SPECIMEN_POS;
+                    PID_MODE = true;
                     startPressToggle = false;
                 }
             }
 
-            //AUTOMATION FOR BACK --> PICKUP FROM WALL
+            //AUTOMATION FOR BACK --> RETRACT TO WALL
 
             if (BACK_PRESS.wasJustPressed()){
                 backPressToggle = true;
                 backPressTimestamp = getRuntime();
+            }
+
+            if (BACK_PRESS.wasJustReleased()){
+                target = 0;
+                PID_MODE = true;
             }
 
             BACK_PRESS.readValue();
@@ -427,20 +504,20 @@ public class Drive_V2 extends LinearOpMode{
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
                 } else if (automationTime < 0.8){
                     extendoIn = true;
-                    robot.clawRotate.setPosition(0.3906);
                 } else if (automationTime < 1.5){
 
                     robot.claw.setPosition(CLAW_CLOSED);
 
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                    robot.clawMove.setPosition(MOVE_OUTTAKE);
-                    robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+                    robot.clawMove.setPosition(MOVE_WALL_INTAKE);
+                    robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
                     extendoIn = true;
                 } else {
                     extendoIn = false;
                     extendoHoldIn = true;
 
                     robot.clawRotate.setPosition(ROTATE_FLIP);
+                    robot.claw.setPosition(CLAW_OPEN);
 
                     backPressToggle = false;
 
@@ -504,9 +581,7 @@ public class Drive_V2 extends LinearOpMode{
             if (DPAD_UP_PRESS.wasJustPressed()){
                 dpadUpToggle = true;
 
-                if (linearSlidePosition > linearSlideZeroPosition + 50) {
-                    dpadUpTimestamp = getRuntime() + 0.3;
-                }
+                dpadUpTimestamp = getRuntime() + 0.3;
 
             }
 
@@ -550,6 +625,10 @@ public class Drive_V2 extends LinearOpMode{
 
             TELE.addData("Linear Slide Position", linearSlidePosition);
             TELE.addData("Linear Slide Zero Position", linearSlideZeroPosition);
+
+
+            TELE.addData("Extendo Position", robot.extendo.getCurrentPosition());
+            TELE.addData("Extendo Zero Position", extendoZeroPosition);
 
 
 

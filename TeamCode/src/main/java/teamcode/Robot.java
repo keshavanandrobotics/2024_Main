@@ -94,7 +94,7 @@ public class Robot {
         sidePod = backRightMotor;
 
         extendoEncoder=extendo;
-        linearSlideEncoder = rightSlide;
+        linearSlideEncoder = leftSlide;
 
         //Misc
 
