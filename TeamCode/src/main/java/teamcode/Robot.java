@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import teamcode.Autonomous.RoadRunner.MecanumDrive;
+import teamcode.Autonomous.RoadRunner.PinpointDrive;
 
 public class Robot {
     public DcMotorEx frontLeftMotor;
@@ -22,7 +23,7 @@ public class Robot {
     public DcMotorEx extendo;
 
 
-    public MecanumDrive drive;
+    public PinpointDrive drive;
 
     public DcMotorEx leftPod;
     public DcMotorEx rightPod;

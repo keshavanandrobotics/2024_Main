@@ -1,9 +1,11 @@
 package teamcode.Teleop;
+import static teamcode.Autonomous.Poses.*;
 import static teamcode.Teleop.Singletons.Positions.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -16,6 +18,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import java.util.Objects;
 
 
+import teamcode.Autonomous.Poses;
+import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 import teamcode.Teleop.Singletons.MotorWeights;
 
@@ -86,15 +90,14 @@ public class Drive_V2 extends LinearOpMode{
         TELE = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new Robot(hardwareMap);
 
+        robot.drive = new PinpointDrive(hardwareMap, AUTON_END_POSE);
+
         robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        robot.leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.centerSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -360,8 +363,8 @@ public class Drive_V2 extends LinearOpMode{
                     robot.claw.setPosition(CLAW_CLOSED);
 
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                    robot.clawMove.setPosition(MOVE_OUTTAKE);
-                    robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+                    robot.clawMove.setPosition(MOVE_OUTTAKE - 0.1);
+                    robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
                 } else if (automationTime<2.15) {
                     extendoIn = false;
                     robot.leftSlide.setPower(-1);
@@ -374,31 +377,42 @@ public class Drive_V2 extends LinearOpMode{
 
                     robot.claw.setPosition(CLAW_CLOSED);
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                    robot.clawMove.setPosition(MOVE_NEUTRAL);
-                    robot.clawPivot.setPosition(PIVOT_NEUTRAL);
+                    robot.clawMove.setPosition(MOVE_OUTTAKE);
+                    robot.clawPivot.setPosition(PIVOT_OUTTAKE);
 
-                } else if (automationTime<2.95){
+                }  else if (automationTime < 2.65){
                     extendoIn = false;
+
+
                     robot.leftSlide.setPower(0);
                     robot.rightSlide.setPower(0);
                     robot.centerSlide.setPower(0);
 
                     robot.claw.setPosition(CLAW_CLOSED);
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                    robot.clawMove.setPosition(MOVE_NEUTRAL);
-                    robot.clawPivot.setPosition(PIVOT_NEUTRAL);
-                    linearSlideZeroPosition = linearSlidePosition;
-                } else {
+                    robot.clawMove.setPosition(MOVE_OUTTAKE);
+                    robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+                    linearSlideZeroPosition = robot.linearSlideEncoder.getCurrentPosition();
+                    extendoZeroPosition = robot.extendoEncoder.getCurrentPosition();
+                }
+
+                else {
+
+                    extendoIn = false;
+
 
                     robot.leftSlide.setPower(0);
                     robot.rightSlide.setPower(0);
                     robot.centerSlide.setPower(0);
 
                     robot.claw.setPosition(CLAW_CLOSED);
-                    robot.clawRotate.setPosition(ROTATE_FLIP);
-                    robot.clawMove.setPosition(MOVE_NEUTRAL);
-                    robot.clawPivot.setPosition(PIVOT_NEUTRAL);
-                    linearSlideZeroPosition = linearSlidePosition;
+                    robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                    robot.clawMove.setPosition(MOVE_OUTTAKE);
+                    robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+
+                    linearSlideZeroPosition = robot.linearSlideEncoder.getCurrentPosition();
+
+
                     extendoZeroPosition = robot.extendoEncoder.getCurrentPosition();
 
                     linearAutomation = false;
@@ -425,24 +439,9 @@ public class Drive_V2 extends LinearOpMode{
 
             if(gamepad2.a) robot.claw.setPosition(CLAW_CLOSED);
 
-            //CLAW POSITIONS
 
-            if (gamepad2.x&&(robot.extendoEncoder.getCurrentPosition()>(extendoZeroPosition+500))){
 
-                robot.claw.setPosition(CLAW_CLOSED);
 
-                robot.clawMove.setPosition(MOVE_INTAKE);
-                robot.clawPivot.setPosition(PIVOT_INTAKE);
-            }
-
-            if (gamepad2.y){
-
-                robot.claw.setPosition(CLAW_CLOSED);
-
-                robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                robot.clawMove.setPosition(MOVE_OUTTAKE);
-                robot.clawPivot.setPosition(PIVOT_OUTTAKE);
-            }
 
             //AUTOMATION FOR START --> EXTEND TO SCORE FROM WALL
 
@@ -641,6 +640,13 @@ public class Drive_V2 extends LinearOpMode{
 
             TELE.addData("Extendo Position", robot.extendo.getCurrentPosition());
             TELE.addData("Extendo Zero Position", extendoZeroPosition);
+
+            TELE.addData("x", robot.drive.pose.position.x);
+            TELE.addData("y", robot.drive.pose.position.y);
+
+            TELE.addData("heading", Math.toDegrees(robot.drive.pose.heading.toDouble()));
+
+            robot.drive.updatePoseEstimate();
 
 
 

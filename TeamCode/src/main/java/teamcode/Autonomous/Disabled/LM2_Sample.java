@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import teamcode.Autonomous.RoadRunner.MecanumDrive;
+import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 
@@ -893,7 +894,7 @@ public class LM2_Sample extends LinearOpMode {
 
         Vector2d bucket = new Vector2d(Bucket.position.x, Bucket.position.y);
 
-        robot.drive = new MecanumDrive(hardwareMap, initialPose);
+        robot.drive = new PinpointDrive(hardwareMap, initialPose);
 
         TrajectoryActionBuilder scoreSpecimen = robot.drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(31,0), Math.toRadians(180));

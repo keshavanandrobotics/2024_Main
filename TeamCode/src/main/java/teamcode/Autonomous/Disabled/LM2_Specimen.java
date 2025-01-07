@@ -20,6 +20,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import teamcode.Autonomous.RoadRunner.MecanumDrive;
+import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 
@@ -339,9 +340,11 @@ public class LM2_Specimen extends LinearOpMode {
 
         robot = new Robot(hardwareMap);
 
+
+
         Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(180));
 
-        robot.drive = new MecanumDrive(hardwareMap, initialPose);
+        robot.drive = new PinpointDrive(hardwareMap, initialPose);
 
         TrajectoryActionBuilder scoreSpecimen = robot.drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(31,0), Math.toRadians(180));

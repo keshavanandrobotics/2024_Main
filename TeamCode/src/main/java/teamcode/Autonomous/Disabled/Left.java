@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import teamcode.Autonomous.RoadRunner.MecanumDrive;
+import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 
@@ -454,7 +455,7 @@ public class Left extends LinearOpMode {
 
         Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0));
 
-        robot.drive = new MecanumDrive(hardwareMap, initialPose);
+        robot.drive = new PinpointDrive(hardwareMap, initialPose);
 
         TrajectoryActionBuilder trajectory = robot.drive.actionBuilder(initialPose)
                 .waitSeconds(0.2)

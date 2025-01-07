@@ -24,7 +24,7 @@ import teamcode.Autonomous.RoadRunner.ThreeDeadWheelLocalizer;
 import teamcode.Autonomous.RoadRunner.TwoDeadWheelLocalizer;
 
 public final class TuningOpModes {
-    public static final Class<?> DRIVE_CLASS = SparkFunOTOSDrive.class; // TODO: change to your drive class i.e. PinpointDrive if using pinpoint
+    public static final Class<?> DRIVE_CLASS = PinpointDrive.class;
 
     public static final String GROUP = "quickstart";
     public static final boolean DISABLED = false;
