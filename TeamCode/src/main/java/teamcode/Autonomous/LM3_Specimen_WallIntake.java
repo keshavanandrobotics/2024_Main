@@ -1,9 +1,26 @@
 package teamcode.Autonomous;
 
 
-import static teamcode.Teleop.Singletons.Positions.*;
-
-import android.webkit.ServiceWorkerClient;
+import static teamcode.Teleop.Singletons.Positions.CLAW_CLOSED;
+import static teamcode.Teleop.Singletons.Positions.CLAW_LESS_OPEN;
+import static teamcode.Teleop.Singletons.Positions.CLAW_OPEN;
+import static teamcode.Teleop.Singletons.Positions.HIGH_SPECIMEN_POS;
+import static teamcode.Teleop.Singletons.Positions.MOVE_AUTONOMOUS_INIT;
+import static teamcode.Teleop.Singletons.Positions.MOVE_HOVER_SAMPLE;
+import static teamcode.Teleop.Singletons.Positions.MOVE_HOVER_SPECIMEN;
+import static teamcode.Teleop.Singletons.Positions.MOVE_PICKUP_SAMPLE;
+import static teamcode.Teleop.Singletons.Positions.MOVE_PICKUP_SPECIMEN;
+import static teamcode.Teleop.Singletons.Positions.MOVE_SPECIMEN_SCORE;
+import static teamcode.Teleop.Singletons.Positions.MOVE_WALL_INTAKE;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_AUTONOMOUS_INIT;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_HOVER_SPECIMEN;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_PICKUP_SPECIMEN;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_SAMPLE_PICKUP;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_SPECIMEN_SCORE;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_WALL_INTAKE;
+import static teamcode.Teleop.Singletons.Positions.ROTATE_FLIP;
+import static teamcode.Teleop.Singletons.Positions.ROTATE_LM3_SPECIMEN_AUTON;
+import static teamcode.Teleop.Singletons.Positions.ROTATE_NEUTRAL;
 
 import androidx.annotation.NonNull;
 
@@ -16,22 +33,19 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import teamcode.Autonomous.RoadRunner.MecanumDrive;
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
 @Autonomous
-public class LM3_Specimen extends LinearOpMode{
+public class LM3_Specimen_WallIntake extends LinearOpMode{
 
     Robot robot;
 
@@ -66,9 +80,9 @@ public class LM3_Specimen extends LinearOpMode{
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
 
-            robot.clawPivot.setPosition(PIVOT_HOVER_SPECIMEN);
-            robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-            robot.clawMove.setPosition(MOVE_HOVER_SPECIMEN);
+            robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
+            robot.clawRotate.setPosition(ROTATE_FLIP);
+            robot.clawMove.setPosition(MOVE_WALL_INTAKE);
 
 
             robot.claw.setPosition(CLAW_OPEN);
@@ -93,24 +107,14 @@ public class LM3_Specimen extends LinearOpMode{
             ticker++;
 
             if (getRuntime() - stamp <0.3){
-                robot.clawMove.setPosition(MOVE_PICKUP_SPECIMEN);
 
-
-                robot.clawPivot.setPosition(PIVOT_PICKUP_SPECIMEN);
-                robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-
-                return true;
-
-            } else if ( getRuntime() - stamp < 0.42){
-
-                robot.clawMove.setPosition(MOVE_PICKUP_SPECIMEN);
-                robot.clawPivot.setPosition(PIVOT_PICKUP_SPECIMEN);
                 robot.claw.setPosition(CLAW_CLOSED);
+
                 return true;
+
             } else {
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SPECIMEN);
-                robot.clawPivot.setPosition(PIVOT_PICKUP_SPECIMEN);
+
                 robot.claw.setPosition(CLAW_CLOSED);
                 return false;
             }
@@ -501,17 +505,17 @@ public class LM3_Specimen extends LinearOpMode{
 
         TrajectoryActionBuilder trajectory7 = robot.drive.actionBuilder(new Pose2d(15.2,-42.45,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -17.45), Math.toRadians(-120));
-        TrajectoryActionBuilder trajectory8 = robot.drive.actionBuilder(new Pose2d(14.5,-17.5,Math.toRadians(-120)))
-                .strafeToConstantHeading(new Vector2d(4, -24));
+        TrajectoryActionBuilder trajectory8 = robot.drive.actionBuilder(new Pose2d(14.5,-17.5,Math.toRadians(0)))
+                .strafeToConstantHeading(new Vector2d(2, -37));
 
 
 
-        TrajectoryActionBuilder trajectory9 = robot.drive.actionBuilder(new Pose2d(4,-24,Math.toRadians(-120)))
+        TrajectoryActionBuilder trajectory9 = robot.drive.actionBuilder(new Pose2d(3,-37,Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(25, 15), Math.toRadians(0));
 
 
         TrajectoryActionBuilder trajectory10 = robot.drive.actionBuilder(new Pose2d(25,15,Math.toRadians(0)))
-                .strafeToLinearHeading(new Vector2d(4, -24), Math.toRadians(-120));
+                .strafeToLinearHeading(new Vector2d(2, -37), Math.toRadians(0));
 
 
 
@@ -587,6 +591,8 @@ public class LM3_Specimen extends LinearOpMode{
 
 
             );
+
+            sleep( 200);
 
             Actions.runBlocking(new SpecimenPickupServos());
 

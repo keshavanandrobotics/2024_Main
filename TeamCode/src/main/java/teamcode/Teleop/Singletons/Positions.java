@@ -21,9 +21,9 @@ public class Positions {
     public static double MOVE_ALL_OUT = 0.44;
     public static double MOVE_HOVER_SAMPLE = 0.47;
 
-    public static double MOVE_HOVER_SPECIMEN = 0.52;
+    public static double MOVE_HOVER_SPECIMEN = 0.49;
 
-    public static double MOVE_PICKUP_SPECIMEN = 0.44;
+    public static double MOVE_PICKUP_SPECIMEN = 0.43;
 
 
     public static double MOVE_PICKUP_SAMPLE = 0.42;
@@ -35,8 +35,8 @@ public class Positions {
     public static double PIVOT_SPECIMEN_SCORE = 0.44;
     public static double PIVOT_ALL_OUT = 0.65;
     public static double PIVOT_SAMPLE_PICKUP = 0.95;
-    public static double PIVOT_HOVER_SPECIMEN = 0.9;
-    public static double PIVOT_PICKUP_SPECIMEN = 0.87;
+    public static double PIVOT_HOVER_SPECIMEN = 0.89;
+    public static double PIVOT_PICKUP_SPECIMEN = 0.89;
     public static double PIVOT_AUTONOMOUS_INIT = 0.17;
 
     public static int HIGH_SPECIMEN_POS = 17400;
