@@ -43,6 +43,8 @@ public class Positions {
 
     public static int HIGH_SAMPLE_POS = 61000;
 
+    public static int EXTENDO_MAX_TELE = 21000;
+
 
 
 

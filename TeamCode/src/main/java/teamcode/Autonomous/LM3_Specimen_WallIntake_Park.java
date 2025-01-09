@@ -1,9 +1,22 @@
 package teamcode.Autonomous;
 
 
-import static teamcode.Teleop.Singletons.Positions.*;
-
-import android.webkit.ServiceWorkerClient;
+import static teamcode.Teleop.Singletons.Positions.CLAW_CLOSED;
+import static teamcode.Teleop.Singletons.Positions.CLAW_LESS_OPEN;
+import static teamcode.Teleop.Singletons.Positions.CLAW_OPEN;
+import static teamcode.Teleop.Singletons.Positions.HIGH_SPECIMEN_POS;
+import static teamcode.Teleop.Singletons.Positions.MOVE_AUTONOMOUS_INIT;
+import static teamcode.Teleop.Singletons.Positions.MOVE_HOVER_SAMPLE;
+import static teamcode.Teleop.Singletons.Positions.MOVE_PICKUP_SAMPLE;
+import static teamcode.Teleop.Singletons.Positions.MOVE_SPECIMEN_SCORE;
+import static teamcode.Teleop.Singletons.Positions.MOVE_WALL_INTAKE;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_AUTONOMOUS_INIT;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_SAMPLE_PICKUP;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_SPECIMEN_SCORE;
+import static teamcode.Teleop.Singletons.Positions.PIVOT_WALL_INTAKE;
+import static teamcode.Teleop.Singletons.Positions.ROTATE_FLIP;
+import static teamcode.Teleop.Singletons.Positions.ROTATE_LM3_SPECIMEN_AUTON;
+import static teamcode.Teleop.Singletons.Positions.ROTATE_NEUTRAL;
 
 import androidx.annotation.NonNull;
 
@@ -21,17 +34,15 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import teamcode.Autonomous.RoadRunner.MecanumDrive;
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
-@Autonomous
-public class LM3_Specimen extends LinearOpMode{
+@Autonomous (preselectTeleOp = "Drive_V2")
+public class LM3_Specimen_WallIntake_Park extends LinearOpMode {
 
     Robot robot;
 
@@ -66,9 +77,9 @@ public class LM3_Specimen extends LinearOpMode{
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
 
-            robot.clawPivot.setPosition(PIVOT_HOVER_SPECIMEN);
-            robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-            robot.clawMove.setPosition(MOVE_HOVER_SPECIMEN);
+            robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
+            robot.clawRotate.setPosition(ROTATE_FLIP);
+            robot.clawMove.setPosition(MOVE_WALL_INTAKE);
 
 
             robot.claw.setPosition(CLAW_OPEN);
@@ -92,25 +103,25 @@ public class LM3_Specimen extends LinearOpMode{
 
             ticker++;
 
-            if (getRuntime() - stamp <0.3){
-                robot.clawMove.setPosition(MOVE_PICKUP_SPECIMEN);
+            if (getRuntime() - stamp <0.21){
 
-
-                robot.clawPivot.setPosition(PIVOT_PICKUP_SPECIMEN);
-                robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-
-                return true;
-
-            } else if ( getRuntime() - stamp < 0.42){
-
-                robot.clawMove.setPosition(MOVE_PICKUP_SPECIMEN);
-                robot.clawPivot.setPosition(PIVOT_PICKUP_SPECIMEN);
                 robot.claw.setPosition(CLAW_CLOSED);
+
+                robot.drive.leftFront.setPower(-0.2);
+                robot.drive.rightFront.setPower(-0.2);
+                robot.drive.leftBack.setPower(-0.2);
+                robot.drive.rightBack.setPower(-0.2);
+
                 return true;
+
             } else {
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SPECIMEN);
-                robot.clawPivot.setPosition(PIVOT_PICKUP_SPECIMEN);
+                robot.drive.leftFront.setPower(0);
+                robot.drive.rightFront.setPower(0);
+                robot.drive.leftBack.setPower(0);
+                robot.drive.rightBack.setPower(0);
+
+
                 robot.claw.setPosition(CLAW_CLOSED);
                 return false;
             }
@@ -136,7 +147,7 @@ public class LM3_Specimen extends LinearOpMode{
 
             ticker ++;
 
-            if (getRuntime() - stamp < 0.28){
+            if (getRuntime() - stamp < 0.19){
                 robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
 
                 robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
@@ -146,7 +157,7 @@ public class LM3_Specimen extends LinearOpMode{
 
                 return true;
 
-            } else if ( getRuntime() - stamp < 0.41){
+            } else if ( getRuntime() - stamp < 0.26){
 
                 robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
                 robot.claw.setPosition(CLAW_CLOSED);
@@ -259,6 +270,29 @@ public class LM3_Specimen extends LinearOpMode{
 
         }
     }
+
+    public class Serve implements Action {
+
+
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+
+            robot.claw.setPosition(CLAW_OPEN);
+
+            TARGET = -200;
+
+            return false;
+
+
+
+
+
+
+        }
+    }
+
 
     public class ExtendoInTemp implements Action {
 
@@ -486,35 +520,38 @@ public class LM3_Specimen extends LinearOpMode{
                 .splineTo(new Vector2d(20,0),0);
 
         TrajectoryActionBuilder trajectory2 = robot.drive.actionBuilder(new Pose2d(18,0,0))
-                .strafeToLinearHeading(new Vector2d(14.1, -22.95), Math.toRadians(-38));
-        TrajectoryActionBuilder trajectory3 = robot.drive.actionBuilder(new Pose2d(14.1,-22.95,Math.toRadians(-38)))
+                .strafeToLinearHeading(new Vector2d(13.85, -22.95), Math.toRadians(-38));
+        TrajectoryActionBuilder trajectory3 = robot.drive.actionBuilder(new Pose2d(13.85,-22.95,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -27.45), Math.toRadians(-120));
 
         TrajectoryActionBuilder trajectory4 = robot.drive.actionBuilder(new Pose2d(14.5,-27.45,Math.toRadians(-120)))
-                .strafeToLinearHeading(new Vector2d(14.1, -32.45), Math.toRadians(-38));
+                .strafeToLinearHeading(new Vector2d(13.85, -32.45), Math.toRadians(-38));
 
-        TrajectoryActionBuilder trajectory5 = robot.drive.actionBuilder(new Pose2d(14.1,-32.45,Math.toRadians(-38)))
+        TrajectoryActionBuilder trajectory5 = robot.drive.actionBuilder(new Pose2d(13.85,-32.45,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -22.45), Math.toRadians(-120));
 
         TrajectoryActionBuilder trajectory6 = robot.drive.actionBuilder(new Pose2d(14.5,-22.45,Math.toRadians(-120)))
-                .strafeToLinearHeading(new Vector2d(15.2, -42.45), Math.toRadians(-38));
+                .strafeToLinearHeading(new Vector2d(15.1, -42.45), Math.toRadians(-38));
 
-        TrajectoryActionBuilder trajectory7 = robot.drive.actionBuilder(new Pose2d(15.2,-42.45,Math.toRadians(-38)))
+        TrajectoryActionBuilder trajectory7 = robot.drive.actionBuilder(new Pose2d(15.1,-42.45,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -17.45), Math.toRadians(-120));
-        TrajectoryActionBuilder trajectory8 = robot.drive.actionBuilder(new Pose2d(14.5,-17.5,Math.toRadians(-120)))
-                .strafeToConstantHeading(new Vector2d(4, -24));
+        TrajectoryActionBuilder trajectory8 = robot.drive.actionBuilder(new Pose2d(14.5,-17.5,Math.toRadians(0)))
+                .strafeToConstantHeading(new Vector2d(2, -32));
 
 
 
-        TrajectoryActionBuilder trajectory9 = robot.drive.actionBuilder(new Pose2d(4,-24,Math.toRadians(-120)))
-                .strafeToLinearHeading(new Vector2d(25, 15), Math.toRadians(0));
+        TrajectoryActionBuilder trajectory9 = robot.drive.actionBuilder(new Pose2d(2,-32,Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(25, 9), Math.toRadians(0));
 
 
-        TrajectoryActionBuilder trajectory10 = robot.drive.actionBuilder(new Pose2d(25,15,Math.toRadians(0)))
-                .strafeToLinearHeading(new Vector2d(4, -24), Math.toRadians(-120));
+        TrajectoryActionBuilder trajectory10 = robot.drive.actionBuilder(new Pose2d(25,9,Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(2, -32), Math.toRadians(0));
 
 
 
+        TrajectoryActionBuilder trajectory11 = robot.drive.actionBuilder(new Pose2d(25,9,Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(2, -37), Math.toRadians(0),
+        new TranslationalVelConstraint(125));
 
 
         waitForStart();
@@ -588,63 +625,66 @@ public class LM3_Specimen extends LinearOpMode{
 
             );
 
+            sleep( 200);
+
             Actions.runBlocking(new SpecimenPickupServos());
 
             TARGET = HIGH_SPECIMEN_POS;
 
             Actions.runBlocking(
-                    new ParallelAction(
-                            new SampleScoreServos(),
-                            new LinearSlidesSampleScore2(),
-                            trajectory9.build()
-                    )
-            );
-
-            robot.claw.setPosition(CLAW_OPEN);
-
-            TARGET = -200;
-
-            Actions.runBlocking(
-                    new ParallelAction(
-                            new SequentialAction(
-                                    new ExtendoIn(),
-                                    new ParallelAction(
-                                            new SpecimenHoverServos(),
-                                            new LinearSlidesPID()
-                                    )
+                    new SequentialAction(
+                            new ParallelAction(
+                                    new SampleScoreServos(),
+                                    new LinearSlidesSampleScore2(),
+                                    trajectory9.build()
                             ),
-                            trajectory10.build()
+                            new Serve(),
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            new ExtendoIn(),
+                                            new ParallelAction(
+                                                    new SpecimenHoverServos(),
+                                                    new LinearSlidesPID()
+                                            )
+                                    ),
+                                    trajectory10.build()
+
+                            )
+
 
                     )
+
             );
+
+
 
             Actions.runBlocking(new SpecimenPickupServos());
 
             TARGET = HIGH_SPECIMEN_POS;
 
             Actions.runBlocking(
-                    new ParallelAction(
-                            new SampleScoreServos(),
-                            new LinearSlidesSampleScore2(),
-                            trajectory9.build()
-                    )
-            );
-            robot.claw.setPosition(CLAW_OPEN);
-
-            TARGET = -200;
-
-            Actions.runBlocking(
-                    new ParallelAction(
-                            new SequentialAction(
-                                    new ExtendoIn(),
-                                    new ParallelAction(
-                                            new SpecimenHoverServos(),
-                                            new LinearSlidesPID()
-                                    )
+                    new SequentialAction(
+                            new ParallelAction(
+                                    new SampleScoreServos(),
+                                    new LinearSlidesSampleScore2(),
+                                    trajectory9.build()
                             ),
-                            trajectory10.build()
+                            new Serve(),
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            new ExtendoIn(),
+                                            new ParallelAction(
+                                                    new SpecimenHoverServos(),
+                                                    new LinearSlidesPID()
+                                            )
+                                    ),
+                                    trajectory10.build()
+
+                            )
+
 
                     )
+
             );
 
             Actions.runBlocking(new SpecimenPickupServos());
@@ -652,29 +692,28 @@ public class LM3_Specimen extends LinearOpMode{
             TARGET = HIGH_SPECIMEN_POS;
 
             Actions.runBlocking(
-                    new ParallelAction(
-                            new SampleScoreServos(),
-                            new LinearSlidesSampleScore2(),
-                            trajectory9.build()
-                    )
-            );
-
-            robot.claw.setPosition(CLAW_OPEN);
-
-            TARGET = -200;
-
-            Actions.runBlocking(
-                    new ParallelAction(
-                            new SequentialAction(
-                                    new ExtendoIn(),
-                                    new ParallelAction(
-                                            new SpecimenHoverServos(),
-                                            new LinearSlidesPID()
-                                    )
+                    new SequentialAction(
+                            new ParallelAction(
+                                    new SampleScoreServos(),
+                                    new LinearSlidesSampleScore2(),
+                                    trajectory9.build()
                             ),
-                            trajectory10.build()
+                            new Serve(),
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            new ExtendoIn(),
+                                            new ParallelAction(
+                                                    new SpecimenHoverServos(),
+                                                    new LinearSlidesPID()
+                                            )
+                                    ),
+                                    trajectory10.build()
+
+                            )
+
 
                     )
+
             );
 
             Actions.runBlocking(new SpecimenPickupServos());
@@ -682,17 +721,29 @@ public class LM3_Specimen extends LinearOpMode{
             TARGET = HIGH_SPECIMEN_POS;
 
             Actions.runBlocking(
-                    new ParallelAction(
-                            new SampleScoreServos(),
-                            new LinearSlidesSampleScore2(),
-                            trajectory9.build()
+                    new SequentialAction(
+                            new ParallelAction(
+                                    new SampleScoreServos(),
+                                    new LinearSlidesSampleScore2(),
+                                    trajectory9.build()
+                            ),
+                            new Serve(),
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            new ExtendoIn(),
+                                            new ParallelAction(
+                                                    new SpecimenHoverServos(),
+                                                    new LinearSlidesPID()
+                                            )
+                                    ),
+                                    trajectory11.build()
+
+                            )
+
+
                     )
+
             );
-
-
-
-
-
 
 
 

@@ -44,7 +44,7 @@ import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
-@Autonomous
+@Autonomous (preselectTeleOp = "Drive_V2")
 public class LM3_Specimen_WallIntake extends LinearOpMode{
 
     Robot robot;
@@ -110,9 +110,22 @@ public class LM3_Specimen_WallIntake extends LinearOpMode{
 
                 robot.claw.setPosition(CLAW_CLOSED);
 
+                robot.drive.leftFront.setPower(-0.2);
+                robot.drive.rightFront.setPower(-0.2);
+                robot.drive.leftBack.setPower(-0.2);
+                robot.drive.rightBack.setPower(-0.2);
+
                 return true;
 
+
+
             } else {
+
+
+                robot.drive.leftFront.setPower(0);
+                robot.drive.rightFront.setPower(0);
+                robot.drive.leftBack.setPower(0);
+                robot.drive.rightBack.setPower(0);
 
 
                 robot.claw.setPosition(CLAW_CLOSED);
@@ -506,16 +519,16 @@ public class LM3_Specimen_WallIntake extends LinearOpMode{
         TrajectoryActionBuilder trajectory7 = robot.drive.actionBuilder(new Pose2d(15.2,-42.45,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -17.45), Math.toRadians(-120));
         TrajectoryActionBuilder trajectory8 = robot.drive.actionBuilder(new Pose2d(14.5,-17.5,Math.toRadians(0)))
-                .strafeToConstantHeading(new Vector2d(2, -37));
+                .strafeToConstantHeading(new Vector2d(2, -32));
 
 
 
-        TrajectoryActionBuilder trajectory9 = robot.drive.actionBuilder(new Pose2d(3,-37,Math.toRadians(0)))
+        TrajectoryActionBuilder trajectory9 = robot.drive.actionBuilder(new Pose2d(3,-32,Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(25, 15), Math.toRadians(0));
 
 
         TrajectoryActionBuilder trajectory10 = robot.drive.actionBuilder(new Pose2d(25,15,Math.toRadians(0)))
-                .strafeToLinearHeading(new Vector2d(2, -37), Math.toRadians(0));
+                .strafeToLinearHeading(new Vector2d(2, -32), Math.toRadians(0));
 
 
 

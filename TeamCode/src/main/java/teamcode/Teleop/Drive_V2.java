@@ -267,7 +267,7 @@ public class Drive_V2 extends LinearOpMode{
             
             //EXTENDO
 
-            if ((robot.extendo.getCurrentPosition()-extendoZeroPosition)<=23500){
+            if ((robot.extendo.getCurrentPosition()-extendoZeroPosition)<=EXTENDO_MAX_TELE){
 
 
 
