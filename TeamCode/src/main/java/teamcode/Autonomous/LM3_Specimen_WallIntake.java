@@ -1,26 +1,7 @@
 package teamcode.Autonomous;
 
 
-import static teamcode.Teleop.Singletons.Positions.CLAW_CLOSED;
-import static teamcode.Teleop.Singletons.Positions.CLAW_LESS_OPEN;
-import static teamcode.Teleop.Singletons.Positions.CLAW_OPEN;
-import static teamcode.Teleop.Singletons.Positions.HIGH_SPECIMEN_POS;
-import static teamcode.Teleop.Singletons.Positions.MOVE_AUTONOMOUS_INIT;
-import static teamcode.Teleop.Singletons.Positions.MOVE_HOVER_SAMPLE;
-import static teamcode.Teleop.Singletons.Positions.MOVE_HOVER_SPECIMEN;
-import static teamcode.Teleop.Singletons.Positions.MOVE_PICKUP_SAMPLE;
-import static teamcode.Teleop.Singletons.Positions.MOVE_PICKUP_SPECIMEN;
-import static teamcode.Teleop.Singletons.Positions.MOVE_SPECIMEN_SCORE;
-import static teamcode.Teleop.Singletons.Positions.MOVE_WALL_INTAKE;
-import static teamcode.Teleop.Singletons.Positions.PIVOT_AUTONOMOUS_INIT;
-import static teamcode.Teleop.Singletons.Positions.PIVOT_HOVER_SPECIMEN;
-import static teamcode.Teleop.Singletons.Positions.PIVOT_PICKUP_SPECIMEN;
-import static teamcode.Teleop.Singletons.Positions.PIVOT_SAMPLE_PICKUP;
-import static teamcode.Teleop.Singletons.Positions.PIVOT_SPECIMEN_SCORE;
-import static teamcode.Teleop.Singletons.Positions.PIVOT_WALL_INTAKE;
-import static teamcode.Teleop.Singletons.Positions.ROTATE_FLIP;
-import static teamcode.Teleop.Singletons.Positions.ROTATE_LM3_SPECIMEN_AUTON;
-import static teamcode.Teleop.Singletons.Positions.ROTATE_NEUTRAL;
+import static teamcode.Teleop.Singletons.Positions.*;
 
 import androidx.annotation.NonNull;
 

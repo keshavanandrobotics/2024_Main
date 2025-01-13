@@ -519,7 +519,7 @@ public class LM3_Specimen_WallIntake_Park extends LinearOpMode {
 
                 .splineTo(new Vector2d(20,0),0);
 
-        TrajectoryActionBuilder trajectory2 = robot.drive.actionBuilder(new Pose2d(18,0,0))
+        TrajectoryActionBuilder trajectory2 = robot.drive.actionBuilder(new Pose2d(20,0,0))
                 .strafeToLinearHeading(new Vector2d(13.85, -22.95), Math.toRadians(-38));
         TrajectoryActionBuilder trajectory3 = robot.drive.actionBuilder(new Pose2d(13.85,-22.95,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -27.45), Math.toRadians(-120));
