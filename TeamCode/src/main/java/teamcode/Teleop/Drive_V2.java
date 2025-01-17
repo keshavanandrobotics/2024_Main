@@ -63,6 +63,8 @@ public class Drive_V2 extends LinearOpMode{
     public double slideResetTimestamp = 0.0;
 
     public double bPressTimestamp = 0.0;
+    public double yTimestamp = 0.0;
+    public boolean yToggle = false;
     public double startPressTimestamp = 0.0;
     public double dpadDownTimestamp = 0.0;
     public double dpadUpTimestamp = 0.0;
@@ -120,6 +122,15 @@ public class Drive_V2 extends LinearOpMode{
         ButtonReader B_PRESS = new ButtonReader(
                 g2, GamepadKeys.Button.B
         );
+
+        ButtonReader Y_PRESS = new ButtonReader(
+                g2, GamepadKeys.Button.Y
+        );
+
+        ButtonReader X_PRESS = new ButtonReader(
+                g2, GamepadKeys.Button.X
+        );
+
 
         ButtonReader RIGHT_BUMPER_PRESS = new ButtonReader(
                 g2, GamepadKeys.Button.RIGHT_BUMPER
@@ -294,12 +305,12 @@ public class Drive_V2 extends LinearOpMode{
 
             }
 
-            if (gamepad2.left_bumper||gamepad2.back||gamepad2.dpad_up){
+            if (gamepad2.left_bumper||gamepad2.back||gamepad2.dpad_up||gamepad2.y||gamepad2.x){
                 extendoOut = false;
                 extendoHoldOut = false;
             }
 
-            if (gamepad2.right_bumper||gamepad2.start||gamepad2.dpad_down){
+            if (gamepad2.right_bumper||gamepad2.start||gamepad2.dpad_down||gamepad2.x||gamepad2.y){
                 extendoIn = false;
                 extendoHoldIn = false;
             }
@@ -518,7 +529,7 @@ public class Drive_V2 extends LinearOpMode{
 
             //AUTOMATION FOR DPAD DOWN --> PICKUP
 
-            if (DPAD_DOWN_PRESS.wasJustPressed()){
+            if (DPAD_DOWN_PRESS.wasJustPressed() || X_PRESS.wasJustPressed()){
 
                 target = (int) ( 0 + linearSlideZeroPosition);
                 PID_MODE = true;
@@ -527,7 +538,7 @@ public class Drive_V2 extends LinearOpMode{
                 dpadDownServoLock = false;
             }
 
-            if (DPAD_DOWN_PRESS.wasJustReleased()){
+            if (DPAD_DOWN_PRESS.wasJustReleased()||X_PRESS.wasJustReleased()){
 
                 dpadDownServoLock = true;
 
@@ -537,6 +548,8 @@ public class Drive_V2 extends LinearOpMode{
             }
 
             DPAD_DOWN_PRESS.readValue();
+
+            X_PRESS.readValue();
 
             if (dpadDownToggle){
 
@@ -583,6 +596,54 @@ public class Drive_V2 extends LinearOpMode{
 
 
 
+            }
+
+            //AUTOMATION FOR Y --> GRAB AND GO TO RELEASE POSITION
+
+
+            if (Y_PRESS.wasJustPressed()){
+
+                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+
+            }
+
+            if (Y_PRESS.wasJustReleased()){
+
+                yToggle = true;
+
+                yTimestamp = getRuntime();
+
+            }
+
+
+
+            Y_PRESS.readValue();
+
+            if (yToggle){
+
+                double automationTime = getRuntime() - yTimestamp;
+
+
+
+                if (automationTime<0.3){
+
+                    robot.claw.setPosition(CLAW_CLOSED);
+                } else if (automationTime < 1){
+
+                    robot.claw.setPosition(CLAW_CLOSED);
+
+                    robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                    robot.clawMove.setPosition(MOVE_WALL_INTAKE);
+                    robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
+                    extendoIn = true;
+                } else {
+                    extendoIn = false;
+                    extendoHoldIn = true;
+
+
+                    yToggle = false;
+                }
             }
 
             //AUTOMATION FOR DPAD UP --> GRAB SPECIMEN
