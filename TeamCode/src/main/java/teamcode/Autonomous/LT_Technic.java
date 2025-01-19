@@ -150,7 +150,7 @@ public class LT_Technic extends LinearOpMode {
             if (getRuntime() - stamp < 0.19){
                 robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+
 
                 robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
                 robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
@@ -159,7 +159,7 @@ public class LT_Technic extends LinearOpMode {
 
             } else if ( getRuntime() - stamp < 0.26){
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE );
                 robot.claw.setPosition(CLAW_CLOSED);
                 return true;
             } else {
@@ -184,7 +184,7 @@ public class LT_Technic extends LinearOpMode {
 
                 robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
                 robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
 
                 robot.claw.setPosition(CLAW_OPEN);
                 return false;
@@ -205,7 +205,7 @@ public class LT_Technic extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE +0.0275);
 
             robot.claw.setPosition(CLAW_LESS_OPEN);
             return false;
@@ -228,7 +228,7 @@ public class LT_Technic extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
 
 
             robot.claw.setPosition(CLAW_OPEN);
@@ -267,7 +267,7 @@ public class LT_Technic extends LinearOpMode {
             ticker ++;
 
 
-            if (robot.extendoEncoder.getCurrentPosition()>-500 && timer - getRuntime() < 0.25){
+            if (robot.extendoEncoder.getCurrentPosition()>-500 && timer - getRuntime() < 0.4){
 
 
                 robot.extendo.setPower(-1);
@@ -304,6 +304,27 @@ public class LT_Technic extends LinearOpMode {
 
         }
     }
+
+    public class Extra implements Action {
+
+
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+
+            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
+
+            return false;
+
+
+
+
+
+
+        }
+    }
+
 
 
     public class ExtendoInTemp implements Action {
@@ -530,14 +551,14 @@ public class LT_Technic extends LinearOpMode {
 
 
         TrajectoryActionBuilder trajectory2 = robot.drive.actionBuilder(new Pose2d(0,0,0))
-                .strafeToLinearHeading(new Vector2d(14.85, -22), Math.toRadians(-38));
-        TrajectoryActionBuilder trajectory3 = robot.drive.actionBuilder(new Pose2d(14.85,-22,Math.toRadians(-38)))
+                .strafeToLinearHeading(new Vector2d(15.15, -22), Math.toRadians(-38));
+        TrajectoryActionBuilder trajectory3 = robot.drive.actionBuilder(new Pose2d(15.15,-22,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -27.45), Math.toRadians(-120));
 
         TrajectoryActionBuilder trajectory4 = robot.drive.actionBuilder(new Pose2d(14.5,-27.45,Math.toRadians(-120)))
-                .strafeToLinearHeading(new Vector2d(16.35, -29.7), Math.toRadians(-38));
+                .strafeToLinearHeading(new Vector2d(13.45, -32.3), Math.toRadians(-38));
 
-        TrajectoryActionBuilder trajectory5 = robot.drive.actionBuilder(new Pose2d(16.35,-29.7,Math.toRadians(-38)))
+        TrajectoryActionBuilder trajectory5 = robot.drive.actionBuilder(new Pose2d(13.45,-32.3,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -22.45), Math.toRadians(-120));
 
         TrajectoryActionBuilder trajectory6 = robot.drive.actionBuilder(new Pose2d(14.5,-22.45,Math.toRadians(-120)))
@@ -599,14 +620,27 @@ public class LT_Technic extends LinearOpMode {
                             ),
                             new ParallelAction(
                                     new ServosSampleDrop(),
+                                    new Extra(),
                                     trajectory4.build()
-                            ),
+                            )
+
+                    )
+
+
+            );
+
+            sleep(300);
+
+            Actions.runBlocking(
+
+                    new SequentialAction(
                             new SequentialAction(
                                     new ServosPickupSample(),
                                     trajectory5.build()
                             ),
                             new ParallelAction(
                                     new ServosSampleDrop(),
+                                    new Extra(),
                                     trajectory6.build()
                             ),
                             new SequentialAction(
@@ -614,6 +648,7 @@ public class LT_Technic extends LinearOpMode {
                                     trajectory7.build()
                             )
                     )
+
             );
 
             Actions.runBlocking(
@@ -627,7 +662,7 @@ public class LT_Technic extends LinearOpMode {
             );
 
 
-            sleep( 80);
+            sleep( 110);
 
 
 
@@ -661,7 +696,7 @@ public class LT_Technic extends LinearOpMode {
 
             );
 
-            sleep( 80);
+            sleep( 110);
 
 
 
@@ -695,7 +730,7 @@ public class LT_Technic extends LinearOpMode {
 
             );
 
-            sleep( 80);
+            sleep( 110);
 
 
 
@@ -728,7 +763,7 @@ public class LT_Technic extends LinearOpMode {
 
             );
 
-            sleep( 80);
+            sleep( 110);
 
 
 
@@ -761,7 +796,7 @@ public class LT_Technic extends LinearOpMode {
 
             );
 
-            sleep( 80);
+            sleep( 110);
 
 
             Actions.runBlocking(new SpecimenPickupServos());

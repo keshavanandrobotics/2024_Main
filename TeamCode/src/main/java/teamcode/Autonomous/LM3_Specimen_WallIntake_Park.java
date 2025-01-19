@@ -184,7 +184,7 @@ public class LM3_Specimen_WallIntake_Park extends LinearOpMode {
 
                 robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
                 robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.025);
 
                 robot.claw.setPosition(CLAW_OPEN);
                 return false;
