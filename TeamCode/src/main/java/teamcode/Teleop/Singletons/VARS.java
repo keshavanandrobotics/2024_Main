@@ -19,7 +19,7 @@ public class VARS {
 
     public static double ROTATE_90 = 0.66;
     public static double ROTATE_FLIP = 0.94;
-    public static double ROTATE_LM3_SPECIMEN_AUTON = 0.28;
+    public static double ROTATE_LM3_SPECIMEN_AUTON = 0.3;
 
 
 

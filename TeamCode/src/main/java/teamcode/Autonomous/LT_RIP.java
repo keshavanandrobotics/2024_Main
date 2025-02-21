@@ -43,7 +43,7 @@ import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
-@Autonomous (preselectTeleOp = "Drive_V4")
+@Autonomous (preselectTeleOp = "Drive_V3")
 public class LT_RIP extends LinearOpMode {
 
     Robot robot;

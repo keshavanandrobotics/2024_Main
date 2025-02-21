@@ -45,7 +45,6 @@ import teamcode.Teleop.Singletons.MotorWeights;
 
 @Config
 @TeleOp
-@Disabled
 
 public class Drive_V3 extends LinearOpMode{
     private static MultipleTelemetry TELE;
@@ -415,14 +414,14 @@ public class Drive_V3 extends LinearOpMode{
 
             if(G1_DPAD_UP.wasJustPressed()){
                 HIGH_SPECIMEN_POS_TELE += 400;
-                target = HIGH_SPECIMEN_POS_TELE;
+                target = (int) (HIGH_SPECIMEN_POS_TELE + linearSlideZeroPosition);
                 PID_MODE = true;
             }
 
 
             if(G1_DPAD_DOWN.wasJustPressed()){
                 HIGH_SPECIMEN_POS_TELE -= 400;
-                target = HIGH_SPECIMEN_POS_TELE;
+                target = (int) (HIGH_SPECIMEN_POS_TELE + linearSlideZeroPosition);
                 PID_MODE = true;
             }
 
@@ -680,8 +679,11 @@ public class Drive_V3 extends LinearOpMode{
             }
 
             if (START_PRESS.wasJustReleased()){
-                target = HIGH_SPECIMEN_POS_TELE;
-                PID_MODE = true;
+
+                if (pickupSample) {
+                    target = (int) (HIGH_SPECIMEN_POS_TELE + linearSlideZeroPosition);
+                    PID_MODE = true;
+                }
             }
 
             START_PRESS.readValue();
@@ -691,11 +693,18 @@ public class Drive_V3 extends LinearOpMode{
 
                 if (automationTime < 0.4){
                     robot.claw.setPosition(CLAW_CLOSED);
-                } else {
+                } else if (pickupSample){
                     robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
                     robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
                     startPressToggle = false;
+                } else {
+                    robot.claw.setPosition(CLAW_OPEN);
+
+                    target = (int) linearSlideZeroPosition;
+
+                    startPressToggle = false;
+
                 }
             }
 
