@@ -128,7 +128,7 @@ public class LT_Sample4 extends LinearOpMode{
             telemetry.addData("Target", TARGET);
             telemetry.addData("pos", linearSlidePosition);
 
-            if ((Math.abs(TARGET - linearSlidePosition)<300) || linearSlidePosition > 59000 && TARGET ==HIGH_SAMPLE_POS){
+            if ((Math.abs(TARGET - linearSlidePosition)<650) || linearSlidePosition > 59000 && TARGET ==HIGH_SAMPLE_POS){
                 telemetry.addLine("Success");
                 telemetry.update();
 
@@ -438,10 +438,10 @@ public class LT_Sample4 extends LinearOpMode{
 
 
         TrajectoryActionBuilder firstSamplePickup = robot.drive.actionBuilder(new Pose2d(5, 50, Math.toRadians(-45)))
-                .strafeToLinearHeading(new Vector2d(13, 41.7), Math.toRadians(0),
+                .strafeToLinearHeading(new Vector2d(13, 42.1), Math.toRadians(0),
                         new TranslationalVelConstraint(13));
 
-        TrajectoryActionBuilder firstSampleNet = robot.drive.actionBuilder(new Pose2d(13, 41.7, 0))
+        TrajectoryActionBuilder firstSampleNet = robot.drive.actionBuilder(new Pose2d(13, 42.1, 0))
 
                 .strafeToLinearHeading(new Vector2d(9,44), Math.toRadians(-45));
 
@@ -453,19 +453,19 @@ public class LT_Sample4 extends LinearOpMode{
                         new TranslationalVelConstraint(20));
 
         TrajectoryActionBuilder secondSamplePickup = robot.drive.actionBuilder(new Pose2d(5, 50, Math.toRadians(-45)))
-                .strafeToLinearHeading(new Vector2d(12,51), Math.toRadians(0),
+                .strafeToLinearHeading(new Vector2d(13,51.7), Math.toRadians(0),
                         new TranslationalVelConstraint(13));
 
-        TrajectoryActionBuilder secondSampleNet = robot.drive.actionBuilder(new Pose2d(12 , 51, 0))
+        TrajectoryActionBuilder secondSampleNet = robot.drive.actionBuilder(new Pose2d(13 , 51.7, 0))
 
                 .strafeToLinearHeading(new Vector2d(9,44), Math.toRadians(-45));
 
 
         TrajectoryActionBuilder thirdSamplePickup = robot.drive.actionBuilder(new Pose2d(5, 50, Math.toRadians(-45)))
-                .strafeToLinearHeading(new Vector2d(35.8,37), Math.toRadians(90),
+                .strafeToLinearHeading(new Vector2d(36.8,36), Math.toRadians(90),
                         new TranslationalVelConstraint(14));
 
-        TrajectoryActionBuilder thirdSampleNet = robot.drive.actionBuilder(new Pose2d(35.8 , 37, Math.toRadians(90)))
+        TrajectoryActionBuilder thirdSampleNet = robot.drive.actionBuilder(new Pose2d(36.8 , 36, Math.toRadians(90)))
 
                 .strafeToLinearHeading(new Vector2d(9,44), Math.toRadians(-45));
 
@@ -639,6 +639,8 @@ public class LT_Sample4 extends LinearOpMode{
                     )
 
             );
+
+
 
         }
 
