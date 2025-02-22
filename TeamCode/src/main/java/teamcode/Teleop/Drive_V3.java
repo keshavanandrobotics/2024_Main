@@ -680,10 +680,9 @@ public class Drive_V3 extends LinearOpMode{
 
             if (START_PRESS.wasJustReleased()){
 
-                if (pickupSample) {
                     target = (int) (HIGH_SPECIMEN_POS_TELE + linearSlideZeroPosition);
                     PID_MODE = true;
-                }
+                
             }
 
             START_PRESS.readValue();
@@ -858,7 +857,7 @@ public class Drive_V3 extends LinearOpMode{
                 colorSensorTimer = getRuntime();
 
 
-                if (robot.claw.getPosition()> CLAW_CLOSED- 0.04){
+                if (robot.claw.getPosition()< CLAW_CLOSED+ 0.04){
 
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
                     robot.clawMove.setPosition(MOVE_WALL_INTAKE);
@@ -886,7 +885,7 @@ public class Drive_V3 extends LinearOpMode{
 
             if (Y_PRESS.wasJustReleased()){
 
-                if (robot.claw.getPosition()< CLAW_CLOSED- 0.04 &&  (pickupSample|| (getRuntime() - colorSensorTimer > 0.25))) {
+                if (robot.claw.getPosition()> CLAW_CLOSED+ 0.04 &&  (pickupSample|| (getRuntime() - colorSensorTimer > 0.25))) {
 
 
                     yToggle = true;

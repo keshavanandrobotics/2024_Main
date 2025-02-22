@@ -645,20 +645,20 @@ public class LT_RIP extends LinearOpMode {
 
 
         TrajectoryActionBuilder trajectory2 = robot.drive.actionBuilder(new Pose2d(0,0,0))
-                .strafeToLinearHeading(new Vector2d(15.9, -22.1), Math.toRadians(-38));
-        TrajectoryActionBuilder trajectory3 = robot.drive.actionBuilder(new Pose2d(15.9,-22.1,Math.toRadians(-38)))
+                .strafeToLinearHeading(new Vector2d(15.4, -21.7), Math.toRadians(-38));
+        TrajectoryActionBuilder trajectory3 = robot.drive.actionBuilder(new Pose2d(15.4,-22.7,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -27.45), Math.toRadians(-120));
 
         TrajectoryActionBuilder trajectory4 = robot.drive.actionBuilder(new Pose2d(14.5,-27.45,Math.toRadians(-120)))
-                .strafeToLinearHeading(new Vector2d(12.9, -31.9), Math.toRadians(-38));
+                .strafeToLinearHeading(new Vector2d(13, -32.5), Math.toRadians(-38));
 
-        TrajectoryActionBuilder trajectory5 = robot.drive.actionBuilder(new Pose2d(12.9,-31.9,Math.toRadians(-38)))
+        TrajectoryActionBuilder trajectory5 = robot.drive.actionBuilder(new Pose2d(13,-32.5,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -22.45), Math.toRadians(-120));
 
         TrajectoryActionBuilder trajectory6 = robot.drive.actionBuilder(new Pose2d(14.5,-22.45,Math.toRadians(-120)))
-                .strafeToLinearHeading(new Vector2d(15.4, -41.7), Math.toRadians(-38));
+                .strafeToLinearHeading(new Vector2d(15, -41.5), Math.toRadians(-38));
 
-        TrajectoryActionBuilder trajectory7 = robot.drive.actionBuilder(new Pose2d(15.4,-41.7,Math.toRadians(-38)))
+        TrajectoryActionBuilder trajectory7 = robot.drive.actionBuilder(new Pose2d(15,-41.5,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -17.45), Math.toRadians(-120));
         TrajectoryActionBuilder trajectory8 = robot.drive.actionBuilder(new Pose2d(14.5,-17.5,Math.toRadians(0)))
                 .strafeToConstantHeading(new Vector2d(4, -32));
@@ -763,7 +763,7 @@ public class LT_RIP extends LinearOpMode {
 
             );
 
-            sleep(300);
+            sleep(450);
 
             Actions.runBlocking(
 

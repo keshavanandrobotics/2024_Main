@@ -7,15 +7,13 @@ import com.acmerobotics.dashboard.config.Config;
 
 public class VARS {
 
-    public static double CLAW_CLOSED = 0.88;
+    public static double CLAW_CLOSED = 0.57;
             ;
-    public static double CLAW_LOOSE_CLOSED = 0.55;
-    public static double CLAW_OPEN = 0.69;
-    public static double CLAW_LESS_OPEN = 0.77;
+    public static double CLAW_OPEN = 0.76;
+    public static double CLAW_LESS_OPEN = 0.67;
 
     public static double ROTATE_NEUTRAL = 0.36;
 
-    public static double ROTATE_N90 = 0.12;
 
     public static double ROTATE_90 = 0.65;
     public static double ROTATE_FLIP = 0.92;
