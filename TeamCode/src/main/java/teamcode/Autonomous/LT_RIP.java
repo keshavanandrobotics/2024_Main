@@ -804,7 +804,7 @@ public class LT_RIP extends LinearOpMode {
 
             Actions.runBlocking(new ExtendoIn2());
 
-            sleep (30);
+            sleep (40);
 
 
 
@@ -846,7 +846,7 @@ public class LT_RIP extends LinearOpMode {
 
             );
 
-            sleep (30);
+            sleep (40);
 
 
 
@@ -885,7 +885,7 @@ public class LT_RIP extends LinearOpMode {
 
 
 
-            sleep (30);
+            sleep (40);
 
 
             Actions.runBlocking(new SpecimenPickupServos());
@@ -920,7 +920,7 @@ public class LT_RIP extends LinearOpMode {
             );
 
 
-            sleep (30);
+            sleep (40);
 
 
 
@@ -955,7 +955,7 @@ public class LT_RIP extends LinearOpMode {
 
             );
 
-            sleep (30);
+            sleep (40);
 
 
             Actions.runBlocking(new SpecimenPickupServos());
