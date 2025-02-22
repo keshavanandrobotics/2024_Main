@@ -217,6 +217,10 @@ public class Drive_V3 extends LinearOpMode{
                 g2, GamepadKeys.Button.DPAD_UP
         );
 
+        if (!AUTON_RED){
+            useColorSensor= false;
+        }
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -1023,9 +1027,7 @@ public class Drive_V3 extends LinearOpMode{
                 pickupSample = false;
             }
 
-            if (!AUTON_RED){
-                MOVE_HOVER_SAMPLE = 0.46;
-            }
+
 
 
 
