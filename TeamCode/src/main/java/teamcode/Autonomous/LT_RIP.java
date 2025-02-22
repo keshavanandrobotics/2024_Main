@@ -650,9 +650,9 @@ public class LT_RIP extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(14.5, -27.45), Math.toRadians(-120));
 
         TrajectoryActionBuilder trajectory4 = robot.drive.actionBuilder(new Pose2d(14.5,-27.45,Math.toRadians(-120)))
-                .strafeToLinearHeading(new Vector2d(13.4, -31.9), Math.toRadians(-38));
+                .strafeToLinearHeading(new Vector2d(13, -31.9), Math.toRadians(-38));
 
-        TrajectoryActionBuilder trajectory5 = robot.drive.actionBuilder(new Pose2d(13.4,-31.9,Math.toRadians(-38)))
+        TrajectoryActionBuilder trajectory5 = robot.drive.actionBuilder(new Pose2d(13,-31.9,Math.toRadians(-38)))
                 .strafeToLinearHeading(new Vector2d(14.5, -22.45), Math.toRadians(-120));
 
         TrajectoryActionBuilder trajectory6 = robot.drive.actionBuilder(new Pose2d(14.5,-22.45,Math.toRadians(-120)))
