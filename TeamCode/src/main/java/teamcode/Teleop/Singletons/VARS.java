@@ -48,7 +48,7 @@ public class VARS {
     public static int HIGH_SPECIMEN_POS = 17800;
 
     public static int HIGH_SPECIMEN_POS_TELE = 17800;
-    public static int AUTO_PARK_SLIDE_POS = 28000;
+    public static int AUTO_PARK_SLIDE_POS = 23000;
 
     public static int HIGH_SAMPLE_POS = 61000;
 
