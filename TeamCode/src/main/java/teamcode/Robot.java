@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
@@ -48,9 +49,18 @@ public class Robot {
 
     public Servo clawMove;
 
+    public Servo rightStabilizer;
+    public Servo leftStabilizer;
+
+    public Servo rightSpringHook;
+    public Servo leftSpringHook;
+
+
     public IMU imu;
 
     public IMU.Parameters parameters;
+
+    public VoltageSensor voltage;
 
 
 
@@ -95,6 +105,14 @@ public class Robot {
         clawMove = hardwareMap.servo.get("clawMove");
 
 
+        leftStabilizer = hardwareMap.servo.get("bottomHoldServoTwo");
+        rightStabilizer = hardwareMap.servo.get("bottomHoldServoOne");
+        leftSpringHook = hardwareMap.servo.get("hookServoTwo");
+        rightSpringHook = hardwareMap.servo.get("hookServoOne");
+
+
+
+
 
 
 
@@ -123,6 +141,7 @@ public class Robot {
 
         pin0 = hardwareMap.digitalChannel.get("digital0");
         pin1 = hardwareMap.digitalChannel.get("digital1");
+
 
 
 
