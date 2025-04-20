@@ -36,33 +36,16 @@ public class SpecimenAuton extends LinearOpMode {
 
     Robot robot;
 
-    // === Coordinate Variables ===
-    public static double X1 = 15, Y1 = -29.5;
-    public static double X2 = 55, Y2 = -21;
-    public static double X3 = 50, Y3 = -32;
-    public static double X4 = 10,  Y4 = -31;
-    public static double X5 = 50, Y5 = -42.5;
-    public static double X6 = 10,  Y6 = -41;
-    public static double X7 = 50, Y7 = -50;
-    public static double X8 = 10,  Y8 = -46;
-
-    public static double X9 = 1, Y9 = -22;
-
-    public static double X10 = 25, Y10 = 8;
 
 
 
-    // === Motion Constraint Variables ===
-    public static double MAX_VEL = 100;
-    public static double MAX_ACCEL = 90;
-    public static double MIN_ACCEL = -70;
 
-    // === Constraint Objects (built from the variables) ===
-    public static TranslationalVelConstraint VEL_CONSTRAINT = new TranslationalVelConstraint(MAX_VEL);
-    public static ProfileAccelConstraint ACCEL_CONSTRAINT = new ProfileAccelConstraint(MIN_ACCEL, MAX_ACCEL);
+    public TranslationalVelConstraint VEL_CONSTRAINT = new TranslationalVelConstraint(MAX_PUSHING_VEL);
+    public ProfileAccelConstraint ACCEL_CONSTRAINT = new ProfileAccelConstraint(-Math.abs(MAX_PUSHING_DECCEL), MAX_PUSHING_ACCEL);
 
-    public static TranslationalVelConstraint VEL_CONSTRAINT2 = new TranslationalVelConstraint(140);
-    public static ProfileAccelConstraint ACCEL_CONSTRAINT2 = new ProfileAccelConstraint(-40, 140);
+    public TranslationalVelConstraint VEL_CONSTRAINT2 = new TranslationalVelConstraint(MAX_CYCLING_VEL);
+    public ProfileAccelConstraint ACCEL_CONSTRAINT2 = new ProfileAccelConstraint(-Math.abs(MAX_CYCLING_DECCEL), MAX_CYCLING_ACCEL);
+
 
 
     public Action ExtendoPID(int position, double power, double holdPower){
@@ -352,13 +335,13 @@ public class SpecimenAuton extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(X8, Y8), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
 
         TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X8, Y8, 0))
-                .strafeToLinearHeading(new Vector2d(X9,Y9), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(X9, Y9, 0))
-                .strafeToLinearHeading(new Vector2d(X10,Y10), Math.toRadians(30),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X, WALL_GRAB_Y, 0))
+                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder secondWallGrab = robot.drive.actionBuilder(new Pose2d(X10, Y10, Math.toRadians(30)))
-                .strafeToLinearHeading(new Vector2d(X9,Y9), Math.toRadians(0),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+        TrajectoryActionBuilder subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
+                .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), Math.toRadians(0),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         while(opModeInInit()){
 
@@ -397,15 +380,15 @@ public class SpecimenAuton extends LinearOpMode {
                     new ParallelAction(
                             pushing.build(),
                             new SequentialAction(
-                                    Wait(1),
+                                    Wait(PUSHING_SERVO_ROTATE),
                                     Servos(0.501, ROTATE_FLIP, 0.501, 0.501),
-                                    Wait(1),
+                                    Wait(PUSHING_SERVO_OPEN),
                                     Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
-                                    Wait(1),
+                                    Wait(PUSHING_SERVO_PIVOT),
                                     Servos(0.501, 0.501, 0.501, PIVOT_WALL_INTAKE),
-                                    Wait(1),
+                                    Wait(PUSHING_SERVO_MOVE),
                                     Servos(0.501, 0.501, MOVE_WALL_INTAKE, 0.501),
-                                    ExtendoPID(1500, 1, 0)
+                                    ExtendoPID(EXTENDO_INITIAL_HUMAN_PLAYER, 1, 0)
                             )
 
                     )
@@ -417,17 +400,17 @@ public class SpecimenAuton extends LinearOpMode {
 
                 Actions.runBlocking(
                         new SequentialAction(
-                                Wait(0.22),
-                                ExtendoPID(300, 1, 1),
+                                Wait(HUMAN_PLAYER_WAIT),
+                                ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
                                 Servos(CLAW_CLOSED, 0.501, 0.501, .501),
-                                Wait(0.25),
+                                Wait(CLAW_CLOSE_TIME),
                                 new ParallelAction(
                                         firstScore.build(),
                                         Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
                                         LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
                                         new SequentialAction(
-                                                Wait(1),
-                                                ExtendoPID(5000, 1, 1)
+                                                Wait(EXTENDO_OUT_WAIT),
+                                                ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1)
                                         )
 
                                 )
@@ -437,11 +420,11 @@ public class SpecimenAuton extends LinearOpMode {
                 Actions.runBlocking(
                         new ParallelAction(
                                 Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
-                                secondWallGrab.build(),
+                                subsequentWallGrabs.build(),
                                 new SequentialAction(
-                                        ExtendoPID(2500, 1, 0),
+                                        ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
                                         new ParallelAction(
-                                                LinearSlidePID(500, -0.12),
+                                                LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
                                                 Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
 
                                         )
