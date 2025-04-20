@@ -31,7 +31,6 @@ import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -1062,7 +1061,7 @@ public class Drive_V3 extends LinearOpMode{
                     target = (int) (HANG_4+ linearSlideZeroPosition);
                     PID_MODE = true;
                 }
-                else if (time < 6.5 ){
+                else if (time < 7 ){
                     extendoIn = true;
 
                 }
