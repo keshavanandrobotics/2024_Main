@@ -402,6 +402,7 @@ public class SpecimenAuton extends LinearOpMode {
                         new SequentialAction(
                                 Wait(HUMAN_PLAYER_WAIT),
                                 ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
+                                Wait(EXTENDO_IN_WAIT),
                                 Servos(CLAW_CLOSED, 0.501, 0.501, .501),
                                 Wait(CLAW_CLOSE_TIME),
                                 new ParallelAction(
@@ -418,18 +419,23 @@ public class SpecimenAuton extends LinearOpMode {
                 );
 
                 Actions.runBlocking(
-                        new ParallelAction(
+                        new SequentialAction(
                                 Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
-                                subsequentWallGrabs.build(),
-                                new SequentialAction(
-                                        ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
-                                        new ParallelAction(
-                                                LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
-                                                Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
+                                Wait(CLAW_OPEN_TIME),
+                                new ParallelAction(
+                                        subsequentWallGrabs.build(),
+                                        new SequentialAction(
+                                                ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
+                                                new ParallelAction(
+                                                        LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
+                                                        Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
 
+                                                )
                                         )
                                 )
+
                         )
+
 
                 );
             }
