@@ -377,7 +377,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(WALL_GRAB_X1, WALL_GRAB_Y1), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
 
-        TrajectoryActionBuilder secondpushing = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING))
+        TrajectoryActionBuilder secondpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2))
                 .setReversed(false)
 
                 .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
@@ -388,9 +388,8 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(WALL_GRAB_X2, WALL_GRAB_Y2), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
 
-        TrajectoryActionBuilder thirdpushing = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING))
+        TrajectoryActionBuilder thirdpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
                 .setReversed(false)
-                .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
                 .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                 .splineToConstantHeading(new Vector2d(X7, Y7), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
@@ -399,10 +398,12 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
 
 
         TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X1, WALL_GRAB_Y1, 0))
-                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
+                .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder secondScore = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X2, WALL_GRAB_Y2, 0))
                 .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder thirdScore = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X3, WALL_GRAB_Y3, 0))
                 .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
@@ -483,30 +484,26 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
 
                                                 (i == 0 ? Wait(EXTENDO_OUT_WAIT1) : i == 1 ? Wait(EXTENDO_OUT_WAIT2) : i == 2 ? Wait(EXTENDO_OUT_WAIT3) : Wait(EXTENDO_OUT_WAIT)),
 
-                                                ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1)
-                                        )
-                                )
-                        )
-                );
-
-                Actions.runBlocking(
-                        new SequentialAction(
-                                Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
-                                Wait(CLAW_OPEN_TIME),
-                                new ParallelAction(
-                                        (i == 0 ? secondpushing.build() : (i == 1 ? thirdpushing.build() : subsequentWallGrabs.build())),
-
-                                        new SequentialAction(
-                                                ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
+                                                ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1),
+                                                Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
+                                                Wait(CLAW_OPEN_TIME)
                                                 new ParallelAction(
-                                                        LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
-                                                        Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
+                                                    (i == 0 ? secondpushing.build() : (i == 1 ? thirdpushing.build() : subsequentWallGrabs.build())),
 
+                                                    new SequentialAction(
+                                                        ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
+                                                        new ParallelAction(
+                                                            LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
+                                                            Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
+                                                        )
+                                                    )
                                                 )
                                         )
                                 )
                         )
-                );
+                )
+
+
             }
 
 
