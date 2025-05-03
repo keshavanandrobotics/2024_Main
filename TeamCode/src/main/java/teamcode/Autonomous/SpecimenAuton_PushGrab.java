@@ -110,7 +110,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
 
         return new Action() {
 
-            int pos = position;
+            final int pos = position;
 
             int ticker = 1;
 
