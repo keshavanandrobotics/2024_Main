@@ -400,7 +400,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder secondScore = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X2, WALL_GRAB_Y2, 0))
-                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
                 .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder thirdScore = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X3, WALL_GRAB_Y3, 0))
