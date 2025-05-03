@@ -486,7 +486,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
 
                                                 ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1),
                                                 Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
-                                                Wait(CLAW_OPEN_TIME)
+                                                Wait(CLAW_OPEN_TIME);
                                                 new ParallelAction(
                                                     (i == 0 ? secondpushing.build() : (i == 1 ? thirdpushing.build() : subsequentWallGrabs.build())),
 
