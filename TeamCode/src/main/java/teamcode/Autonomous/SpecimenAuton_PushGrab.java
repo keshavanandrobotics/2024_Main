@@ -380,7 +380,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
         TrajectoryActionBuilder secondpushing = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING))
                 .setReversed(false)
 
-                .splineToConstantHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
+                .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
 
                 .splineToConstantHeading(new Vector2d(X3, Y3), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                 .splineToConstantHeading(new Vector2d(X5, Y5), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
@@ -390,7 +390,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
 
         TrajectoryActionBuilder thirdpushing = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING))
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
+                .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
                 .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                 .splineToConstantHeading(new Vector2d(X7, Y7), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
