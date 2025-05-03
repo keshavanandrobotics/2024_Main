@@ -379,9 +379,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
 
         TrajectoryActionBuilder secondpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1, 0))
                 .setReversed(false)
-
-                .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
-
+                
                 .splineToConstantHeading(new Vector2d(X3, Y3), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                 .splineToConstantHeading(new Vector2d(X5, Y5), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
