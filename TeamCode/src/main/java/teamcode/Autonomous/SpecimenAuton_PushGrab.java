@@ -386,7 +386,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(WALL_GRAB_X2, WALL_GRAB_Y2), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
 
-        TrajectoryActionBuilder thirdpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1, 0)
+        TrajectoryActionBuilder thirdpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1, 0))
                 .setReversed(false)
 
                 .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
