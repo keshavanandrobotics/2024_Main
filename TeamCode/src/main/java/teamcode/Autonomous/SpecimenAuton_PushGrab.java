@@ -377,7 +377,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(WALL_GRAB_X1, WALL_GRAB_Y1), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
 
-        TrajectoryActionBuilder secondpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2))
+        TrajectoryActionBuilder secondpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1, 0))
                 .setReversed(false)
 
                 .strafeToLinearHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
@@ -388,7 +388,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(WALL_GRAB_X2, WALL_GRAB_Y2), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
 
-        TrajectoryActionBuilder thirdpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
+        TrajectoryActionBuilder thirdpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1, 0)
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                 .splineToConstantHeading(new Vector2d(X7, Y7), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
@@ -497,7 +497,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
                                                             Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
                                                         )
                                                     )
-                                                )
+                                                );
                                         )
                                 )
                         )
