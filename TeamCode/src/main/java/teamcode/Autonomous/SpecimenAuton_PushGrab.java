@@ -366,7 +366,7 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
 
-        //Trajectories
+        //Trajectories - fix
 
 
         TrajectoryActionBuilder firstpushing = robot.drive.actionBuilder(AUTON_START_POSE)
