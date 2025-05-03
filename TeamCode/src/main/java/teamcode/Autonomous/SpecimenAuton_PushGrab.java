@@ -388,10 +388,11 @@ public class SpecimenAuton_PushGrab extends LinearOpMode {
 
         TrajectoryActionBuilder thirdpushing = robot.drive.actionBuilder(new Pose2d(X1, Y1, 0)
                 .setReversed(false)
+
                 .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
                 .splineToConstantHeading(new Vector2d(X7, Y7), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
-                .setReversed(true),
+                .setReversed(true)
                 .splineToConstantHeading(new Vector2d(WALL_GRAB_X3, WALL_GRAB_Y3), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
 
         TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X1, WALL_GRAB_Y1, 0))
