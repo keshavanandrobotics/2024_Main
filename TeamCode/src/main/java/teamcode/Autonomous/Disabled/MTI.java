@@ -1,4 +1,4 @@
-package teamcode.Autonomous;
+package teamcode.Autonomous.Disabled;
 
 
 import static teamcode.Teleop.Singletons.VARS.AUTON_RED;
@@ -6,7 +6,6 @@ import static teamcode.Teleop.Singletons.VARS.CLAW_CLOSED;
 import static teamcode.Teleop.Singletons.VARS.CLAW_LESS_OPEN;
 import static teamcode.Teleop.Singletons.VARS.CLAW_OPEN;
 import static teamcode.Teleop.Singletons.VARS.HIGH_SPECIMEN_POS;
-import static teamcode.Teleop.Singletons.VARS.MOVE_ALL_OUT;
 import static teamcode.Teleop.Singletons.VARS.MOVE_AUTONOMOUS_INIT;
 import static teamcode.Teleop.Singletons.VARS.MOVE_AUTON_DRAG;
 import static teamcode.Teleop.Singletons.VARS.MOVE_AUTON_HOVER;
@@ -43,14 +42,15 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import kotlin.ranges.OpenEndRange;
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
+@Disabled
 @Autonomous (preselectTeleOp = "Drive_V3")
 public class MTI extends LinearOpMode {
 

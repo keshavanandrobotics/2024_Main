@@ -1,6 +1,6 @@
 package teamcode.Teleop;
 
-import static teamcode.Autonomous.Poses.AUTON_END_POSE;
+import static teamcode.Autonomous.Disabled.Poses.AUTON_END_POSE;
 import static teamcode.Teleop.Singletons.VARS.*;
 import static teamcode.Teleop.Singletons.VARS.CLAW_CLOSED;
 import static teamcode.Teleop.Singletons.VARS.CLAW_LESS_OPEN;

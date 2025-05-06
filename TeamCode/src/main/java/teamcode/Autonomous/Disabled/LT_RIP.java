@@ -1,4 +1,4 @@
-package teamcode.Autonomous;
+package teamcode.Autonomous.Disabled;
 
 
 import static teamcode.Teleop.Singletons.VARS.AUTON_RED;
@@ -36,6 +36,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -43,6 +44,7 @@ import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
+@Disabled
 @Autonomous (preselectTeleOp = "Drive_V3")
 public class LT_RIP extends LinearOpMode {
 

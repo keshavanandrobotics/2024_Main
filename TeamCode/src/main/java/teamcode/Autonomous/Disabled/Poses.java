@@ -1,9 +1,6 @@
-package teamcode.Autonomous;
+package teamcode.Autonomous.Disabled;
 
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
-
-import static teamcode.Autonomous.SPEC_AUTO_VARS.*;
 
 
 public class Poses {

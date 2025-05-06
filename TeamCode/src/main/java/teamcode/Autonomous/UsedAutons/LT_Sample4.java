@@ -1,4 +1,4 @@
-package teamcode.Autonomous;
+package teamcode.Autonomous.UsedAutons;
 
 
 import static teamcode.Teleop.Singletons.VARS.AUTO_PARK_SLIDE_POS;
@@ -6,7 +6,6 @@ import static teamcode.Teleop.Singletons.VARS.CLAW_CLOSED;
 import static teamcode.Teleop.Singletons.VARS.CLAW_OPEN;
 import static teamcode.Teleop.Singletons.VARS.EXTENDO_MAX_TELE;
 import static teamcode.Teleop.Singletons.VARS.HIGH_SAMPLE_POS;
-import static teamcode.Teleop.Singletons.VARS.HIGH_SPECIMEN_POS;
 import static teamcode.Teleop.Singletons.VARS.MOVE_ALL_OUT;
 import static teamcode.Teleop.Singletons.VARS.MOVE_AUTONOMOUS_INIT;
 import static teamcode.Teleop.Singletons.VARS.MOVE_HOVER_SAMPLE;
