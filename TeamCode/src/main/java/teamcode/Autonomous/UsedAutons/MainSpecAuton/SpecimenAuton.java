@@ -416,6 +416,7 @@ public class SpecimenAuton extends LinearOpMode {
                         )
                 );
 
+
                 Actions.runBlocking(
                         new SequentialAction(
                                 Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
