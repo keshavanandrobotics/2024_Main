@@ -69,6 +69,7 @@ public class Drive_V3 extends LinearOpMode{
     public double dpadDownTimestamp = 0.0;
     public double dpadUpTimestamp = 0.0;
     public double backPressTimestamp = 0.0;
+    public double limitSwitchTimestamp = 0.0;
 
 
     public double offset = 0.0;
@@ -645,9 +646,10 @@ public class Drive_V3 extends LinearOpMode{
 
             //AUTOMATION FOR START --> EXTEND TO SCORE FROM WALL
 
-            if (specIn && START_PRESS.isDown()){
+            if (specIn && holdSpec){
                 startPressTimestamp = getRuntime();
-                holdSpec = true;
+                specIn = false;
+                startPressToggle = true;
             }
 
             if (START_PRESS.wasJustReleased()){
@@ -660,12 +662,10 @@ public class Drive_V3 extends LinearOpMode{
             START_PRESS.readValue();
 
             if (startPressToggle){
-
-                if (holdSpec){
+                double automationTime = getRuntime() - startPressTimestamp;
+                if (automationTime < 0.25){
                     robot.claw.setPosition(CLAW_CLOSED);
-                    holdSpec = false;
-                    startPressToggle = true;
-                } else if (specIn){
+                } else if (holdSpec){
                     robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
                     robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
@@ -986,10 +986,14 @@ public class Drive_V3 extends LinearOpMode{
             }
 
             if (!robot.pin00.getState() || !robot.pin01.getState()){
-                specIn = true;
+                holdSpec = true;
+                if (getRuntime() - limitSwitchTimestamp < 0.1){
+                    specIn = true;
+                }
             } else if (robot.pin00.getState() && robot.pin01.getState()){
-                specIn = false;
                 holdSpec = false;
+                specIn = false;
+                limitSwitchTimestamp = getRuntime();
             }
 
             //L3 HANG
