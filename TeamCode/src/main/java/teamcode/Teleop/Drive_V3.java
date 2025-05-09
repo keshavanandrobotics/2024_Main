@@ -82,6 +82,8 @@ public class Drive_V3 extends LinearOpMode{
     public boolean useColorSensor = true;
 
     public boolean pickupSample = false;
+    public boolean specIn = false;
+    public boolean holdSpec = false;
 
     public double colorSensorTimer = 0.0;
     public boolean extendoOut = false;
@@ -643,9 +645,9 @@ public class Drive_V3 extends LinearOpMode{
 
             //AUTOMATION FOR START --> EXTEND TO SCORE FROM WALL
 
-            if (!robot.pin00.getState() || !robot.pin01.getState()){
-                startPressToggle = true;
+            if (specIn && START_PRESS.isDown()){
                 startPressTimestamp = getRuntime();
+                holdSpec = true;
             }
 
             if (START_PRESS.wasJustReleased()){
@@ -658,11 +660,12 @@ public class Drive_V3 extends LinearOpMode{
             START_PRESS.readValue();
 
             if (startPressToggle){
-                double automationTime = getRuntime() - startPressTimestamp;
 
-                if (automationTime < 0.4){
+                if (holdSpec){
                     robot.claw.setPosition(CLAW_CLOSED);
-                } else if (pickupSample){
+                    holdSpec = false;
+                    startPressToggle = true;
+                } else if (specIn){
                     robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
                     robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
@@ -980,6 +983,13 @@ public class Drive_V3 extends LinearOpMode{
                 pickupSample = true;
             } else {
                 pickupSample = robot.pin00.getState() && !robot.pin01.getState() && !AUTON_RED;
+            }
+
+            if (!robot.pin00.getState() || !robot.pin01.getState()){
+                specIn = true;
+            } else if (robot.pin00.getState() && robot.pin01.getState()){
+                specIn = false;
+                holdSpec = false;
             }
 
             //L3 HANG

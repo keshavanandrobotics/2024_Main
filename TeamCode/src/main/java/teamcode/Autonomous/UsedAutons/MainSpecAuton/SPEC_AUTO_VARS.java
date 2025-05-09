@@ -26,6 +26,7 @@ public class SPEC_AUTO_VARS {
     public static double WALL_GRAB_X = 1, WALL_GRAB_Y = -22; //SPOT FOR HUMAN PLAYER GRAB
 
     public static double SPEC_SCORE_X = 25, SPEC_SCORE_Y = 8, SPEC_SCORE_HEADING = 30; //SPOT FOR SCORING
+    public static double RETRY_SPEC_X = 15, RETRY_SPEC_Y = -22; // SPOT TO MOVE TO IF FAILED SPEC
 
     //Trajectory Speeds - SHOULD NOT NEED EDITING
 
