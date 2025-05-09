@@ -10,22 +10,20 @@ public class SPEC_AUTO_VARS {
 
     //PUSHING WAYPOINTS - CHRONOLOGICAL
 
-    public static double X1 = 15, Y1 = -27; //INITIAL DIAGONAL STRAFE
-    public static double X2 = 55, Y2 = -27; //GOING PAST THE FIRST SPEC
+    public static double X1 = 15, Y1 = -25; //INITIAL DIAGONAL STRAFE
+    public static double X2 = 55, Y2 = -25; //GOING PAST THE FIRST SPEC
     public static double X3 = 45, Y3 = -32; //STRAFING BEHIND THE FIRST SPEC
     public static double X4 = 10,  Y4 = -31; //BRING FIRST SPEC TO HUMAN PLAYER
     public static double X5 = 45, Y5 = -42.5; //GOING BACK AND BEHIND 2ND SPEC
     public static double X6 = 10,  Y6 = -41; //DRAGGING 2ND SPEC TO HUMAN PLAYER
-    public static double X7 = 45, Y7 = -50; //GOING BACK AND BEHING 3RD SPEC
-    public static double X8 = 10,  Y8 = -46; // DRAGGING 3RD SPEC TO HUMAN PLAER
+    public static double X7 = 45, Y7 = -50; //GOING BACK AND BEHIND 3RD SPEC
+    public static double X8 = 1,  Y8 = -46; // DRAGGING 3RD SPEC TO HUMAN PLAYER
+    public static double X9 = 3, Y9 = -22; // GETTING READY TO SCORE FIRST SPEC
 
     //Cycling Coordinates
 
 
     public static double WALL_GRAB_X = 1, WALL_GRAB_Y = -22; //SPOT FOR HUMAN PLAYER GRAB
-    public static double WALL_GRAB_X1 = 1, WALL_GRAB_Y1 = -32; // FIRST SPOT FOR HUMAN PLAYER GRAB
-    public static double WALL_GRAB_X2 = 1, WALL_GRAB_Y2 = -42.5; // SECOND SPOT FOR HUMAN PLAYER GRAB
-    public static double WALL_GRAB_X3 = 1, WALL_GRAB_Y3 = -50; // THIRD SPOT FOR HUMAN PLAYER GRAB
 
     public static double SPEC_SCORE_X = 25, SPEC_SCORE_Y = 8, SPEC_SCORE_HEADING = 30; //SPOT FOR SCORING
 
@@ -54,9 +52,6 @@ public class SPEC_AUTO_VARS {
     public static double CLAW_OPEN_TIME = 0.1; //TIME THAT CLAW OPENS FOR WHEN SCORING SPEC
 
     public static double EXTENDO_OUT_WAIT = 1; //WAIT TIME FOR EXTENDO TO GO OUT WHILE SCORING
-    public static double EXTENDO_OUT_WAIT1 = 1; //WAIT TIME FOR EXTENDO TO GO OUT WHILE SCORING FIRST SPEC
-    public static double EXTENDO_OUT_WAIT2 = 1; // WAIT TIME FOR EXTENDO TO GO OUT WHILE SCORING SECOND SPEC
-    public static double EXTENDO_OUT_WAIT3 = 1; //WAIT TIME FOR EXTENDO TO GO OUT WHILE SCORING THIRD SPEC
 
     public static double EXTENDO_IN_WAIT = 0.1;
 
@@ -71,7 +66,6 @@ public class SPEC_AUTO_VARS {
     public static int EXTENDO_CYCLE_HUMAN_PLAYER = 5000; //POSITION BEFORE EXTENDO GOES IN AND GRABS 2-5 SPEC
 
     public static int LINEAR_SLIDE_LOWER_THRESHOLD = 500; //SHOULD NOT NEED EDITING, POSITION WHERE LINEAR SLIDE LOWERING ACTION ENDS
-    public static int FIRST_HIGH_SPECIMEN_POS = 26000; //FIRST AUTO SPECIMEN POSITION
 
 
 

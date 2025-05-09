@@ -333,9 +333,9 @@ public class SpecimenAuton extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(X8, Y8), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
 
         TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X8, Y8, 0))
-                .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(X9, Y9), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X, WALL_GRAB_Y, 0))
+        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(X9, Y9, 0))
                 .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
@@ -392,9 +392,9 @@ public class SpecimenAuton extends LinearOpMode {
                     )
             );
 
-            Actions.runBlocking(firstWallGrab.build());
+            //Actions.runBlocking(firstWallGrab.build());
 
-            for (int i = 0; i<5; i++) {
+            for (int i = 0; i<100; i++) {
 
                 Actions.runBlocking(
                         new SequentialAction(
@@ -404,6 +404,7 @@ public class SpecimenAuton extends LinearOpMode {
                                 Servos(CLAW_CLOSED, 0.501, 0.501, .501),
                                 Wait(CLAW_CLOSE_TIME),
                                 new ParallelAction(
+                                        firstWallGrab.build(),
                                         firstScore.build(),
                                         Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
                                         LinearSlidePID(i == 0 ? FIRST_HIGH_SPECIMEN_POS : HIGH_SPECIMEN_POS, 0.12),
