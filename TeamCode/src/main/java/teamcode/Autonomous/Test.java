@@ -47,7 +47,7 @@ public class Test extends LinearOpMode {
 
             while(robot.extendo.getPower()>0.1) {
 
-                if (!robot.pin0.getState() && robot.pin1.getState()) {
+                if (!robot.pin00.getState() && robot.pin01.getState()) {
                     robot.extendo.setPower(0);
                 }
 

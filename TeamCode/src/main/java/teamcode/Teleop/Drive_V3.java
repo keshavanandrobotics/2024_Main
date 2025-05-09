@@ -2,26 +2,6 @@ package teamcode.Teleop;
 
 import static teamcode.Autonomous.Disabled.Poses.AUTON_END_POSE;
 import static teamcode.Teleop.Singletons.VARS.*;
-import static teamcode.Teleop.Singletons.VARS.CLAW_CLOSED;
-import static teamcode.Teleop.Singletons.VARS.CLAW_LESS_OPEN;
-import static teamcode.Teleop.Singletons.VARS.CLAW_OPEN;
-import static teamcode.Teleop.Singletons.VARS.EXTENDO_MAX_TELE;
-import static teamcode.Teleop.Singletons.VARS.HIGH_SAMPLE_POS;
-import static teamcode.Teleop.Singletons.VARS.HIGH_SPECIMEN_POS_TELE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_ALL_OUT;
-import static teamcode.Teleop.Singletons.VARS.MOVE_HOVER_SAMPLE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_OUTTAKE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_PICKUP_SAMPLE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_SPECIMEN_SCORE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_WALL_INTAKE;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_ALL_OUT;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_OUTTAKE;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_SAMPLE_PICKUP;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_SPECIMEN_SCORE;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_WALL_INTAKE;
-import static teamcode.Teleop.Singletons.VARS.ROTATE_FLIP;
-import static teamcode.Teleop.Singletons.VARS.ROTATE_NEUTRAL;
-import static teamcode.Teleop.Singletons.VARS.USING_LIMELIGHT;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -663,7 +643,7 @@ public class Drive_V3 extends LinearOpMode{
 
             //AUTOMATION FOR START --> EXTEND TO SCORE FROM WALL
 
-            if (START_PRESS.wasJustPressed()){
+            if (!robot.pin00.getState() || !robot.pin01.getState()){
                 startPressToggle = true;
                 startPressTimestamp = getRuntime();
             }
@@ -898,16 +878,7 @@ public class Drive_V3 extends LinearOpMode{
 
                 double automationTime = getRuntime() - yTimestamp;
 
-
-
-
-
                 if (automationTime<0.3){
-
-
-
-
-
                     robot.claw.setPosition(CLAW_CLOSED);
                 } else if (automationTime < 0.95){
 
@@ -1003,14 +974,12 @@ public class Drive_V3 extends LinearOpMode{
 
             if (!useColorSensor){
                 pickupSample = true;
-            } else if (robot.pin0.getState() &&  robot.pin1.getState() && !SPEC_MODE){
+            } else if (robot.pin00.getState() &&  robot.pin01.getState() && !SPEC_MODE){
                 pickupSample = true;
-            } else if (!robot.pin0.getState()&& robot.pin1.getState() && AUTON_RED ){
-                pickupSample = true;
-            }else if (robot.pin0.getState()&& !robot.pin1.getState() && !AUTON_RED ){
+            } else if (!robot.pin00.getState()&& robot.pin01.getState() && AUTON_RED ){
                 pickupSample = true;
             } else {
-                pickupSample = false;
+                pickupSample = robot.pin00.getState() && !robot.pin01.getState() && !AUTON_RED;
             }
 
             //L3 HANG
@@ -1109,8 +1078,10 @@ public class Drive_V3 extends LinearOpMode{
 
             TELE.addData("heading", Math.toDegrees(robot.drive.pose.heading.toDouble()));
 
-            TELE.addData("pin0", robot.pin0.getState());
-            TELE.addData("pin1", robot.pin1.getState());
+            TELE.addData("pin00", robot.pin00.getState());
+            TELE.addData("pin01", robot.pin01.getState());
+            TELE.addData("pin10", robot.pin10.getState());
+            TELE.addData("pin11", robot.pin11.getState());
 
 
 

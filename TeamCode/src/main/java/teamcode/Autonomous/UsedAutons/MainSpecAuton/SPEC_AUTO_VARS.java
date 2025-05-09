@@ -10,14 +10,15 @@ public class SPEC_AUTO_VARS {
 
     //PUSHING WAYPOINTS - CHRONOLOGICAL
 
-    public static double X1 = 15, Y1 = -27; //INITIAL DIAGONAL STRAFE
-    public static double X2 = 55, Y2 = -21; //GOING PAST THE FIRST SPEC
-    public static double X3 = 47, Y3 = -32; //STRAFING BEHIND THE FIRST SPEC
-    public static double X4 = 6,  Y4 = -31; //BRING FIRST SPEC TO HUMAN PLAYER
-    public static double X5 = 47, Y5 = -42.5; //GOING BACK AND BEHIND 2ND SPEC
-    public static double X6 = 6,  Y6 = -41; //DRAGGING 2ND SPEC TO HUMAN PLAYER
-    public static double X7 = 47, Y7 = -50; //GOING BACK AND BEHING 3RD SPEC
-    public static double X8 = 6,  Y8 = -46; // DRAGGING 3RD SPEC TO HUMAN PLAER
+    public static double X1 = 15, Y1 = -25; //INITIAL DIAGONAL STRAFE
+    public static double X2 = 55, Y2 = -25; //GOING PAST THE FIRST SPEC
+    public static double X3 = 45, Y3 = -32; //STRAFING BEHIND THE FIRST SPEC
+    public static double X4 = 10,  Y4 = -31; //BRING FIRST SPEC TO HUMAN PLAYER
+    public static double X5 = 45, Y5 = -42.5; //GOING BACK AND BEHIND 2ND SPEC
+    public static double X6 = 10,  Y6 = -41; //DRAGGING 2ND SPEC TO HUMAN PLAYER
+    public static double X7 = 45, Y7 = -50; //GOING BACK AND BEHIND 3RD SPEC
+    public static double X8 = 1,  Y8 = -46; // DRAGGING 3RD SPEC TO HUMAN PLAYER
+    public static double X9 = 3, Y9 = -22; // GETTING READY TO SCORE FIRST SPEC
 
     //Cycling Coordinates
 
@@ -29,8 +30,8 @@ public class SPEC_AUTO_VARS {
     //Trajectory Speeds - SHOULD NOT NEED EDITING
 
     //SPEEDS FOR THE PUSHING PATHS
-    public static double MAX_PUSHING_VEL = 100;
-    public static double MAX_PUSHING_ACCEL = 90;
+    public static double MAX_PUSHING_VEL = 140;
+    public static double MAX_PUSHING_ACCEL = 140;
     public static double MAX_PUSHING_DECCEL = 70; //Only input positive number
 
     //SPEEDS FOR THE SCORING AND CYCLING PATHS

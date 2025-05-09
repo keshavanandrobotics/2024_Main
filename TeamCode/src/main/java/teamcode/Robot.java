@@ -32,9 +32,11 @@ public class Robot {
 
     public Limelight3A limelight;
 
-    public DigitalChannel pin0;
+    public DigitalChannel pin00;
 
-    public DigitalChannel pin1;
+    public DigitalChannel pin01;
+    public DigitalChannel pin10;
+    public DigitalChannel pin11;
 
     public DcMotorEx leftPod;
     public DcMotorEx rightPod;
@@ -139,8 +141,10 @@ public class Robot {
 
         }
 
-        pin0 = hardwareMap.digitalChannel.get("digital0");
-        pin1 = hardwareMap.digitalChannel.get("digital1");
+        pin00 = hardwareMap.digitalChannel.get("digital0_0");
+        pin01 = hardwareMap.digitalChannel.get("digital0_1");
+        pin10 = hardwareMap.digitalChannel.get("digital1_0");
+        pin11 = hardwareMap.digitalChannel.get("digital1_1");
 
 
 
