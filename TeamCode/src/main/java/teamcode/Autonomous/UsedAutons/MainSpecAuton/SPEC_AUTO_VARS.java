@@ -17,8 +17,9 @@ public class SPEC_AUTO_VARS {
     public static double X5 = 45, Y5 = -42.5; //GOING BACK AND BEHIND 2ND SPEC
     public static double X6 = 10,  Y6 = -41; //DRAGGING 2ND SPEC TO HUMAN PLAYER
     public static double X7 = 45, Y7 = -50; //GOING BACK AND BEHIND 3RD SPEC
-    public static double X8 = 1,  Y8 = -46; // DRAGGING 3RD SPEC TO HUMAN PLAYER
-    public static double X9 = 3, Y9 = -22; // GETTING READY TO SCORE FIRST SPEC
+    public static double X8 = 10,  Y8 = -46; // DRAGGING 3RD SPEC TO HUMAN PLAYER
+    public static double X9 = 1, Y9 = -42; // PICKING UP FIRST SPEC
+    public static double X10 = 5, Y10 = -17; // GETTING READY TO SCORE FIRST SPEC
 
     //Cycling Coordinates
 
@@ -33,7 +34,7 @@ public class SPEC_AUTO_VARS {
     //SPEEDS FOR THE PUSHING PATHS
     public static double MAX_PUSHING_VEL = 140;
     public static double MAX_PUSHING_ACCEL = 140;
-    public static double MAX_PUSHING_DECCEL = 70; //Only input positive number
+    public static double MAX_PUSHING_DECCEL = 80; //Only input positive number
 
     //SPEEDS FOR THE SCORING AND CYCLING PATHS
 
@@ -55,6 +56,7 @@ public class SPEC_AUTO_VARS {
     public static double EXTENDO_OUT_WAIT = 1; //WAIT TIME FOR EXTENDO TO GO OUT WHILE SCORING
 
     public static double EXTENDO_IN_WAIT = 0.1;
+    public static double LINEAR_SLIDE_UP = 0.8; // WAIT TIME FOR LINEAR SIDES TO GO UP
 
     //PID POSITIONS
 
