@@ -678,7 +678,7 @@ public class Drive_V3 extends LinearOpMode{
 
 
             }
-            G1_LEFT_BUMPER.readValue();
+            G1_RIGHT_BUMPER.readValue();
 
             BACK_PRESS.readValue();
 
