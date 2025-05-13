@@ -27,7 +27,7 @@ public class VARS {
 
 
 
-    public static double MOVE_WALL_INTAKE = 0.8;
+    public static double MOVE_WALL_INTAKE = 0.85;
 
 
     public static double MOVE_OUTTAKE = 0.8;

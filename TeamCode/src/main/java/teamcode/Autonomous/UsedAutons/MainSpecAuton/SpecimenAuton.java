@@ -337,9 +337,9 @@ public class SpecimenAuton extends LinearOpMode {
                 //.strafeToLinearHeading(new Vector2d(X9, Y9), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X8, Y8, 0))
-                .strafeToLinearHeading(new Vector2d(WALL_GRAB_X, WALL_GRAB_Y), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(X10, Y10, 0))
+        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y, 0))
                 .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
@@ -422,7 +422,7 @@ public class SpecimenAuton extends LinearOpMode {
 
             Actions.runBlocking(
                             new ParallelAction(
-                                    subsequentScores.build(),
+                                    firstScore.build(),
                                     Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
                                     LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
                                     new SequentialAction(
