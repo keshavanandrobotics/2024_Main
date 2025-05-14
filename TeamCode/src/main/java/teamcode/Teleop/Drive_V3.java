@@ -989,34 +989,33 @@ public class Drive_V3 extends LinearOpMode{
                     HANG_1_TARGET = false;
                     target = (int) (HANG_2 + linearSlideZeroPosition);
                     PID_MODE = true;
-                } else if (linearSlidePosition < HANG_2 + linearSlideZeroPosition){
+                } else if (HANG_2_TARGET){
                     HANG_2_TARGET = false;
                     PID_MODE = false;
                     robot.rightSpringHook.setPosition(RIGHT_SPRING_ON);
                     robot.leftSpringHook.setPosition(LEFT_SPRING_ON);
                 }
-                else if (linearSlidePosition < HANG_3 + linearSlideZeroPosition && HANG_3_TARGET){
+                else if (time > 2.5 && linearSlidePosition < HANG_3 + linearSlideZeroPosition && HANG_3_TARGET){
 
-                    target = (int) (HANG_3+ linearSlideZeroPosition);
+                    target = (int) (HANG_3 + linearSlideZeroPosition);
                     robot.leftSpringHook.setPosition(LEFT_SPRING_IN);
                     robot.rightSpringHook.setPosition(RIGHT_SPRING_IN);
                     PID_MODE = true;
 
-
-
                 }
-                else if (linearSlidePosition > HANG_3 + linearSlideZeroPosition){
+                else if (HANG_3_TARGET){
                     HANG_3_TARGET = false;
                     robot.clawMove.setPosition(MOVE_AUTONOMOUS_INIT);
                     robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
                     extendoOut = true;
                 }
-                else if (linearSlidePosition > HANG_4 + linearSlideZeroPosition && HANG_4_TARGET){
+                else if (time > 5.5 && linearSlidePosition > HANG_4 + linearSlideZeroPosition && HANG_4_TARGET){
                     extendoOut = false;
                     target = (int) (HANG_4 + linearSlideZeroPosition);
                     PID_MODE = true;
                 }
-                else if (time < 7.75 && !magneticSwitch){
+                else if (!magneticSwitch || robot.extendo.getCurrentPosition() > extendoZeroPosition){
+                    HANG_4_TARGET = false;
                     extendoHoldIn = false;
                     extendoHoldOut = false;
                     extendoIn = true;
@@ -1029,7 +1028,7 @@ public class Drive_V3 extends LinearOpMode{
                     robot.rightSlide.setPower(0);
                 }
 
-                else {
+                else if (time > 7.5 || magneticSwitch) {
                     extendoIn = false;
                     robot.extendo.setPower(0);
                     robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
