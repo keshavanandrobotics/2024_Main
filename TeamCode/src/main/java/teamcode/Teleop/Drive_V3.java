@@ -1044,8 +1044,7 @@ public class Drive_V3 extends LinearOpMode{
                     robot.rightSlide.setPower(-1);
 
                     robot.centerSlide.setPower(-1);
-
-
+                    
 
                     G1B = false;
                 }
