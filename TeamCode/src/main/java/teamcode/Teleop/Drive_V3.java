@@ -962,11 +962,7 @@ public class Drive_V3 extends LinearOpMode{
                 limitSwitchTimestamp = getRuntime();
             }
 
-            if (!robot.pin10.getState() || !robot.pin11.getState()){
-                magneticSwitch = true;
-            } else{
-                magneticSwitch = false;
-            }
+            magneticSwitch = !robot.pin10.getState() || !robot.pin11.getState();
 
             //L3 HANG
 
@@ -1044,7 +1040,7 @@ public class Drive_V3 extends LinearOpMode{
                     robot.rightSlide.setPower(-1);
 
                     robot.centerSlide.setPower(-1);
-                    
+
 
                     G1B = false;
                 }
