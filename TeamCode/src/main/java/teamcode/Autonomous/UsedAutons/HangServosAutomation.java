@@ -9,10 +9,11 @@ import teamcode.Robot;
 public class HangServosAutomation extends LinearOpMode {
     Robot robot;
 
-    
+
     public void runOpMode() throws InterruptedException {
         robot.leftSpringHook.setPosition(LEFT_SPRING_ON);
         robot.rightSpringHook.setPosition(RIGHT_SPRING_ON);
+
         if (isStopRequested()) return;
         if (opModeIsActive()) {
             robot.leftSpringHook.setPosition(LEFT_SPRING_OFF);
