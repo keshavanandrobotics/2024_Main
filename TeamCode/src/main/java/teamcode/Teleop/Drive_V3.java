@@ -102,6 +102,11 @@ public class Drive_V3 extends LinearOpMode{
 
     public double angle =0;
 
+    public boolean HANG_1_TARGET = true;
+    public boolean HANG_2_TARGET = true;
+    public boolean HANG_3_TARGET = true;
+    public boolean HANG_4_TARGET = true;
+
 
 
 
@@ -969,7 +974,7 @@ public class Drive_V3 extends LinearOpMode{
                 double time = getRuntime() - G1BTime;
 
 
-                if (time < 1.3){
+                if (linearSlidePosition < HANG_1 + linearSlideZeroPosition && HANG_1_TARGET){
 
                     robot.leftStabilizer.setPosition(LEFT_HOLD_ON);
 
@@ -980,17 +985,17 @@ public class Drive_V3 extends LinearOpMode{
 
                     target = (int) (HANG_1 + linearSlideZeroPosition);
                     PID_MODE = true;
-                } else if (time < 2.1 ){
-
+                } else if (linearSlidePosition > HANG_2 + linearSlideZeroPosition && HANG_2_TARGET){
+                    HANG_1_TARGET = false;
                     target = (int) (HANG_2 + linearSlideZeroPosition);
                     PID_MODE = true;
-                } else if (time < 3.1 ){
-
+                } else if (linearSlidePosition < HANG_2 + linearSlideZeroPosition){
+                    HANG_2_TARGET = false;
                     PID_MODE = false;
                     robot.rightSpringHook.setPosition(RIGHT_SPRING_ON);
                     robot.leftSpringHook.setPosition(LEFT_SPRING_ON);
                 }
-                else if (time < 5 ){
+                else if (linearSlidePosition < HANG_3 + linearSlideZeroPosition && HANG_3_TARGET){
 
                     target = (int) (HANG_3+ linearSlideZeroPosition);
                     robot.leftSpringHook.setPosition(LEFT_SPRING_IN);
@@ -1000,18 +1005,18 @@ public class Drive_V3 extends LinearOpMode{
 
 
                 }
-                else if (time < 5.5 ){
-
+                else if (linearSlidePosition > HANG_3 + linearSlideZeroPosition){
+                    HANG_3_TARGET = false;
                     robot.clawMove.setPosition(MOVE_AUTONOMOUS_INIT);
                     robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
                     extendoOut = true;
                 }
-                else if (time < 6 ){
+                else if (linearSlidePosition > HANG_4 + linearSlideZeroPosition && HANG_4_TARGET){
                     extendoOut = false;
-                    target = (int) (HANG_4+ linearSlideZeroPosition);
+                    target = (int) (HANG_4 + linearSlideZeroPosition);
                     PID_MODE = true;
                 }
-                else if (time < 8){
+                else if (time < 7.75 && !magneticSwitch){
                     extendoHoldIn = false;
                     extendoHoldOut = false;
                     extendoIn = true;

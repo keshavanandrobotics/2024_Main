@@ -21,30 +21,30 @@ public class VARS {
 
 
 
-    public static double ROTATE_90 = 0.65;
+    public static double ROTATE_90 = 0.47;
     public static double ROTATE_FLIP = 0;
     public static double ROTATE_LM3_SPECIMEN_AUTON = 0.23;
 
 
 
-    public static double MOVE_WALL_INTAKE = 0.85;
+    public static double MOVE_WALL_INTAKE = 0.88;
 
 
-    public static double MOVE_OUTTAKE = 0.8;
-    public static double MOVE_SPECIMEN_SCORE = 0.25;
-    public static double MOVE_ALL_OUT = 0.28;
-    public static double MOVE_HOVER_SAMPLE = 0.32;
+    public static double MOVE_OUTTAKE = 0.85;
+    public static double MOVE_SPECIMEN_SCORE = 0.3;
+    public static double MOVE_ALL_OUT = 0.33;
+    public static double MOVE_HOVER_SAMPLE = 0.37;
 
     public static double MOVE_AUTO_HOVER = 0.45;
 
 
 
 
-    public static double MOVE_PICKUP_SAMPLE = 0.23;
-    public static double MOVE_AUTONOMOUS_INIT = 0.45;
+    public static double MOVE_PICKUP_SAMPLE = 0.28;
+    public static double MOVE_AUTONOMOUS_INIT = 0.5;
 
-    public static double MOVE_AUTON_DRAG = 0.23;
-    public static double MOVE_AUTON_HOVER = 0.45;
+    public static double MOVE_AUTON_DRAG = 0.28;
+    public static double MOVE_AUTON_HOVER = 0.5;
 
 
 
@@ -54,7 +54,7 @@ public class VARS {
     public static double PIVOT_AUTON_DRAG = 0.6;
     public static double PIVOT_AUTON_HOVER = 0.5;
 
-    public static double PIVOT_SPECIMEN_SCORE = 0.45;
+    public static double PIVOT_SPECIMEN_SCORE = 0.4;
     public static double PIVOT_ALL_OUT = 0.59;
     public static double PIVOT_SAMPLE_PICKUP = 0.96;
 
@@ -80,9 +80,9 @@ public class VARS {
 
 
 
-    public static int HIGH_SPECIMEN_POS = 27000;
+    public static int HIGH_SPECIMEN_POS = 26000;
 
-    public static int HIGH_SPECIMEN_POS_TELE = 28500;
+    public static int HIGH_SPECIMEN_POS_TELE = 27000;
 
     public static int AUTO_PARK_SLIDE_POS = 23000;
 
@@ -94,7 +94,7 @@ public class VARS {
 
     public static int HANG_4 = 56000;
 
-    public static int EXTENDO_MAX_TELE = 30000;
+    public static int EXTENDO_MAX_TELE = 28000;
 
     public static boolean USING_LIMELIGHT = false;
 
