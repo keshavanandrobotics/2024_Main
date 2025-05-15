@@ -7,10 +7,10 @@ import com.acmerobotics.dashboard.config.Config;
 
 public class VARS {
 
-    public static double CLAW_CLOSED = 0.25;
+    public static double CLAW_CLOSED = 0.535;
             ;
-    public static double CLAW_OPEN = 0;
-    public static double CLAW_LESS_OPEN = 0.1;
+    public static double CLAW_OPEN = 0.37;
+    public static double CLAW_LESS_OPEN = 0.45;
 
     public static double ROTATE_NEUTRAL = 0.94;
 
@@ -31,7 +31,7 @@ public class VARS {
 
 
     public static double MOVE_OUTTAKE = 0.85;
-    public static double MOVE_SPECIMEN_SCORE = 0.3;
+    public static double MOVE_SPECIMEN_SCORE = 0.33;
     public static double MOVE_ALL_OUT = 0.33;
     public static double MOVE_HOVER_SAMPLE = 0.37;
 
