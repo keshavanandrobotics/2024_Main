@@ -16,7 +16,7 @@ import teamcode.Robot;
 public class PID_Test extends LinearOpMode {
 
     private PIDController controller;
-    public static double p = 0.1, i = 0, d = 0.00001;
+    public static double p = 0.0006, i = 0, d = 0.00001;
     public static double f = 0.08;
 
     public static boolean extendo = false;
