@@ -12,9 +12,9 @@ public class SPEC_AUTO_VARS {
 
     public static double X1 = 15, Y1 = -25; //INITIAL DIAGONAL STRAFE
     public static double X2 = 55, Y2 = -25; //GOING PAST THE FIRST SPEC
-    public static double X3 = 45, Y3 = -32; //STRAFING BEHIND THE FIRST SPEC
+    public static double X3 = 50, Y3 = -32; //STRAFING BEHIND THE FIRST SPEC
     public static double X4 = 10,  Y4 = -31; //BRING FIRST SPEC TO HUMAN PLAYER
-    public static double X5 = 45, Y5 = -42.5; //GOING BACK AND BEHIND 2ND SPEC
+    public static double X5 = 50, Y5 = -42.5; //GOING BACK AND BEHIND 2ND SPEC
     public static double X6 = 10,  Y6 = -41; //DRAGGING 2ND SPEC TO HUMAN PLAYER
     public static double X7 = 50, Y7 = -50; //GOING BACK AND BEHIND 3RD SPEC
     public static double X8 = 10,  Y8 = -46; // DRAGGING 3RD SPEC TO HUMAN PLAYER
@@ -23,7 +23,7 @@ public class SPEC_AUTO_VARS {
 
     //Cycling Coordinates
 
-    public static double FIRST_WALL_GRAB_X = 1, FIRST_WALL_GRAB_Y = -22; // SPOT FOR HUMAN PLAYER GRAB FIRST
+    public static double FIRST_WALL_GRAB_X = 1.5, FIRST_WALL_GRAB_Y = -22; // SPOT FOR HUMAN PLAYER GRAB FIRST
     public static double WALL_GRAB_X = 3, WALL_GRAB_Y = -22; //SPOT FOR HUMAN PLAYER GRAB
 
     public static double SPEC_SCORE_X = 25, SPEC_SCORE_Y = 8, SPEC_SCORE_HEADING = 30; //SPOT FOR SCORING
@@ -61,7 +61,7 @@ public class SPEC_AUTO_VARS {
     //PID POSITIONS
 
 
-    public static int EXTENDO_INITIAL_HUMAN_PLAYER = 1500; //POSITION BEFORE EXTENDO GOES IN AND GRABS 1ST SPEC
+    public static int EXTENDO_INITIAL_HUMAN_PLAYER = 2000; //POSITION BEFORE EXTENDO GOES IN AND GRABS 1ST SPEC
 
     public static int EXTENDO_GRAB_THRESHOLD = 0; //SHOULD NOT NEED EDITING, POSITION FOR EXTENDO IN WHERE ACTION ENDS
 
