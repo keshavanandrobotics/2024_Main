@@ -93,7 +93,7 @@ public class VARS {
     public static int HANG_2 = 10000;
     public static int HANG_3 = 68000;
 
-    public static int HANG_4 = 59250;
+    public static int HANG_4 = 60000;
 
     public static int EXTENDO_MAX_TELE = 28000;
 

@@ -1015,7 +1015,7 @@ public class Drive_V3 extends LinearOpMode{
                         robot.extendo.setPower(0);
                     }
                 }
-                else if (time < 6.25){
+                else if (time < 6){
                     extendoOut = false;
                     target = (int) (HANG_4 + linearSlideZeroPosition);
                     PID_MODE = true;
