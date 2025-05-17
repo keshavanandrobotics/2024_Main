@@ -462,7 +462,9 @@ public class Drive_V3 extends LinearOpMode{
             if ((robot.extendo.getCurrentPosition() - extendoZeroPosition) <= EXTENDO_MAX_TELE) {
 
 
-                if ((gamepad2.right_bumper || extendoOut)) {
+                if (gamepad2.right_bumper && (robot.extendo.getCurrentPosition() - extendoZeroPosition <= EXTENDO_SOFTMAX_TELE)) {
+                    robot.extendo.setPower(1);
+                } else if (extendoOut) {
                     robot.extendo.setPower(1);
                 } else if (extendoHoldOut) {
                     robot.extendo.setPower(0.2);
@@ -475,7 +477,7 @@ public class Drive_V3 extends LinearOpMode{
                 }
             } else {
 
-                if (maximumExtension && gamepad2.right_bumper) {
+                if (maximumExtension && gamepad2.right_bumper && (robot.extendo.getCurrentPosition() - extendoZeroPosition <= EXTENDO_SOFTMAX_TELE)) {
                     robot.extendo.setPower(1);
                 } else if ((gamepad2.left_bumper || extendoIn)) {
                     robot.extendo.setPower(-1);

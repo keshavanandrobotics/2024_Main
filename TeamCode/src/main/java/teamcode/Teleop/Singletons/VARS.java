@@ -28,10 +28,10 @@ public class VARS {
 
 
 
-    public static double MOVE_WALL_INTAKE = 0.88;
+    public static double MOVE_WALL_INTAKE = 0.95;
 
 
-    public static double MOVE_OUTTAKE = 0.88;
+    public static double MOVE_OUTTAKE = 0.95;
     public static double MOVE_SPECIMEN_SCORE = 0.35;
     public static double MOVE_ALL_OUT = 0.4;
     public static double MOVE_HOVER_SAMPLE = 0.4;
@@ -81,9 +81,11 @@ public class VARS {
 
 
 
-    public static int HIGH_SPECIMEN_POS = 27000;
+    public static int HIGH_SPECIMEN_POS = 25000;
 
-    public static int HIGH_SPECIMEN_POS_TELE = 28000;
+    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 25500;
+
+    public static int HIGH_SPECIMEN_POS_TELE = 28500;
 
     public static int AUTO_PARK_SLIDE_POS = 23000;
 
@@ -96,8 +98,9 @@ public class VARS {
     public static int HANG_4 = 60000;
 
     public static int EXTENDO_MAX_TELE = 28000;
+    public static int EXTENDO_SOFTMAX_TELE = 21000;
 
-    public static int EXTENDO_SAMPLE_PICKUP = 19000;
+    public static int EXTENDO_SAMPLE_PICKUP = 18000;
 
     public static int EXTENDO_HANG = 13000;
 

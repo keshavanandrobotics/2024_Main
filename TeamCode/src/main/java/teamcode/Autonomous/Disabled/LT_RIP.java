@@ -1,24 +1,7 @@
 package teamcode.Autonomous.Disabled;
 
 
-import static teamcode.Teleop.Singletons.VARS.AUTON_RED;
-import static teamcode.Teleop.Singletons.VARS.CLAW_CLOSED;
-import static teamcode.Teleop.Singletons.VARS.CLAW_LESS_OPEN;
-import static teamcode.Teleop.Singletons.VARS.CLAW_OPEN;
-import static teamcode.Teleop.Singletons.VARS.HIGH_SPECIMEN_POS;
-import static teamcode.Teleop.Singletons.VARS.MOVE_AUTONOMOUS_INIT;
-import static teamcode.Teleop.Singletons.VARS.MOVE_HOVER_SAMPLE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_PICKUP_SAMPLE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_SPECIMEN_SCORE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_WALL_INTAKE;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_AUTONOMOUS_INIT;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_SAMPLE_PICKUP;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_SPECIMEN_SCORE;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_WALL_INTAKE;
-import static teamcode.Teleop.Singletons.VARS.ROTATE_FLIP;
-import static teamcode.Teleop.Singletons.VARS.ROTATE_LM3_SPECIMEN_AUTON;
-import static teamcode.Teleop.Singletons.VARS.ROTATE_NEUTRAL;
-import static teamcode.Teleop.Singletons.VARS.SPEC_MODE;
+import static teamcode.Teleop.Singletons.VARS.*;
 
 import androidx.annotation.NonNull;
 

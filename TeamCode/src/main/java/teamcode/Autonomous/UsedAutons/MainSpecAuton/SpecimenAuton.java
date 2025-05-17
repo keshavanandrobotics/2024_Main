@@ -322,21 +322,21 @@ public class SpecimenAuton extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(X4, Y4), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(X3, Y3), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                .splineToConstantHeading(new Vector2d(X5, Y5), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X6, Y6), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(X6, Y6), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X7, Y7), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                .splineToConstantHeading(new Vector2d(X7, Y7), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X8, Y8), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X9, Y9), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(X8, Y8), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+                .splineToConstantHeading(new Vector2d(X10, Y10), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
                 //.strafeToLinearHeading(new Vector2d(X9, Y9), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X8, Y8, 0))
+        TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X10, Y10, 0))
                 .strafeToLinearHeading(new Vector2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y, 0))
@@ -424,7 +424,7 @@ public class SpecimenAuton extends LinearOpMode {
                             new ParallelAction(
                                     firstScore.build(),
                                     Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
-                                    LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
+                                    LinearSlidePID(HIGH_SPECIMEN_POS_AUTO_FIRST, 0.12),
                                     new SequentialAction(
                                             Wait(EXTENDO_OUT_WAIT),
                                             ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1)
