@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 public class VARS {
 
+    public static double WAIT_BACK_BUTTON = 0.3;
     public static double CLAW_CLOSED = 0.535;
             ;
     public static double CLAW_OPEN = 0.37;
@@ -31,9 +32,9 @@ public class VARS {
 
 
     public static double MOVE_OUTTAKE = 0.88;
-    public static double MOVE_SPECIMEN_SCORE = 0.23;
-    public static double MOVE_ALL_OUT = 0.33;
-    public static double MOVE_HOVER_SAMPLE = 0.33;
+    public static double MOVE_SPECIMEN_SCORE = 0.35;
+    public static double MOVE_ALL_OUT = 0.4;
+    public static double MOVE_HOVER_SAMPLE = 0.4;
 
     public static double MOVE_AUTO_HOVER = 0.45;
 
@@ -54,7 +55,7 @@ public class VARS {
     public static double PIVOT_AUTON_DRAG = 0.6;
     public static double PIVOT_AUTON_HOVER = 0.5;
 
-    public static double PIVOT_SPECIMEN_SCORE = 0.4;
+    public static double PIVOT_SPECIMEN_SCORE = 0.45;
     public static double PIVOT_ALL_OUT = 0.59;
     public static double PIVOT_SAMPLE_PICKUP = 0.96;
 
@@ -80,7 +81,7 @@ public class VARS {
 
 
 
-    public static int HIGH_SPECIMEN_POS = 26000;
+    public static int HIGH_SPECIMEN_POS = 27000;
 
     public static int HIGH_SPECIMEN_POS_TELE = 28000;
 
@@ -92,9 +93,13 @@ public class VARS {
     public static int HANG_2 = 10000;
     public static int HANG_3 = 68000;
 
-    public static int HANG_4 = 56000;
+    public static int HANG_4 = 59250;
 
     public static int EXTENDO_MAX_TELE = 28000;
+
+    public static int EXTENDO_SAMPLE_PICKUP = 19000;
+
+    public static int EXTENDO_HANG = 13000;
 
     public static boolean USING_LIMELIGHT = false;
 

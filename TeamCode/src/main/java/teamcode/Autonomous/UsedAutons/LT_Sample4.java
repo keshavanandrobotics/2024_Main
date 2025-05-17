@@ -1,24 +1,7 @@
 package teamcode.Autonomous.UsedAutons;
 
 
-import static teamcode.Teleop.Singletons.VARS.AUTO_PARK_SLIDE_POS;
-import static teamcode.Teleop.Singletons.VARS.CLAW_CLOSED;
-import static teamcode.Teleop.Singletons.VARS.CLAW_OPEN;
-import static teamcode.Teleop.Singletons.VARS.EXTENDO_MAX_TELE;
-import static teamcode.Teleop.Singletons.VARS.HIGH_SAMPLE_POS;
-import static teamcode.Teleop.Singletons.VARS.MOVE_ALL_OUT;
-import static teamcode.Teleop.Singletons.VARS.MOVE_AUTONOMOUS_INIT;
-import static teamcode.Teleop.Singletons.VARS.MOVE_HOVER_SAMPLE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_OUTTAKE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_PICKUP_SAMPLE;
-import static teamcode.Teleop.Singletons.VARS.MOVE_SPECIMEN_SCORE;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_ALL_OUT;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_AUTONOMOUS_INIT;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_OUTTAKE;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_SAMPLE_PICKUP;
-import static teamcode.Teleop.Singletons.VARS.PIVOT_SPECIMEN_SCORE;
-import static teamcode.Teleop.Singletons.VARS.ROTATE_90;
-import static teamcode.Teleop.Singletons.VARS.ROTATE_NEUTRAL;
+import static teamcode.Teleop.Singletons.VARS.*;
 
 import androidx.annotation.NonNull;
 
@@ -127,7 +110,7 @@ public class LT_Sample4 extends LinearOpMode{
             telemetry.addData("Target", TARGET);
             telemetry.addData("pos", linearSlidePosition);
 
-            if ((Math.abs(TARGET - linearSlidePosition)<650) || linearSlidePosition > 59000 && TARGET ==HIGH_SAMPLE_POS){
+            if ((Math.abs(TARGET - linearSlidePosition)<650) || linearSlidePosition > 83000 && TARGET == HIGH_SAMPLE_POS){
                 telemetry.addLine("Success");
                 telemetry.update();
 
@@ -284,7 +267,7 @@ public class LT_Sample4 extends LinearOpMode{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            if (robot.extendo.getCurrentPosition()<EXTENDO_MAX_TELE){
+            if (robot.extendo.getCurrentPosition()<EXTENDO_SAMPLE_PICKUP){
                 robot.extendo.setPower(1);
                 return true;
 
@@ -396,7 +379,7 @@ public class LT_Sample4 extends LinearOpMode{
 
             } else {
 
-                if (linearSlidePosition> 14000){
+                if (linearSlidePosition> 16000){
                     robot.extendo.setPower(1);
                 }
 
@@ -461,7 +444,7 @@ public class LT_Sample4 extends LinearOpMode{
 
 
         TrajectoryActionBuilder thirdSamplePickup = robot.drive.actionBuilder(new Pose2d(5, 50, Math.toRadians(-45)))
-                .strafeToLinearHeading(new Vector2d(36.8,36), Math.toRadians(90),
+                .strafeToLinearHeading(new Vector2d(36.8,39), Math.toRadians(90),
                         new TranslationalVelConstraint(14));
 
         TrajectoryActionBuilder thirdSampleNet = robot.drive.actionBuilder(new Pose2d(36.8 , 36, Math.toRadians(90)))
@@ -471,7 +454,7 @@ public class LT_Sample4 extends LinearOpMode{
         TrajectoryActionBuilder park = robot.drive.actionBuilder(new Pose2d(5, 50, Math.toRadians(-45)))
                 .splineToSplineHeading(new Pose2d(56,27,Math.toRadians(-90)), Math.toRadians(0),
                         new TranslationalVelConstraint(30))
-                .splineToSplineHeading(new Pose2d(56,14,Math.toRadians(-90)), Math.toRadians(0),
+                .splineToSplineHeading(new Pose2d(56,5,Math.toRadians(-90)), Math.toRadians(0),
                         new TranslationalVelConstraint(30));
 
         waitForStart();
