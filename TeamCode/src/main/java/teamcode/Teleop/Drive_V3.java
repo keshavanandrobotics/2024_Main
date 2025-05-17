@@ -654,9 +654,14 @@ public class Drive_V3 extends LinearOpMode{
                 if (automationTime < 0.25) {
                     robot.claw.setPosition(CLAW_CLOSED);
                 } else if (holdSpec) {
-                    robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE + ((double) robot.extendo.getCurrentPosition() / 1000000));
+                    robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
                     robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+                    if (automationTime > 1.2 && automationTime < 1.5) {
+                        robot.claw.setPosition(CLAW_LOOSE_GRAB);
+                    } else {
+                        robot.claw.setPosition(CLAW_CLOSED);
+                    }
                     if (backPressToggle){
                         startPressToggle = false;
                         limitSwitchOff = false;
@@ -704,7 +709,7 @@ public class Drive_V3 extends LinearOpMode{
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
                     robot.clawPivot.setPosition(PIVOT_ALL_OUT);
 
-                } else if (automationTime < 0.8) {
+                } else if (automationTime < 1) {
                     extendoIn = true;
                     robot.claw.setPosition(CLAW_CLOSED);
                 } else if (automationTime < 1.5) {
@@ -757,7 +762,6 @@ public class Drive_V3 extends LinearOpMode{
             }
 
             DPAD_DOWN_PRESS.readValue();
-
             X_PRESS.readValue();
 
             if (dpadDownToggle) {

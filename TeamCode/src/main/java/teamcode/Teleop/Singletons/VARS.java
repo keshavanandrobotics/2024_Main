@@ -13,6 +13,8 @@ public class VARS {
     public static double CLAW_OPEN = 0.37;
     public static double CLAW_LESS_OPEN = 0.45;
 
+    public static double CLAW_LOOSE_GRAB = 0.51;
+
     public static double ROTATE_NEUTRAL = 0.94;
 
 
@@ -34,14 +36,14 @@ public class VARS {
     public static double MOVE_OUTTAKE = 0.95;
     public static double MOVE_SPECIMEN_SCORE = 0.35;
     public static double MOVE_ALL_OUT = 0.4;
-    public static double MOVE_HOVER_SAMPLE = 0.4;
+    public static double MOVE_HOVER_SAMPLE = 0.42;
 
     public static double MOVE_AUTO_HOVER = 0.45;
 
 
 
 
-    public static double MOVE_PICKUP_SAMPLE = 0.27;
+    public static double MOVE_PICKUP_SAMPLE = 0.35;
     public static double MOVE_AUTONOMOUS_INIT = 0.5;
 
     public static double MOVE_AUTON_DRAG = 0.3;
@@ -81,11 +83,11 @@ public class VARS {
 
 
 
-    public static int HIGH_SPECIMEN_POS = 25000;
+    public static int HIGH_SPECIMEN_POS = 27000;
 
-    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 25500;
+    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 25750;
 
-    public static int HIGH_SPECIMEN_POS_TELE = 28500;
+    public static int HIGH_SPECIMEN_POS_TELE = 29500;
 
     public static int AUTO_PARK_SLIDE_POS = 23000;
 
