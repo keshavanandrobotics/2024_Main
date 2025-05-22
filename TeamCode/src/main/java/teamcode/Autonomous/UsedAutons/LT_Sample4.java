@@ -32,6 +32,7 @@ public class LT_Sample4 extends LinearOpMode{
     Robot robot;
 
     public int TARGET = 0;
+    public static int EXTENDO_SAMPLE_PICKUP = 17600;
 
     public class SpecimenScoreServos implements Action {
 
@@ -110,7 +111,7 @@ public class LT_Sample4 extends LinearOpMode{
             telemetry.addData("Target", TARGET);
             telemetry.addData("pos", linearSlidePosition);
 
-            if ((Math.abs(TARGET - linearSlidePosition)<650) || linearSlidePosition > 83000 && TARGET == HIGH_SAMPLE_POS){
+            if ((Math.abs(TARGET - linearSlidePosition)<750) || linearSlidePosition > 83000 && TARGET == HIGH_SAMPLE_POS){
                 telemetry.addLine("Success");
                 telemetry.update();
 
@@ -436,7 +437,7 @@ public class LT_Sample4 extends LinearOpMode{
 
         TrajectoryActionBuilder secondSamplePickup = robot.drive.actionBuilder(new Pose2d(5, 50, Math.toRadians(-45)))
                 .strafeToLinearHeading(new Vector2d(13,51.7), Math.toRadians(0),
-                        new TranslationalVelConstraint(13));
+                        new TranslationalVelConstraint(15));
 
         TrajectoryActionBuilder secondSampleNet = robot.drive.actionBuilder(new Pose2d(13 , 51.7, 0))
 
@@ -444,18 +445,18 @@ public class LT_Sample4 extends LinearOpMode{
 
 
         TrajectoryActionBuilder thirdSamplePickup = robot.drive.actionBuilder(new Pose2d(5, 50, Math.toRadians(-45)))
-                .strafeToLinearHeading(new Vector2d(36.8,39), Math.toRadians(90),
+                .strafeToLinearHeading(new Vector2d(35.3,39), Math.toRadians(90),
                         new TranslationalVelConstraint(14));
 
-        TrajectoryActionBuilder thirdSampleNet = robot.drive.actionBuilder(new Pose2d(36.8 , 36, Math.toRadians(90)))
+        TrajectoryActionBuilder thirdSampleNet = robot.drive.actionBuilder(new Pose2d(35.3, 36, Math.toRadians(90)))
 
                 .strafeToLinearHeading(new Vector2d(9,44), Math.toRadians(-45));
 
         TrajectoryActionBuilder park = robot.drive.actionBuilder(new Pose2d(5, 50, Math.toRadians(-45)))
                 .splineToSplineHeading(new Pose2d(56,27,Math.toRadians(-90)), Math.toRadians(0),
-                        new TranslationalVelConstraint(30))
+                        new TranslationalVelConstraint(170))
                 .splineToSplineHeading(new Pose2d(56,5,Math.toRadians(-90)), Math.toRadians(0),
-                        new TranslationalVelConstraint(30));
+                        new TranslationalVelConstraint(170));
 
         waitForStart();
 

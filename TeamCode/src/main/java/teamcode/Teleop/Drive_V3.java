@@ -73,6 +73,10 @@ public class Drive_V3 extends LinearOpMode{
     public double limitSwitchTimestamp = 0.0;
     public boolean limitSwitchOff = false;
 
+    public boolean xToggle = false;
+
+    public double xTimeStamp = 0.0;
+
 
     public double offset = 0.0;
     public double botHeading = 0.0;
@@ -102,11 +106,12 @@ public class Drive_V3 extends LinearOpMode{
 
 
     public double angle =0;
-
+    public boolean magneticSwitchHang = false;
     public boolean HANG_1_TARGET = true;
     public boolean HANG_2_TARGET = true;
     public boolean HANG_3_TARGET = true;
     public boolean HANG_4_TARGET = true;
+    public boolean EXTENDO_HANG_TARGET = true;
 
 
 
@@ -297,7 +302,7 @@ public class Drive_V3 extends LinearOpMode{
             }
 
 
-            double slowFactor = 1 - gamepad1.left_trigger * 0.8;
+            double slowFactor = 1 - gamepad1.left_trigger * SLOWDOWN_SPEED;
 
             rx *= slowFactor;
             x *= slowFactor;
@@ -379,14 +384,14 @@ public class Drive_V3 extends LinearOpMode{
             }
 
             if (G1_DPAD_UP.wasJustPressed()) {
-                HIGH_SPECIMEN_POS_TELE += 400;
+                HIGH_SPECIMEN_POS_TELE += 100;
                 target = (int) (HIGH_SPECIMEN_POS_TELE + linearSlideZeroPosition);
                 PID_MODE = true;
             }
 
 
             if (G1_DPAD_DOWN.wasJustPressed()) {
-                HIGH_SPECIMEN_POS_TELE -= 400;
+                HIGH_SPECIMEN_POS_TELE -= 100;
                 target = (int) (HIGH_SPECIMEN_POS_TELE + linearSlideZeroPosition);
                 PID_MODE = true;
             }
@@ -652,14 +657,12 @@ public class Drive_V3 extends LinearOpMode{
             if (startPressToggle) {
                 double automationTime = getRuntime() - startPressTimestamp;
                 if (automationTime < 0.25) {
-                    robot.claw.setPosition(CLAW_CLOSED);
+                    robot.claw.setPosition(CLAW_LOOSE_GRAB);
                 } else if (holdSpec) {
                     robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
                     robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                    if (automationTime > 1.2 && automationTime < 1.5) {
-                        robot.claw.setPosition(CLAW_LOOSE_GRAB);
-                    } else {
+                    if (automationTime > 0.8){
                         robot.claw.setPosition(CLAW_CLOSED);
                     }
                     if (backPressToggle){
@@ -677,6 +680,23 @@ public class Drive_V3 extends LinearOpMode{
 
                 }
             }
+            // BACK UP AUTOMATION FOR MISS
+
+            if (X_PRESS.wasJustPressed()){
+                xToggle = true;
+                xTimeStamp = getRuntime();
+            }
+
+            if (xToggle){
+                double time = getRuntime() - xTimeStamp;
+                PID_MODE = true;
+                target = (int) (LOWER_SLIDES_MISS);
+                if (time > 0.4){
+                    xToggle = false;
+                }
+            }
+
+            X_PRESS.readValue();
 
             //AUTOMATION FOR BACK --> RETRACT TO WALL
 
@@ -734,7 +754,7 @@ public class Drive_V3 extends LinearOpMode{
 
             //AUTOMATION FOR DPAD DOWN --> PICKUP
 
-            if (DPAD_DOWN_PRESS.wasJustPressed() || X_PRESS.wasJustPressed()) {
+            if (DPAD_DOWN_PRESS.wasJustPressed()) {
 
                 target = (int) (0 + linearSlideZeroPosition);
                 PID_MODE = true;
@@ -746,7 +766,7 @@ public class Drive_V3 extends LinearOpMode{
                 dpadDownServoLock = false;
             }
 
-            if (DPAD_DOWN_PRESS.wasJustReleased() || X_PRESS.wasJustReleased()) {
+            if (DPAD_DOWN_PRESS.wasJustReleased()) {
 
                 dpadDownServoLock = true;
 
@@ -762,7 +782,6 @@ public class Drive_V3 extends LinearOpMode{
             }
 
             DPAD_DOWN_PRESS.readValue();
-            X_PRESS.readValue();
 
             if (dpadDownToggle) {
 
@@ -982,7 +1001,7 @@ public class Drive_V3 extends LinearOpMode{
                 double time = getRuntime() - G1BTime;
 
 
-                if (time < 1.3){
+                if (linearSlidePosition + linearSlideZeroPosition < HANG_1 + linearSlideZeroPosition && HANG_1_TARGET){
                     robot.leftStabilizer.setPosition(LEFT_HOLD_ON);
 
                     robot.rightStabilizer.setPosition(RIGHT_HOLD_ON);
@@ -992,55 +1011,69 @@ public class Drive_V3 extends LinearOpMode{
 
                     target = (int) (HANG_1 + linearSlideZeroPosition);
                     PID_MODE = true;
-                } else if (time < 2.1){
+                    if (linearSlidePosition + linearSlideZeroPosition > HANG_1 + linearSlideZeroPosition - 1000){
+                        HANG_1_TARGET = false;
+                    }
+                } else if (linearSlidePosition + linearSlideZeroPosition > HANG_2 + linearSlideZeroPosition && HANG_2_TARGET){
                     HANG_1_TARGET = false;
                     target = (int) (HANG_2 + linearSlideZeroPosition);
                     PID_MODE = true;
-                } else if (time < 2.6){
+                    G1BTime = getRuntime();
+                    if (linearSlidePosition + linearSlideZeroPosition < HANG_2 + linearSlideZeroPosition + 1000){
+                        HANG_2_TARGET = false;
+                    }
+                } else if (time < 0.5){
                     HANG_2_TARGET = false;
                     PID_MODE = false;
                     robot.rightSpringHook.setPosition(RIGHT_SPRING_ON);
                     robot.leftSpringHook.setPosition(LEFT_SPRING_ON);
                 }
-                else if (time < 4.5){
-
+                else if (linearSlidePosition + linearSlideZeroPosition < HANG_3 + linearSlideZeroPosition && HANG_3_TARGET){
                     target = (int) (HANG_3 + linearSlideZeroPosition);
                     robot.leftSpringHook.setPosition(LEFT_SPRING_IN);
                     robot.rightSpringHook.setPosition(RIGHT_SPRING_IN);
                     PID_MODE = true;
-
-                }
-                else if (time < 5){
-                    HANG_3_TARGET = false;
-                    robot.clawMove.setPosition(MOVE_AUTONOMOUS_INIT);
-                    robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
-                    if (robot.extendo.getCurrentPosition() < EXTENDO_HANG){
-                        extendoOut = true;
-                    } else{
-                        extendoOut = false;
-                        robot.extendo.setPower(0);
+                    if (linearSlidePosition + linearSlideZeroPosition > HANG_3 + linearSlideZeroPosition - 1000){
+                        HANG_3_TARGET = false;
                     }
                 }
-                else if (time < 6){
+                else if (robot.extendo.getCurrentPosition() < EXTENDO_HANG && EXTENDO_HANG_TARGET){
+                    HANG_3_TARGET = false;
+                    robot.clawMove.setPosition(MOVE_RAISED);
+                    extendoOut = true;
+                    if (robot.extendo.getCurrentPosition() > EXTENDO_HANG - 1000){
+                        extendoOut = false;
+                        robot.extendo.setPower(0);
+                        EXTENDO_HANG_TARGET = false;
+                    }
+                }
+                else if (linearSlidePosition + linearSlideZeroPosition > HANG_4 + linearSlideZeroPosition && HANG_4_TARGET){
                     extendoOut = false;
                     target = (int) (HANG_4 + linearSlideZeroPosition);
                     PID_MODE = true;
+                    G1BTime = getRuntime();
+                    if (linearSlidePosition + linearSlideZeroPosition < HANG_4 + linearSlideZeroPosition + 1000){
+                        HANG_4_TARGET = false;
+                    }
                 }
-                else if (time < 8){
+                else if (!magneticSwitch && !magneticSwitchHang){
                     HANG_4_TARGET = false;
                     extendoHoldIn = false;
                     extendoHoldOut = false;
-                    extendoIn = true;
                     extendoOut = false;
                     PID_MODE = false;
                     linearAutomation = true;
-                    robot.extendo.setPower(-1);
                     robot.leftSlide.setPower(0);
                     robot.centerSlide.setPower(0);
                     robot.rightSlide.setPower(0);
+                    if (time > 0.5){
+                        robot.extendo.setPower(-1);
+                        extendoIn = true;
+                    }
                 }
 
                 else {
+                    magneticSwitchHang = true;
                     extendoIn = false;
                     robot.extendo.setPower(0);
                     robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);

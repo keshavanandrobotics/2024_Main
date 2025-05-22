@@ -14,7 +14,7 @@ public class SPEC_AUTO_VARS {
     public static double X2 = 55, Y2 = -25; //GOING PAST THE FIRST SPEC
     public static double X3 = 50, Y3 = -31; //STRAFING BEHIND THE FIRST SPEC
     public static double X4 = 10,  Y4 = -30.5; //BRING FIRST SPEC TO HUMAN PLAYER
-    public static double X5 = 50, Y5 = -25; //GOING BACK AND BEHIND 2ND SPEC
+    public static double X5 = 50, Y5 = -20; //GOING BACK AND BEHIND 2ND SPEC
     public static double X6 = 50,  Y6 = -40.5; //DRAGGING 2ND SPEC TO HUMAN PLAYER
     public static double X7 = 10, Y7 = -41; //GOING BACK AND BEHIND 3RD SPEC
     public static double X8 = 50,  Y8 = -30; // DRAGGING 3RD SPEC TO HUMAN PLAYER
