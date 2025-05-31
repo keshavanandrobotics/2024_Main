@@ -99,7 +99,7 @@ public class Drive_V4 extends LinearOpMode {
 
         TELE = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        robot.drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+        robot.drive = new PinpointDrive(hardwareMap, new Pose2d(0,0, 0));
 
         robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
