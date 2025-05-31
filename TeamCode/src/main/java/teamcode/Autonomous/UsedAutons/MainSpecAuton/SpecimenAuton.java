@@ -322,23 +322,24 @@ public class SpecimenAuton extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(X4, Y4), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(X3, Y3), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                .splineToConstantHeading(new Vector2d(X5, Y5), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X6, Y6), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(X6, Y6), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X7, Y7), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                .splineToConstantHeading(new Vector2d(X7, Y7), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X8, Y8), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X9, Y9), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(X8, Y8), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+                .splineToConstantHeading(new Vector2d(X10, Y10), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+        //.strafeToLinearHeading(new Vector2d(X9, Y9), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X8, Y8, 0))
-                .strafeToLinearHeading(new Vector2d(X9, Y9), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
+        TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X10, Y10, 0))
+                .strafeToLinearHeading(new Vector2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(X9, Y9, 0))
+        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y, 0))
                 .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
@@ -408,6 +409,7 @@ public class SpecimenAuton extends LinearOpMode {
 
             Actions.runBlocking(
                     new SequentialAction(
+                            firstWallGrab.build(),
                             Wait(HUMAN_PLAYER_WAIT),
                             ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
                             Wait(EXTENDO_IN_WAIT),
@@ -416,40 +418,21 @@ public class SpecimenAuton extends LinearOpMode {
                     )
             );
 
-            while (limitClawChecker()){
-                Actions.runBlocking(
-                        new ParallelAction(
-                                ExtendoPID(EXTENDO_GRAB_THRESHOLD, 0, 0),
-                                Servos(CLAW_OPEN, 0.501,0.501,0.501),
-                                new SequentialAction(
-                                        Wait(CLAW_OPEN_TIME),
-                                        retrySpec.build(),
-                                        Wait(HUMAN_PLAYER_WAIT),
-                                        ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
-                                        Wait(EXTENDO_IN_WAIT),
-                                        Servos(CLAW_CLOSED, 0.501, 0.501, .501),
-                                        Wait(CLAW_CLOSE_TIME)
-                                )
-                        )
-                );
-            }
+
 
             Actions.runBlocking(
-                    new SequentialAction(
-                            firstWallGrab.build(),
-                            new ParallelAction(
-                                    firstScore.build(),
-                                    Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
-                                    LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
-                                    new SequentialAction(
-                                            Wait(EXTENDO_OUT_WAIT),
-                                            ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1)
-                                    )
+                    new ParallelAction(
+                            firstScore.build(),
+                            Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
+                            LinearSlidePID(HIGH_SPECIMEN_POS_AUTO_FIRST, 0.12),
+                            new SequentialAction(
+                                    Wait(EXTENDO_OUT_WAIT),
+                                    ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1)
                             )
                     )
             );
 
-            for (int i = 0; i<100; i++) {
+            for (int i = 0; i<4; i++) {
 
                 Actions.runBlocking(
                         new SequentialAction(
@@ -472,33 +455,33 @@ public class SpecimenAuton extends LinearOpMode {
 
                 );
 
-                Actions.runBlocking(
-                        new SequentialAction(
-                                Wait(HUMAN_PLAYER_WAIT),
-                                ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
-                                Wait(EXTENDO_IN_WAIT),
-                                Servos(CLAW_CLOSED, 0.501, 0.501, .501),
-                                Wait(CLAW_CLOSE_TIME)
-                        )
-                );
+                //Actions.runBlocking(
+                //        new SequentialAction(
+                //                Wait(HUMAN_PLAYER_WAIT),
+                //                ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
+                //                Wait(EXTENDO_IN_WAIT),
+                //                Servos(CLAW_CLOSED, 0.501, 0.501, .501),
+                //                Wait(CLAW_CLOSE_TIME)
+                //        )
+                //);
 
-                while (limitClawChecker()){
-                    Actions.runBlocking(
-                            new ParallelAction(
-                                    ExtendoPID(EXTENDO_GRAB_THRESHOLD, 0, 0),
-                                    Servos(CLAW_OPEN, 0.501,0.501,0.501),
-                                    new SequentialAction(
-                                            Wait(CLAW_OPEN_TIME),
-                                            retrySpec.build(),
-                                            Wait(HUMAN_PLAYER_WAIT),
-                                            ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
-                                            Wait(EXTENDO_IN_WAIT),
-                                            Servos(CLAW_CLOSED, 0.501, 0.501, .501),
-                                            Wait(CLAW_CLOSE_TIME)
-                                    )
-                            )
-                    );
-                }
+                //while (!limitClawChecker()){
+                //    Actions.runBlocking(
+                //            new ParallelAction(
+                //                    ExtendoPID(EXTENDO_GRAB_THRESHOLD, 0, 0),
+                //                    Servos(CLAW_OPEN, 0.501,0.501,0.501),
+                //                    new SequentialAction(
+                //                            Wait(CLAW_OPEN_TIME),
+                //                            retrySpec.build(),
+                //                            Wait(HUMAN_PLAYER_WAIT),
+                //                            ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
+                //                            Wait(EXTENDO_IN_WAIT),
+                //                            Servos(CLAW_CLOSED, 0.501, 0.501, .501),
+                //                            Wait(CLAW_CLOSE_TIME)
+                //                    )
+                //            )
+                //    );
+                //}
 
                 Actions.runBlocking(
                         new SequentialAction(
@@ -522,7 +505,26 @@ public class SpecimenAuton extends LinearOpMode {
             }
 
 
+            Actions.runBlocking(
+                    new SequentialAction(
+                            Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
+                            Wait(CLAW_OPEN_TIME),
+                            new ParallelAction(
+                                    subsequentWallGrabs.build(),
+                                    new SequentialAction(
+                                            ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
+                                            new ParallelAction(
+                                                    LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
+                                                    Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
 
+                                            )
+                                    )
+                            )
+
+                    )
+
+
+            );
 
             sleep(10000);
 
