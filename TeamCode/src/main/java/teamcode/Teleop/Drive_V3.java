@@ -1018,6 +1018,7 @@ public class Drive_V3 extends LinearOpMode{
                     G1BTime = getRuntime();
                     if (linearSlidePosition + linearSlideZeroPosition < HANG_2 + linearSlideZeroPosition + 1000){
                         HANG_2_TARGET = false;
+                        G1BTime = getRuntime();
                     }
                 } else if (time < 0.5){
                     HANG_2_TARGET = false;

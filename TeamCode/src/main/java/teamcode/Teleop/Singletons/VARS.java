@@ -97,7 +97,7 @@ public class VARS {
     public static int HIGH_SAMPLE_POS = 83500;
     public static int HANG_1 = 43000;
 
-    public static int HANG_2 = 9000;
+    public static int HANG_2 = 13000;
     public static int HANG_3 = 69000;
 
     public static int HANG_4 = 59250;
