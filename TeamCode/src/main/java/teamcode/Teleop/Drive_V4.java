@@ -31,7 +31,8 @@ public class Drive_V4 extends LinearOpMode {
     private MultipleTelemetry TELE;
 
     public static String MODE = "SAM";
-    
+
+    public boolean scoreAutomation = false;
     public double offset = 0;
 
     public double p = 0.0003, i = 0, d = 0.00001;
@@ -50,6 +51,8 @@ public class Drive_V4 extends LinearOpMode {
     public boolean dpadDownServoLock = false;
 
     public double linearSlidePosition;
+    public double linearSlidePower = 0;
+
     public boolean magneticSwitchHang = false;
 
 
@@ -206,18 +209,20 @@ public class Drive_V4 extends LinearOpMode {
 
         while (opModeIsActive()){
 
+            if (!scoreAutomation){
+                drivetrain(MODE);
 
-            drivetrain(MODE);
+                linearSlides();
 
-            linearSlides();
+                clawControl();
 
-            clawControl();
+                horizontalSlides();
 
-            horizontalSlides();
+                limitSwitch();
 
-            limitSwitch();
+                toggles();
+            }
 
-            toggles();
 
             displayTelemetry();
 
@@ -322,9 +327,6 @@ public class Drive_V4 extends LinearOpMode {
     public void linearSlides () {
 
         linearSlidePosition = -robot.linearSlideEncoder.getCurrentPosition();
-
-
-        double linearSlidePower = 0;
 
         if (gamepad2.right_trigger > 0.5) {
             linearSlidePower += 1;
@@ -481,12 +483,11 @@ public class Drive_V4 extends LinearOpMode {
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
             robot.clawPivot.setPosition(PIVOT_ALL_OUT);
 
-        } else if (automationTime < 1) {
+        } else if (automationTime < WAIT_BACK_BUTTON) {
             extendoIn = true;
-            robot.claw.setPosition(CLAW_CLOSED);
-        } else if (automationTime < 1.5) {
+        } else if (automationTime < WAIT_BACK_BUTTON + 0.5) {
 
-            robot.claw.setPosition(CLAW_CLOSED);
+            robot.claw.setPosition(CLAW_OPEN);
 
             robot.clawRotate.setPosition(ROTATE_FLIP);
             robot.clawMove.setPosition(MOVE_WALL_INTAKE);
@@ -496,11 +497,8 @@ public class Drive_V4 extends LinearOpMode {
             extendoIn = false;
             extendoHoldIn = true;
 
-            robot.clawRotate.setPosition(ROTATE_FLIP);
-            robot.claw.setPosition(CLAW_OPEN);
 
             G2_BACK_PRESSED = false;
-
         }
     }
     public void slideReset () {
@@ -900,7 +898,6 @@ public class Drive_V4 extends LinearOpMode {
         }
         if (G2_BACK_RELEASED && getRuntime() - G2_BACK_PRESSED_TIME > WAIT_BACK_BUTTON){
             target = (int) linearSlideZeroPosition;
-            G2_BACK_PRESSED = false;
             PID_MODE = true;
         }
 

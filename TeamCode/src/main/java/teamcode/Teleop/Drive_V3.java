@@ -729,12 +729,11 @@ public class Drive_V3 extends LinearOpMode{
                     robot.clawRotate.setPosition(ROTATE_NEUTRAL);
                     robot.clawPivot.setPosition(PIVOT_ALL_OUT);
 
-                } else if (automationTime < 1) {
+                } else if (automationTime < WAIT_BACK_BUTTON) {
                     extendoIn = true;
-                    robot.claw.setPosition(CLAW_CLOSED);
-                } else if (automationTime < 1.5) {
+                } else if (automationTime < WAIT_BACK_BUTTON + 0.5) {
 
-                    robot.claw.setPosition(CLAW_CLOSED);
+                    robot.claw.setPosition(CLAW_OPEN);
 
                     robot.clawRotate.setPosition(ROTATE_FLIP);
                     robot.clawMove.setPosition(MOVE_WALL_INTAKE);
@@ -744,8 +743,6 @@ public class Drive_V3 extends LinearOpMode{
                     extendoIn = false;
                     extendoHoldIn = true;
 
-                    robot.clawRotate.setPosition(ROTATE_FLIP);
-                    robot.claw.setPosition(CLAW_OPEN);
 
                     backPressToggle = false;
 

@@ -8,7 +8,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class VARS {
 
     public static double SLOWDOWN_SPEED = 0.7;
-    public static double WAIT_BACK_BUTTON = 0.3;
+    public static double WAIT_BACK_BUTTON = 1;
     public static double CLAW_CLOSED = 0.535;
     ;
     public static double CLAW_OPEN = 0.37;
