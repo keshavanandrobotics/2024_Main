@@ -225,8 +225,8 @@ public class Drive_V3 extends LinearOpMode{
             double x = 0;
             double y = 0;
 
-            double rotX = 0;
-            double rotY = 0;
+            double rotX;
+            double rotY;
 
 
 
