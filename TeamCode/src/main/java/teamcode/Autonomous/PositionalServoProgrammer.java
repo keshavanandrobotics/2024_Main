@@ -45,15 +45,16 @@ public class PositionalServoProgrammer extends LinearOpMode {
 
             if (TEST_POSITION != 0.501){robot.testServo.setPosition(TEST_POSITION);}
             if (PIVOT_POSITION != 0.501){robot.clawPivot.setPosition(PIVOT_POSITION);}
-            if (MOVE_POSITION != 0.501){robot.clawMove.setPosition(MOVE_POSITION);}
+            if (MOVE_POSITION != 0.501){robot.clawLeftMove.setPosition(MOVE_POSITION);}
+            if (MOVE_POSITION != 0.501){robot.clawRightMove.setPosition(1-MOVE_POSITION);}
             if (ROTATE_POSITION != 0.501){robot.clawRotate.setPosition(ROTATE_POSITION);}
             if (CLAW_POSITION != 0.501){robot.claw.setPosition(CLAW_POSITION);}
 
 
             if (LEFT_HOLD != 0.501){robot.leftStabilizer.setPosition(LEFT_HOLD);}
             if (RIGHT_HOLD != 0.501){robot.rightStabilizer.setPosition(RIGHT_HOLD);}
-            if (LEFT_SPRING != 0.501){robot.leftSpringHook.setPosition(LEFT_SPRING);}
-            if (RIGHT_SPRING != 0.501){robot.rightSpringHook.setPosition(RIGHT_SPRING);}
+            if (LEFT_SPRING != 0.501){robot.leftHook.setPosition(LEFT_SPRING);}
+            if (RIGHT_SPRING != 0.501){robot.rightHook.setPosition(RIGHT_SPRING);}
 
 
 

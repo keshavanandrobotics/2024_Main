@@ -23,7 +23,6 @@ public class Robot {
     public DcMotorEx backRightMotor;
     public DcMotorEx backLeftMotor;
     public DcMotorEx leftSlide;
-    public DcMotorEx centerSlide;
     public DcMotorEx rightSlide;
     public DcMotorEx extendo;
 
@@ -49,13 +48,15 @@ public class Robot {
 
     public Servo clawPivot;
 
-    public Servo clawMove;
+    public Servo clawLeftMove;
+
+    public Servo clawRightMove;
 
     public Servo rightStabilizer;
     public Servo leftStabilizer;
 
-    public Servo rightSpringHook;
-    public Servo leftSpringHook;
+    public Servo rightHook;
+    public Servo leftHook;
 
 
     public IMU imu;
@@ -80,7 +81,6 @@ public class Robot {
         frontLeftMotor = hardwareMap.get(DcMotorEx.class,"frontLeft");
         frontRightMotor = hardwareMap.get(DcMotorEx.class,"frontRight");
         leftSlide = hardwareMap.get(DcMotorEx.class,"leftSlide");
-        centerSlide = hardwareMap.get(DcMotorEx.class,"centerSlide");
         rightSlide = hardwareMap.get(DcMotorEx.class,"rightSlide");
         extendo = hardwareMap.get(DcMotorEx.class,"extendo");
 
@@ -103,14 +103,15 @@ public class Robot {
         testServo = hardwareMap.servo.get("test");
         clawRotate =hardwareMap.servo.get("clawRotate");
         claw = hardwareMap.servo.get("claw");
-        clawPivot = hardwareMap.servo.get("cPivot");
-        clawMove = hardwareMap.servo.get("clawMove");
+        clawPivot = hardwareMap.servo.get("clawPivot");
+        clawLeftMove = hardwareMap.servo.get("clawLeftMove");
+        clawRightMove = hardwareMap.servo.get("clawRightMove");
 
 
-        leftStabilizer = hardwareMap.servo.get("bottomHoldServoTwo");
-        rightStabilizer = hardwareMap.servo.get("bottomHoldServoOne");
-        leftSpringHook = hardwareMap.servo.get("hookServoTwo");
-        rightSpringHook = hardwareMap.servo.get("hookServoOne");
+        leftStabilizer = hardwareMap.servo.get("leftStabilizer");
+        rightStabilizer = hardwareMap.servo.get("rightStabilizer");
+        leftHook = hardwareMap.servo.get("leftHookServo");
+        rightHook = hardwareMap.servo.get("rightHookServo");
 
 
 

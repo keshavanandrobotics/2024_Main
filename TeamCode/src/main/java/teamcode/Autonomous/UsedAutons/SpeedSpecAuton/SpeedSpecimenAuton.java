@@ -317,8 +317,8 @@ public class SpeedSpecimenAuton extends LinearOpMode {
         robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
         robot.clawRotate.setPosition(ROTATE_NEUTRAL);
 
-        robot.rightSpringHook.setPosition(RIGHT_SPRING_OFF);
-        robot.leftSpringHook.setPosition(LEFT_SPRING_OFF);
+        robot.rightHook.setPosition(RIGHT_SPRING_OFF);
+        robot.leftHook.setPosition(LEFT_SPRING_OFF);
 
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);

@@ -17,13 +17,13 @@ public class HangServosAutomation extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new Robot(hardwareMap);
-        robot.leftSpringHook.setPosition(LEFT_SPRING_ON);
-        robot.rightSpringHook.setPosition(RIGHT_SPRING_ON);
+        robot.leftHook.setPosition(LEFT_SPRING_ON);
+        robot.rightHook.setPosition(RIGHT_SPRING_ON);
         waitForStart();
         if (isStopRequested()) return;
         if (opModeIsActive()) {
-            robot.leftSpringHook.setPosition(LEFT_SPRING_OFF);
-            robot.rightSpringHook.setPosition(RIGHT_SPRING_OFF);
+            robot.leftHook.setPosition(LEFT_SPRING_OFF);
+            robot.rightHook.setPosition(RIGHT_SPRING_OFF);
             sleep(10000);
         }
     }

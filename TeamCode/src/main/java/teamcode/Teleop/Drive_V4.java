@@ -1,5 +1,4 @@
 package teamcode.Teleop;
-
 import static teamcode.Teleop.Singletons.VARS.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -19,8 +18,6 @@ import java.util.Objects;
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 import teamcode.Teleop.Singletons.MotorWeights;
-
-
 @Config
 @TeleOp
 public class Drive_V4 extends LinearOpMode {
@@ -47,14 +44,12 @@ public class Drive_V4 extends LinearOpMode {
     public boolean pickupSample = true;
     public boolean magneticSwitch = false;
 
-
     public boolean dpadDownServoLock = false;
 
     public double linearSlidePosition;
     public double linearSlidePower = 0;
 
     public boolean magneticSwitchHang = false;
-
 
     // Gamepads
     GamepadEx g1, g2;
@@ -93,9 +88,6 @@ public class Drive_V4 extends LinearOpMode {
     public boolean HANG_4_TARGET = true;
     public boolean EXTENDO_HANG_TARGET = true;
 
-
-
-
     public void initialize() {
         
         robot = new Robot(hardwareMap);
@@ -112,10 +104,9 @@ public class Drive_V4 extends LinearOpMode {
         robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.centerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        robot.rightSpringHook.setPosition(RIGHT_SPRING_OFF);
-        robot.leftSpringHook.setPosition(LEFT_SPRING_OFF);
+        robot.rightHook.setPosition(RIGHT_SPRING_OFF);
+        robot.leftHook.setPosition(LEFT_SPRING_OFF);
 
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
@@ -156,8 +147,6 @@ public class Drive_V4 extends LinearOpMode {
         );
 
 
-
-
         G2_B = new ButtonReader(
                 g2, GamepadKeys.Button.B
         );
@@ -191,13 +180,8 @@ public class Drive_V4 extends LinearOpMode {
                 g2, GamepadKeys.Button.DPAD_UP
         );
 
-
-
-
     }
-    
-    
-    
+
     @Override
     public void runOpMode() throws InterruptedException {
         
@@ -223,17 +207,10 @@ public class Drive_V4 extends LinearOpMode {
                 toggles();
             }
 
-
             displayTelemetry();
 
-
-
-
         }
-        
-        
-        
-        
+
     }
 
     public void drivetrain (String mode){
@@ -351,10 +328,9 @@ public class Drive_V4 extends LinearOpMode {
                 robot.leftSlide.setPower(linearSlidePower);
                 robot.rightSlide.setPower(linearSlidePower);
                 if (linearSlidePower < 0.12) {
-                    robot.centerSlide.setPower(0);
+                        robot.leftSlide.setPower(0.08);
                 } else {
-                    robot.centerSlide.setPower(linearSlidePower);
-
+                        robot.leftSlide.setPower(0.08);
                 }
 
 
@@ -369,7 +345,6 @@ public class Drive_V4 extends LinearOpMode {
 
             robot.rightSlide.setPower(PID);
             robot.leftSlide.setPower(PID);
-            robot.centerSlide.setPower(PID);
 
         }
 
@@ -383,7 +358,8 @@ public class Drive_V4 extends LinearOpMode {
         } else if (-gamepad2.left_stick_y > 0.5) {
             target = (int) linearSlideZeroPosition + HIGH_SAMPLE_POS;
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
-            robot.clawMove.setPosition(MOVE_OUTTAKE);
+            robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);
 
             PID_MODE = true;
 
@@ -458,7 +434,8 @@ public class Drive_V4 extends LinearOpMode {
         if (automationTime < 0.25) {
             robot.claw.setPosition(CLAW_LOOSE_GRAB);
         } else {
-            robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
+            robot.clawLeftMove.setPosition(MOVE_SPECIMEN_SCORE);
+            robot.clawRightMove.setPosition(1-MOVE_SPECIMEN_SCORE);
             robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
             if (automationTime > 0.8){
@@ -490,7 +467,8 @@ public class Drive_V4 extends LinearOpMode {
             robot.claw.setPosition(CLAW_OPEN);
 
             robot.clawRotate.setPosition(ROTATE_FLIP);
-            robot.clawMove.setPosition(MOVE_WALL_INTAKE);
+            robot.clawLeftMove.setPosition(MOVE_WALL_INTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_WALL_INTAKE);
             robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
             extendoIn = true;
         } else {
@@ -510,29 +488,28 @@ public class Drive_V4 extends LinearOpMode {
 
             robot.leftSlide.setPower(1);
             robot.rightSlide.setPower(1);
-            robot.centerSlide.setPower(1);
 
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_OUTTAKE);
+            robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
 
         } else if (automationTime < 0.85) {
 
             robot.leftSlide.setPower(0.1);
             robot.rightSlide.setPower(0.1);
-            robot.centerSlide.setPower(0.1);
             extendoIn = true;
 
             robot.claw.setPosition(CLAW_CLOSED);
 
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_OUTTAKE - 0.1);
+            robot.clawLeftMove.setPosition(MOVE_OUTTAKE - 0.1);
+            robot.clawRightMove.setPosition(1-(MOVE_OUTTAKE-0.1));
             robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
         } else if (automationTime < 2.15) {
             extendoIn = false;
             robot.leftSlide.setPower(-1);
             robot.rightSlide.setPower(-1);
-            robot.centerSlide.setPower(-1);
 
             robot.claw.setPosition(CLAW_CLOSED);
 
@@ -540,7 +517,8 @@ public class Drive_V4 extends LinearOpMode {
 
             robot.claw.setPosition(CLAW_CLOSED);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_OUTTAKE);
+            robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
 
         } else if (automationTime < 2.65) {
@@ -549,11 +527,11 @@ public class Drive_V4 extends LinearOpMode {
 
             robot.leftSlide.setPower(0);
             robot.rightSlide.setPower(0);
-            robot.centerSlide.setPower(0);
 
             robot.claw.setPosition(CLAW_CLOSED);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_OUTTAKE);
+            robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
             linearSlideZeroPosition = robot.linearSlideEncoder.getCurrentPosition();
             extendoZeroPosition = robot.extendoEncoder.getCurrentPosition();
@@ -564,11 +542,11 @@ public class Drive_V4 extends LinearOpMode {
 
             robot.leftSlide.setPower(0);
             robot.rightSlide.setPower(0);
-            robot.centerSlide.setPower(0);
 
             robot.claw.setPosition(CLAW_CLOSED);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_OUTTAKE);
+            robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
 
             linearSlideZeroPosition = robot.linearSlideEncoder.getCurrentPosition();
@@ -580,7 +558,7 @@ public class Drive_V4 extends LinearOpMode {
             G1_START_PRESSED = false;
         }
     }
-    public void submerisbleHover() {
+    public void submersibleHover() {
         double automationTime = getRuntime() - G2_DPAD_DOWN_PRESSED_TIME;
 
         extendoIn = false;
@@ -593,11 +571,13 @@ public class Drive_V4 extends LinearOpMode {
 
             if (!dpadDownServoLock) {
                 robot.clawPivot.setPosition(PIVOT_ALL_OUT);
-                robot.clawMove.setPosition(MOVE_ALL_OUT);
+                robot.clawLeftMove.setPosition(MOVE_ALL_OUT);
+                robot.clawRightMove.setPosition(1-MOVE_ALL_OUT);
                 robot.clawRotate.setPosition(ROTATE_90);
                 robot.claw.setPosition(CLAW_CLOSED);
             } else {
-                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
                 robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
                 robot.clawRotate.setPosition(ROTATE_90);
                 robot.claw.setPosition(CLAW_CLOSED);
@@ -608,11 +588,13 @@ public class Drive_V4 extends LinearOpMode {
 
             if (!dpadDownServoLock) {
                 robot.clawPivot.setPosition(PIVOT_ALL_OUT);
-                robot.clawMove.setPosition(MOVE_ALL_OUT);
+                robot.clawLeftMove.setPosition(MOVE_ALL_OUT);
+                robot.clawRightMove.setPosition(1-MOVE_ALL_OUT);
                 robot.clawRotate.setPosition(ROTATE_90);
                 robot.claw.setPosition(CLAW_CLOSED);
             } else {
-                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
                 robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
                 robot.clawRotate.setPosition(ROTATE_90);
                 robot.claw.setPosition(CLAW_OPEN);
@@ -633,7 +615,8 @@ public class Drive_V4 extends LinearOpMode {
             robot.claw.setPosition(CLAW_CLOSED);
 
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_ALL_OUT);
+            robot.clawLeftMove.setPosition(MOVE_ALL_OUT);
+            robot.clawRightMove.setPosition(1-MOVE_ALL_OUT);
             robot.clawPivot.setPosition(PIVOT_ALL_OUT);
             extendoIn = true;
         } else if (automationTime < 1.05 && pickupSample) {
@@ -641,7 +624,8 @@ public class Drive_V4 extends LinearOpMode {
             robot.claw.setPosition(CLAW_CLOSED);
 
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_WALL_INTAKE);
+            robot.clawLeftMove.setPosition(MOVE_WALL_INTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_WALL_INTAKE);
             robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
             extendoIn = true;
         } else {
@@ -665,7 +649,8 @@ public class Drive_V4 extends LinearOpMode {
             robot.claw.setPosition(CLAW_CLOSED);
 
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_ALL_OUT);
+            robot.clawLeftMove.setPosition(MOVE_ALL_OUT);
+            robot.clawRightMove.setPosition(1-MOVE_ALL_OUT);
             robot.clawPivot.setPosition(PIVOT_ALL_OUT);
             extendoIn = true;
         } else {
@@ -685,7 +670,8 @@ public class Drive_V4 extends LinearOpMode {
 
             robot.rightStabilizer.setPosition(RIGHT_HOLD_ON);
 
-            robot.clawMove.setPosition(MOVE_WALL_INTAKE);
+            robot.clawLeftMove.setPosition(MOVE_WALL_INTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_WALL_INTAKE);
             robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
 
             target = (int) (HANG_1 + linearSlideZeroPosition);
@@ -704,13 +690,13 @@ public class Drive_V4 extends LinearOpMode {
         } else if (time < 0.5){
             HANG_2_TARGET = false;
             PID_MODE = false;
-            robot.rightSpringHook.setPosition(RIGHT_SPRING_ON);
-            robot.leftSpringHook.setPosition(LEFT_SPRING_ON);
+            robot.rightHook.setPosition(RIGHT_SPRING_ON);
+            robot.leftHook.setPosition(LEFT_SPRING_ON);
         }
         else if (linearSlidePosition + linearSlideZeroPosition < HANG_3 + linearSlideZeroPosition && HANG_3_TARGET){
             target = (int) (HANG_3 + linearSlideZeroPosition);
-            robot.leftSpringHook.setPosition(LEFT_SPRING_IN);
-            robot.rightSpringHook.setPosition(RIGHT_SPRING_IN);
+            robot.leftHook.setPosition(LEFT_SPRING_IN);
+            robot.rightHook.setPosition(RIGHT_SPRING_IN);
             PID_MODE = true;
             if (linearSlidePosition + linearSlideZeroPosition > HANG_3 + linearSlideZeroPosition - 1000){
                 HANG_3_TARGET = false;
@@ -718,7 +704,8 @@ public class Drive_V4 extends LinearOpMode {
         }
         else if (robot.extendo.getCurrentPosition() < EXTENDO_HANG && EXTENDO_HANG_TARGET){
             HANG_3_TARGET = false;
-            robot.clawMove.setPosition(MOVE_RAISED);
+            robot.clawLeftMove.setPosition(MOVE_RAISED);
+            robot.clawRightMove.setPosition(1-MOVE_RAISED);
             extendoOut = true;
             if (robot.extendo.getCurrentPosition() > EXTENDO_HANG - 1000){
                 extendoOut = false;
@@ -743,7 +730,6 @@ public class Drive_V4 extends LinearOpMode {
             PID_MODE = false;
             linearAutomation = true;
             robot.leftSlide.setPower(0);
-            robot.centerSlide.setPower(0);
             robot.rightSlide.setPower(0);
             if (time > 0.5){
                 robot.extendo.setPower(-1);
@@ -756,7 +742,6 @@ public class Drive_V4 extends LinearOpMode {
             extendoIn = false;
             robot.extendo.setPower(0);
             robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
-
             robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
 
 
@@ -766,9 +751,6 @@ public class Drive_V4 extends LinearOpMode {
 
             robot.leftSlide.setPower(-1);
             robot.rightSlide.setPower(-1);
-
-            robot.centerSlide.setPower(-1);
-
 
             G1_B_PRESSED = false;
         }
@@ -943,7 +925,8 @@ public class Drive_V4 extends LinearOpMode {
             dpadDownServoLock = true;
 
             robot.claw.setPosition(CLAW_OPEN);
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
+            robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             robot.clawRotate.setPosition(ROTATE_90);
 
@@ -956,7 +939,7 @@ public class Drive_V4 extends LinearOpMode {
         G2_DPAD_DOWN.readValue();
 
         if (G2_DPAD_DOWN_PRESSED) {
-            submerisbleHover();
+            submersibleHover();
         }
 
 
@@ -971,7 +954,8 @@ public class Drive_V4 extends LinearOpMode {
             if (robot.claw.getPosition() < CLAW_CLOSED + 0.04) {
 
                 robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                robot.clawMove.setPosition(MOVE_WALL_INTAKE);
+                robot.clawLeftMove.setPosition(MOVE_WALL_INTAKE);
+                robot.clawRightMove.setPosition(1-MOVE_WALL_INTAKE);
                 robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
 
                 extendoIn = false;
@@ -982,7 +966,8 @@ public class Drive_V4 extends LinearOpMode {
 
             } else if (robot.clawPivot.getPosition() <= PIVOT_SAMPLE_PICKUP + 0.03 && robot.clawPivot.getPosition() >= PIVOT_SAMPLE_PICKUP - 0.03) {
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawRightMove.setPosition(1-MOVE_PICKUP_SAMPLE);
                 robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             }
 
@@ -1000,7 +985,8 @@ public class Drive_V4 extends LinearOpMode {
 
                 G2_Y_PRESSED_TIME = getRuntime();
             } else if (robot.clawPivot.getPosition() > (PIVOT_SAMPLE_PICKUP - 0.15)) {
-                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
                 robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
 
             }
@@ -1023,7 +1009,8 @@ public class Drive_V4 extends LinearOpMode {
 
             colorSensorTimer = getRuntime();
 
-            robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+            robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
+            robot.clawRightMove.setPosition(1-MOVE_PICKUP_SAMPLE);
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
 
 
@@ -1039,7 +1026,8 @@ public class Drive_V4 extends LinearOpMode {
 
                 G2_DPAD_UP_PRESSED_TIME = getRuntime();
             } else {
-                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
             }
 
         }
@@ -1080,10 +1068,5 @@ public class Drive_V4 extends LinearOpMode {
         TELE.update();
 
     }
-
-
-
-
-
 
 }
