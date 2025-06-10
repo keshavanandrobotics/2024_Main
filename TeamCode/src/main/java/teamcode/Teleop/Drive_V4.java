@@ -768,7 +768,7 @@ public class Drive_V4 extends LinearOpMode {
 
         G1_B.readValue();
 
-        if (G1_B_PRESSED){
+        while (G1_B_PRESSED){
             hang();
         }
 

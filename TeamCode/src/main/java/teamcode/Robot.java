@@ -58,6 +58,9 @@ public class Robot {
     public Servo rightHook;
     public Servo leftHook;
 
+    public Servo leftPTO;
+    public Servo rightPTO;
+
 
     public IMU imu;
 
@@ -112,6 +115,8 @@ public class Robot {
         rightStabilizer = hardwareMap.servo.get("rightStabilizer");
         leftHook = hardwareMap.servo.get("leftHookServo");
         rightHook = hardwareMap.servo.get("rightHookServo");
+        leftPTO = hardwareMap.servo.get("leftPTOServo");
+        rightPTO = hardwareMap.servo.get("rightPTOServo");
 
 
 
@@ -142,6 +147,7 @@ public class Robot {
 
         }
 
+        // Digital Sensors
         pin00 = hardwareMap.digitalChannel.get("digital0_0");
         pin01 = hardwareMap.digitalChannel.get("digital0_1");
         pin10 = hardwareMap.digitalChannel.get("digital1_0");
