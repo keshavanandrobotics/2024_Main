@@ -181,7 +181,8 @@ public class SpeedSpecimenAuton extends LinearOpMode {
 
 
 
-                    robot.clawMove.setPosition(movePos);
+                    robot.clawLeftMove.setPosition(movePos);
+                    robot.clawRightMove.setPosition(1-movePos);
                 }
                 if (pivotPos== 0.501){
                     pivot = false;
@@ -225,7 +226,6 @@ public class SpeedSpecimenAuton extends LinearOpMode {
 
                 robot.leftSlide.setPower(power);
                 robot.rightSlide.setPower(power);
-                robot.centerSlide.setPower(power);
 
                 telemetry.addData("power", power);
                 telemetry.addData("Target", position);
@@ -238,7 +238,6 @@ public class SpeedSpecimenAuton extends LinearOpMode {
 
                     robot.leftSlide.setPower(holdPower);
                     robot.rightSlide.setPower(holdPower);
-                    robot.centerSlide.setPower(holdPower);
 
 
                     return false;
@@ -313,7 +312,8 @@ public class SpeedSpecimenAuton extends LinearOpMode {
         robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.claw.setPosition(CLAW_CLOSED);
-        robot.clawMove.setPosition(MOVE_AUTONOMOUS_INIT);
+        robot.clawLeftMove.setPosition(MOVE_AUTONOMOUS_INIT);
+        robot.clawRightMove.setPosition(1-MOVE_AUTONOMOUS_INIT);
         robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
         robot.clawRotate.setPosition(ROTATE_NEUTRAL);
 

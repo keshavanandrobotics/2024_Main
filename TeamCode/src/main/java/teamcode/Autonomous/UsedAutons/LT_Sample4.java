@@ -44,7 +44,8 @@ public class LT_Sample4 extends LinearOpMode{
 
             robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
+            robot.clawLeftMove.setPosition(MOVE_SPECIMEN_SCORE);
+            robot.clawRightMove.setPosition(1-MOVE_SPECIMEN_SCORE);
 
 
             robot.claw.setPosition(CLAW_CLOSED);
@@ -70,7 +71,8 @@ public class LT_Sample4 extends LinearOpMode{
             if (getRuntime()- stamp< 0.2){
                 robot.clawPivot.setPosition(PIVOT_ALL_OUT);
                 robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-                robot.clawMove.setPosition(MOVE_ALL_OUT);
+                robot.clawLeftMove.setPosition(MOVE_ALL_OUT);
+                robot.clawRightMove.setPosition(1-MOVE_ALL_OUT);
 
 
                 robot.claw.setPosition(CLAW_OPEN);
@@ -105,7 +107,6 @@ public class LT_Sample4 extends LinearOpMode{
 
             robot.leftSlide.setPower(power);
             robot.rightSlide.setPower(power);
-            robot.centerSlide.setPower(power);
 
             telemetry.addData("power", power);
             telemetry.addData("Target", TARGET);
@@ -118,12 +119,10 @@ public class LT_Sample4 extends LinearOpMode{
                 if (TARGET<=0){
                     robot.leftSlide.setPower(0);
                     robot.rightSlide.setPower(0);
-                    robot.centerSlide.setPower(0);
                 } else {
 
                     robot.leftSlide.setPower(0.12);
                     robot.rightSlide.setPower(0.12);
-                    robot.centerSlide.setPower(0.12);
                 }
 
                 return false;
@@ -175,7 +174,8 @@ public class LT_Sample4 extends LinearOpMode{
 
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_OUTTAKE);
+            robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);
 
 
             robot.claw.setPosition(CLAW_CLOSED);
@@ -193,7 +193,8 @@ public class LT_Sample4 extends LinearOpMode{
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.04);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE + 0.04);
+            robot.clawRightMove.setPosition(1-(MOVE_HOVER_SAMPLE+0.04));
 
 
             robot.claw.setPosition(CLAW_OPEN);
@@ -211,7 +212,8 @@ public class LT_Sample4 extends LinearOpMode{
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             robot.clawRotate.setPosition(ROTATE_90);
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.05);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE + 0.05);
+            robot.clawRightMove.setPosition(1-(MOVE_HOVER_SAMPLE+0.05));
 
 
             robot.claw.setPosition(CLAW_OPEN);
@@ -235,7 +237,8 @@ public class LT_Sample4 extends LinearOpMode{
             ticker ++;
 
             if (getRuntime() - stamp < 0.4){
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawRightMove.setPosition(1-MOVE_PICKUP_SAMPLE);
 
 
 
@@ -245,12 +248,14 @@ public class LT_Sample4 extends LinearOpMode{
 
             } else if ( getRuntime() - stamp < 0.6){
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawRightMove.setPosition(1-MOVE_PICKUP_SAMPLE);
                 robot.claw.setPosition(CLAW_CLOSED);
                 return true;
             } else {
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawRightMove.setPosition(1-MOVE_PICKUP_SAMPLE);
                 robot.claw.setPosition(CLAW_CLOSED);
                 return false;
             }
@@ -362,7 +367,6 @@ public class LT_Sample4 extends LinearOpMode{
 
             robot.leftSlide.setPower(power);
             robot.rightSlide.setPower(power);
-            robot.centerSlide.setPower(power);
 
             telemetry.addData("power", power);
             telemetry.addData("Target", TARGET);
@@ -374,7 +378,6 @@ public class LT_Sample4 extends LinearOpMode{
 
                 robot.leftSlide.setPower(0.12);
                 robot.rightSlide.setPower(0.12);
-                robot.centerSlide.setPower(0.12);
 
                 return false;
 
@@ -411,7 +414,8 @@ public class LT_Sample4 extends LinearOpMode{
         robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.claw.setPosition(CLAW_CLOSED);
-        robot.clawMove.setPosition(MOVE_AUTONOMOUS_INIT);
+        robot.clawLeftMove.setPosition(MOVE_AUTONOMOUS_INIT);
+        robot.clawRightMove.setPosition(1-MOVE_AUTONOMOUS_INIT);
         robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
         robot.clawRotate.setPosition(ROTATE_NEUTRAL);
 
