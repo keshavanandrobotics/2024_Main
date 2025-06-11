@@ -62,6 +62,7 @@ public class Robot {
     public Servo rightPTO;
 
 
+
     public IMU imu;
 
     public IMU.Parameters parameters;
@@ -103,7 +104,6 @@ public class Robot {
 
         //Servos:
 
-        testServo = hardwareMap.servo.get("test");
         clawRotate =hardwareMap.servo.get("clawRotate");
         claw = hardwareMap.servo.get("claw");
         clawPivot = hardwareMap.servo.get("clawPivot");

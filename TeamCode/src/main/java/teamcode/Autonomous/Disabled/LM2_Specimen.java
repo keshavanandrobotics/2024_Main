@@ -64,14 +64,12 @@ public class LM2_Specimen extends LinearOpMode {
 
                 robot.leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.centerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                 robot.leftSlide.setPower(1);
 
                 return true;
             }
             else if (robot.leftSlide.isBusy()&&robot.leftSlide.getCurrentPosition()<position+40){
-                robot.centerSlide.setPower(robot.leftSlide.getPower());
                 robot.rightSlide.setPower(robot.leftSlide.getPower());
                 return true;
             } else {
@@ -89,7 +87,6 @@ public class LM2_Specimen extends LinearOpMode {
 
 
 
-                robot.centerSlide.setPower(0.1);
                 robot.rightSlide.setPower(0.1);
 
                 return false;
@@ -120,12 +117,10 @@ public class LM2_Specimen extends LinearOpMode {
             }
             else if (robot.leftSlide.getCurrentPosition()>(-GLOBAL_POSITION+40)){
                 robot.rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.centerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                 robot.leftSlide.setPower(-1);
                 robot.rightSlide.setPower(-1);
-                robot.centerSlide.setPower(-1);
 
 
                 return true;
@@ -137,7 +132,6 @@ public class LM2_Specimen extends LinearOpMode {
 
                 robot.leftSlide.setPower(0);
                 robot.rightSlide.setPower(0);
-                robot.centerSlide.setPower(0);
 
 
 
@@ -162,20 +156,17 @@ public class LM2_Specimen extends LinearOpMode {
             double timer = getRuntime() - stamp;
             if ((robot.leftSlide.getCurrentPosition()>(-GLOBAL_POSITION+40))&&timer<0.1){
                 robot.rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.centerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
                 robot.leftSlide.setPower(-1);
                 robot.rightSlide.setPower(-1);
-                robot.centerSlide.setPower(-1);
 
 
                 return true;
             }
             else if ((robot.leftSlide.getCurrentPosition()>(-GLOBAL_POSITION+40))){
                 robot.rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.centerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                 robot.claw.setPosition(0.65);
@@ -183,7 +174,7 @@ public class LM2_Specimen extends LinearOpMode {
                 robot.claw.setPosition(0.65);
 
                 robot.clawRotate.setPosition(0.95);
-                robot.clawMove.setPosition(0.55);
+                robot.clawLeftMove.setPosition(0.55);
                 robot.clawPivot.setPosition(0.61);
 
                 robot.clawRotate.setPosition(0.95);
@@ -191,7 +182,6 @@ public class LM2_Specimen extends LinearOpMode {
 
                 robot.leftSlide.setPower(-1);
                 robot.rightSlide.setPower(-1);
-                robot.centerSlide.setPower(-1);
 
 
                 return true;
@@ -207,7 +197,6 @@ public class LM2_Specimen extends LinearOpMode {
 
                 robot.leftSlide.setPower(0);
                 robot.rightSlide.setPower(0);
-                robot.centerSlide.setPower(0);
 
                 robot.claw.setPosition(0.84);
                 robot.claw.setPosition(0.84);
@@ -243,7 +232,7 @@ public class LM2_Specimen extends LinearOpMode {
                 robot.claw.setPosition(0.65);
 
                 robot.clawRotate.setPosition(0.95);
-                robot.clawMove.setPosition(0.55);
+                robot.clawLeftMove.setPosition(0.55);
                 robot.clawPivot.setPosition(0.61);
 
                 robot.clawRotate.setPosition(0.95);
@@ -284,7 +273,7 @@ public class LM2_Specimen extends LinearOpMode {
 
             } else if (timer <1){
 
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
                 robot.claw.setPosition(0.65);
                 return true;
@@ -297,7 +286,7 @@ public class LM2_Specimen extends LinearOpMode {
 
                 robot.clawRotate.setPosition(0.95);
 
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
                 robot.claw.setPosition(0.65);
                 return true;
@@ -307,12 +296,12 @@ public class LM2_Specimen extends LinearOpMode {
                 robot.extendo.setPower(-0.3);
 
                 robot.clawRotate.setPosition(0.95);
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
                 robot.claw.setPosition(0.65);
 
                 robot.clawRotate.setPosition(0.95);
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
                 robot.claw.setPosition(0.65);
 
@@ -393,12 +382,12 @@ public class LM2_Specimen extends LinearOpMode {
 
 
         robot.clawRotate.setPosition(0.95);
-        robot.clawMove.setPosition(0.8);
+        robot.clawLeftMove.setPosition(0.8);
         robot.clawPivot.setPosition(0.12);
         robot.claw.setPosition(0.65);
 
         robot.clawRotate.setPosition(0.95);
-        robot.clawMove.setPosition(0.8);
+        robot.clawLeftMove.setPosition(0.8);
         robot.clawPivot.setPosition(0.12);
         robot.claw.setPosition(0.65);
 
@@ -415,12 +404,12 @@ public class LM2_Specimen extends LinearOpMode {
 
 
             robot.clawRotate.setPosition(0.95);
-            robot.clawMove.setPosition(0.8);
+            robot.clawLeftMove.setPosition(0.8);
             robot.clawPivot.setPosition(0.12);
             robot.claw.setPosition(0.65);
 
             robot.clawRotate.setPosition(0.95);
-            robot.clawMove.setPosition(0.8);
+            robot.clawLeftMove.setPosition(0.8);
             robot.clawPivot.setPosition(0.12);
             robot.claw.setPosition(0.65);
 
@@ -432,7 +421,6 @@ public class LM2_Specimen extends LinearOpMode {
             Actions.runBlocking(
                     new ParallelAction(scoreSpecimen.build(), slides())
             );
-            robot.centerSlide.setPower(0.1);
             robot.rightSlide.setPower(0.1);
 
 
@@ -470,12 +458,12 @@ public class LM2_Specimen extends LinearOpMode {
             sleep(200);
 
             robot.clawRotate.setPosition(0.95);
-            robot.clawMove.setPosition(0.8);
+            robot.clawLeftMove.setPosition(0.8);
             robot.clawPivot.setPosition(0.12);
             robot.claw.setPosition(0.65);
 
             robot.clawRotate.setPosition(0.95);
-            robot.clawMove.setPosition(0.8);
+            robot.clawLeftMove.setPosition(0.8);
             robot.clawPivot.setPosition(0.12);
             robot.claw.setPosition(0.65);
 
@@ -483,7 +471,6 @@ public class LM2_Specimen extends LinearOpMode {
             Actions.runBlocking(
                     new ParallelAction(scoreLater.build(), slides())
             );
-            robot.centerSlide.setPower(0.1);
             robot.rightSlide.setPower(0.1);
 
 
@@ -509,7 +496,6 @@ public class LM2_Specimen extends LinearOpMode {
             Actions.runBlocking(
                     new ParallelAction(scoreLater2.build(), slides(), in())
             );
-            robot.centerSlide.setPower(0.1);
             robot.rightSlide.setPower(0.1);
 
 

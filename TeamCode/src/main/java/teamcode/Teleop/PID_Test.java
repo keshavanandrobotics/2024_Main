@@ -65,7 +65,6 @@ public class PID_Test extends LinearOpMode {
             } else {
                 robot.rightSlide.setPower(power);
                 robot.leftSlide.setPower(power);
-                robot.centerSlide.setPower(power);
             }
 
             telemetry.addData("pos", pos);

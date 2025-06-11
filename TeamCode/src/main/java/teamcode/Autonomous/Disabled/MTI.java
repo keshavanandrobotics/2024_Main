@@ -73,7 +73,7 @@ public class MTI extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
             robot.clawRotate.setPosition(ROTATE_MTI_AUTON_SCORE);
-            robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
+            robot.clawLeftMove.setPosition(MOVE_SPECIMEN_SCORE);
 
 
             robot.claw.setPosition(CLAW_CLOSED);
@@ -91,7 +91,7 @@ public class MTI extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
             robot.clawRotate.setPosition(ROTATE_FLIP);
-            robot.clawMove.setPosition(MOVE_WALL_INTAKE);
+            robot.clawLeftMove.setPosition(MOVE_WALL_INTAKE);
 
 
             robot.claw.setPosition(CLAW_OPEN);
@@ -157,7 +157,7 @@ public class MTI extends LinearOpMode {
 
             robot.claw.setPosition(CLAW_OPEN);
 
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.04);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE + 0.04);
 
             robot.clawRotate.setPosition(ROTATE_FLIP);
 
@@ -189,7 +189,7 @@ public class MTI extends LinearOpMode {
             robot.claw.setPosition(CLAW_CLOSED);
 
             if (getRuntime() - stamp < 0.01){
-                robot.clawMove.setPosition(MOVE_AUTON_DRAG);
+                robot.clawLeftMove.setPosition(MOVE_AUTON_DRAG);
 
 
 
@@ -200,7 +200,7 @@ public class MTI extends LinearOpMode {
                 return true;
 
             } else if ( getRuntime() - stamp < 0.02){
-                robot.clawMove.setPosition(MOVE_AUTON_DRAG);
+                robot.clawLeftMove.setPosition(MOVE_AUTON_DRAG);
 
 
 
@@ -210,7 +210,7 @@ public class MTI extends LinearOpMode {
                 return true;
             } else {
 
-                robot.clawMove.setPosition(MOVE_AUTON_DRAG);
+                robot.clawLeftMove.setPosition(MOVE_AUTON_DRAG);
 
 
 
@@ -244,7 +244,7 @@ public class MTI extends LinearOpMode {
             robot.claw.setPosition(CLAW_OPEN);
 
             if (getRuntime() - stamp < 0.01){
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawRightMove.setPosition(MOVE_PICKUP_SAMPLE);
 
 
 
@@ -254,7 +254,7 @@ public class MTI extends LinearOpMode {
                 return true;
 
             } else if ( getRuntime() - stamp < 0.02){
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawRightMove.setPosition(MOVE_PICKUP_SAMPLE);
 
 
 
@@ -291,7 +291,7 @@ public class MTI extends LinearOpMode {
             ticker ++;
 
             if (getRuntime() - stamp < 0.01){
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
 
 
 
@@ -302,7 +302,7 @@ public class MTI extends LinearOpMode {
                 return true;
 
             } else if ( getRuntime() - stamp < 0.02){
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
 
 
 
@@ -312,7 +312,7 @@ public class MTI extends LinearOpMode {
                 return true;
             } else {
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
 
 
 
@@ -338,7 +338,7 @@ public class MTI extends LinearOpMode {
 
                 robot.clawPivot.setPosition(PIVOT_AUTON_HOVER);
 
-                robot.clawMove.setPosition(MOVE_AUTON_HOVER);
+                robot.clawLeftMove.setPosition(MOVE_AUTON_HOVER);
 
                 robot.claw.setPosition(CLAW_CLOSED);
                 return false;
@@ -359,7 +359,7 @@ public class MTI extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
 
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE+ 0.08);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE+ 0.08);
 
             robot.claw.setPosition(CLAW_OPEN);
 
@@ -383,7 +383,7 @@ public class MTI extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_AUTON_HOVER);
 
-            robot.clawMove.setPosition(MOVE_AUTON_HOVER);
+            robot.clawLeftMove.setPosition(MOVE_AUTON_HOVER);
 
             robot.claw.setPosition(CLAW_OPEN);
             return false;
@@ -404,7 +404,7 @@ public class MTI extends LinearOpMode {
 
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE +0.0275);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE +0.0275);
 
             robot.claw.setPosition(CLAW_LESS_OPEN);
             return false;
@@ -565,7 +565,7 @@ public class MTI extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
 
-            robot.clawMove.setPosition(MOVE_AUTON_HOVER);
+            robot.clawLeftMove.setPosition(MOVE_AUTON_HOVER);
 
             robot.claw.setPosition(CLAW_CLOSED);
 
@@ -587,7 +587,7 @@ public class MTI extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
 
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE+ 0.08);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE+ 0.08);
 
             robot.claw.setPosition(CLAW_OPEN);
 
@@ -610,7 +610,7 @@ public class MTI extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
 
-            robot.clawMove.setPosition(MOVE_AUTON_HOVER);
+            robot.clawLeftMove.setPosition(MOVE_AUTON_HOVER);
 
             robot.claw.setPosition(CLAW_OPEN);
 
@@ -667,7 +667,6 @@ public class MTI extends LinearOpMode {
 
             robot.leftSlide.setPower(power);
             robot.rightSlide.setPower(power);
-            robot.centerSlide.setPower(power);
 
             telemetry.addData("power", power);
             telemetry.addData("Target", TARGET);
@@ -679,7 +678,6 @@ public class MTI extends LinearOpMode {
 
                 robot.leftSlide.setPower(0.12);
                 robot.rightSlide.setPower(0.12);
-                robot.centerSlide.setPower(0.12);
 
                 return false;
 
@@ -722,7 +720,6 @@ public class MTI extends LinearOpMode {
 
             robot.leftSlide.setPower(power);
             robot.rightSlide.setPower(power);
-            robot.centerSlide.setPower(power);
 
             telemetry.addData("power", power);
             telemetry.addData("Target", TARGET);
@@ -742,7 +739,6 @@ public class MTI extends LinearOpMode {
 
                 robot.leftSlide.setPower(0.12);
                 robot.rightSlide.setPower(0.12);
-                robot.centerSlide.setPower(0.12);
 
                 return false;
 
@@ -785,7 +781,6 @@ public class MTI extends LinearOpMode {
 
             robot.leftSlide.setPower(power);
             robot.rightSlide.setPower(power);
-            robot.centerSlide.setPower(power);
 
             telemetry.addData("power", power);
             telemetry.addData("Target", TARGET);
@@ -798,12 +793,10 @@ public class MTI extends LinearOpMode {
                 if (TARGET<=0){
                     robot.leftSlide.setPower(-0.1);
                     robot.rightSlide.setPower(-0.1);
-                    robot.centerSlide.setPower(-0.1);
                 } else {
 
                     robot.leftSlide.setPower(0.12);
                     robot.rightSlide.setPower(0.12);
-                    robot.centerSlide.setPower(0.12);
                 }
 
                 return false;
@@ -882,7 +875,7 @@ public class MTI extends LinearOpMode {
 
                robot.clawRotate.setPosition(0.5);
 
-               robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+               robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
 
                return true;
 
@@ -898,7 +891,7 @@ public class MTI extends LinearOpMode {
            }else {
                robot.extendo.setPower(-1);
 
-               robot.clawMove.setPosition(MOVE_AUTON_HOVER);
+               robot.clawLeftMove.setPosition(MOVE_AUTON_HOVER);
                robot.clawPivot.setPosition(PIVOT_AUTON_HOVER);
                robot.clawRotate.setPosition(ROTATE_FLIP);
 
@@ -950,7 +943,7 @@ public class MTI extends LinearOpMode {
         robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.claw.setPosition(CLAW_CLOSED);
-        robot.clawMove.setPosition(MOVE_AUTONOMOUS_INIT);
+        robot.clawLeftMove.setPosition(MOVE_AUTONOMOUS_INIT);
         robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
         robot.clawRotate.setPosition(ROTATE_NEUTRAL);
 
@@ -1063,7 +1056,7 @@ public class MTI extends LinearOpMode {
 
             robot.claw.setPosition(CLAW_OPEN);
 
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE+0.08);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE+0.08);
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
 

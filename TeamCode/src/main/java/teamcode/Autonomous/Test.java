@@ -27,7 +27,7 @@ public class Test extends LinearOpMode {
         robot = new Robot(hardwareMap);
 
         robot.claw.setPosition(CLAW_OPEN);
-        robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+        robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
         robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
 
 
@@ -81,13 +81,13 @@ public class Test extends LinearOpMode {
             robot.extendo.setPower(0);
 
 
-            robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+            robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
 
             sleep(500);
             robot.claw.setPosition(CLAW_CLOSED);
             sleep(500);
 
-            robot.clawMove.setPosition(MOVE_ALL_OUT);
+            robot.clawLeftMove.setPosition(MOVE_ALL_OUT);
             robot.clawPivot.setPosition(PIVOT_ALL_OUT);
 
             sleep(150000);

@@ -50,7 +50,7 @@ public class LT_RIP extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
-            robot.clawMove.setPosition(MOVE_SPECIMEN_SCORE);
+            robot.clawLeftMove.setPosition(MOVE_SPECIMEN_SCORE);
 
 
             robot.claw.setPosition(CLAW_CLOSED);
@@ -68,7 +68,7 @@ public class LT_RIP extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
             robot.clawRotate.setPosition(ROTATE_FLIP);
-            robot.clawMove.setPosition(MOVE_WALL_INTAKE);
+            robot.clawLeftMove.setPosition(MOVE_WALL_INTAKE);
 
 
             robot.claw.setPosition(CLAW_OPEN);
@@ -134,7 +134,7 @@ public class LT_RIP extends LinearOpMode {
 
             robot.claw.setPosition(CLAW_OPEN);
 
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.04);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE + 0.04);
 
             robot.clawRotate.setPosition(ROTATE_FLIP);
 
@@ -164,7 +164,7 @@ public class LT_RIP extends LinearOpMode {
             ticker ++;
 
             if (getRuntime() - stamp < 0.19){
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE);
 
 
 
@@ -175,12 +175,12 @@ public class LT_RIP extends LinearOpMode {
 
             } else if ( getRuntime() - stamp < 0.26){
 
-                robot.clawMove.setPosition(MOVE_PICKUP_SAMPLE );
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE );
                 robot.claw.setPosition(CLAW_CLOSED);
                 return true;
             } else {
 
-                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE);
+                robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
                 robot.claw.setPosition(CLAW_CLOSED);
                 return false;
             }
@@ -200,7 +200,7 @@ public class LT_RIP extends LinearOpMode {
 
                 robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
                 robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-                robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
+                robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
 
                 robot.claw.setPosition(CLAW_OPEN);
                 return false;
@@ -221,7 +221,7 @@ public class LT_RIP extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE +0.0275);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE +0.0275);
 
             robot.claw.setPosition(CLAW_LESS_OPEN);
             return false;
@@ -244,7 +244,7 @@ public class LT_RIP extends LinearOpMode {
 
             robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
             robot.clawRotate.setPosition(ROTATE_LM3_SPECIMEN_AUTON);
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
 
 
             robot.claw.setPosition(CLAW_OPEN);
@@ -363,7 +363,7 @@ public class LT_RIP extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
 
-            robot.clawMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
+            robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE + 0.0275);
 
             return false;
 
@@ -420,7 +420,6 @@ public class LT_RIP extends LinearOpMode {
 
             robot.leftSlide.setPower(power);
             robot.rightSlide.setPower(power);
-            robot.centerSlide.setPower(power);
 
             telemetry.addData("power", power);
             telemetry.addData("Target", TARGET);
@@ -432,7 +431,6 @@ public class LT_RIP extends LinearOpMode {
 
                 robot.leftSlide.setPower(0.12);
                 robot.rightSlide.setPower(0.12);
-                robot.centerSlide.setPower(0.12);
 
                 return false;
 
@@ -475,7 +473,6 @@ public class LT_RIP extends LinearOpMode {
 
             robot.leftSlide.setPower(power);
             robot.rightSlide.setPower(power);
-            robot.centerSlide.setPower(power);
 
             telemetry.addData("power", power);
             telemetry.addData("Target", TARGET);
@@ -495,7 +492,6 @@ public class LT_RIP extends LinearOpMode {
 
                 robot.leftSlide.setPower(0.12);
                 robot.rightSlide.setPower(0.12);
-                robot.centerSlide.setPower(0.12);
 
                 return false;
 
@@ -538,7 +534,6 @@ public class LT_RIP extends LinearOpMode {
 
             robot.leftSlide.setPower(power);
             robot.rightSlide.setPower(power);
-            robot.centerSlide.setPower(power);
 
             telemetry.addData("power", power);
             telemetry.addData("Target", TARGET);
@@ -551,12 +546,10 @@ public class LT_RIP extends LinearOpMode {
                 if (TARGET<=0){
                     robot.leftSlide.setPower(-0.1);
                     robot.rightSlide.setPower(-0.1);
-                    robot.centerSlide.setPower(-0.1);
                 } else {
 
                     robot.leftSlide.setPower(0.12);
                     robot.rightSlide.setPower(0.12);
-                    robot.centerSlide.setPower(0.12);
                 }
 
                 return false;
@@ -619,7 +612,7 @@ public class LT_RIP extends LinearOpMode {
         robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.claw.setPosition(CLAW_CLOSED);
-        robot.clawMove.setPosition(MOVE_AUTONOMOUS_INIT);
+        robot.clawLeftMove.setPosition(MOVE_AUTONOMOUS_INIT);
         robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
         robot.clawRotate.setPosition(ROTATE_NEUTRAL);
 

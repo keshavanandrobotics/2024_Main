@@ -10,7 +10,6 @@ import teamcode.Robot;
 @TeleOp
 public class PositionalServoProgrammer extends LinearOpMode {
 
-    public static double TEST_POSITION = 0.501;
     public static double MOVE_POSITION = 0.501;
     public static double PIVOT_POSITION = 0.501;
     public static double CLAW_POSITION= 0.501;
@@ -43,7 +42,6 @@ public class PositionalServoProgrammer extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (TEST_POSITION != 0.501){robot.testServo.setPosition(TEST_POSITION);}
             if (PIVOT_POSITION != 0.501){robot.clawPivot.setPosition(PIVOT_POSITION);}
             if (MOVE_POSITION != 0.501){robot.clawLeftMove.setPosition(MOVE_POSITION);}
             if (MOVE_POSITION != 0.501){robot.clawRightMove.setPosition(1-MOVE_POSITION);}

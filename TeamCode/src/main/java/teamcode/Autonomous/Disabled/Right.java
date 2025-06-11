@@ -39,7 +39,7 @@ public class Right extends LinearOpMode {
             robot.claw.setPosition(0.6);
             robot.clawRotate.setPosition(0.3906);
 
-            robot.clawMove.setPosition(0.6);
+            robot.clawLeftMove.setPosition(0.6);
             robot.clawPivot.setPosition(0.62);
             robot.extendo.setPower(1);
             return false;
@@ -57,13 +57,11 @@ public class Right extends LinearOpMode {
            if (getRuntime()-stamp<timeSlidesUP){
                robot.leftSlide.setPower(1);
                robot.rightSlide.setPower(1);
-               robot.centerSlide.setPower(1);
                robot.claw.setPosition(0.62);
                return true;
            } else {
                robot.leftSlide.setPower(0);
                robot.rightSlide.setPower(0);
-               robot.centerSlide.setPower(0);
                return false;
            }
 
@@ -82,17 +80,15 @@ public class Right extends LinearOpMode {
             if (getRuntime()-stamp<3.7){
                 robot.leftSlide.setPower(1);
                 robot.rightSlide.setPower(1);
-                robot.centerSlide.setPower(1);
                 robot.clawRotate.setPosition(0.3906);
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
                 return true;
             } else {
                 robot.extendo.setPower(-0.1);
 
-                robot.centerSlide.setPower(0.1);
                 robot.leftSlide.setPower(0);
                 robot.rightSlide.setPower(0);
                 return false;
@@ -115,7 +111,6 @@ public class Right extends LinearOpMode {
                 robot.extendo.setPower(-1);
                 robot.leftSlide.setPower(-1);
                 robot.rightSlide.setPower(-1);
-                robot.centerSlide.setPower(-1);
                 return true;
             } else if (getRuntime() - stamp <1.2){
                 robot.extendo.setPower(0);
@@ -123,11 +118,10 @@ public class Right extends LinearOpMode {
             }  else if (getRuntime()-stamp <1.7){
                 robot.leftSlide.setPower(0);
                 robot.rightSlide.setPower(0);
-                robot.centerSlide.setPower(0);
 
                 robot.extendo.setPower(1);
 
-                robot.clawMove.setPosition(0.55);
+                robot.clawLeftMove.setPosition(0.55);
 
                 robot.clawPivot.setPosition(0.93);
                 robot.claw.setPosition(0.84);
@@ -138,7 +132,6 @@ public class Right extends LinearOpMode {
             else {
                 robot.leftSlide.setPower(0);
                 robot.rightSlide.setPower(0);
-                robot.centerSlide.setPower(0);
                 return false;
             }
 
@@ -159,14 +152,13 @@ public class Right extends LinearOpMode {
 
                 robot.claw.setPosition(0.6);
                 robot.claw.setPosition(0.6);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
                 robot.extendo.setPower(1);
                 robot.leftSlide.setPower(-1);
                 robot.rightSlide.setPower(-1);
-                robot.centerSlide.setPower(-1);
                 robot.claw.setPosition(0.6);
 
 
@@ -175,14 +167,13 @@ public class Right extends LinearOpMode {
 
                 robot.claw.setPosition(0.84);
                 robot.claw.setPosition(0.84);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
                 robot.extendo.setPower(1);
                 robot.leftSlide.setPower(-1);
                 robot.rightSlide.setPower(-1);
-                robot.centerSlide.setPower(-1);
 
                 return true;
             }
@@ -191,12 +182,12 @@ public class Right extends LinearOpMode {
                 robot.claw.setPosition(0.84);
                 robot.clawRotate.setPosition(0.3906);
 
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
-                robot.clawMove.setPosition(0.48);
-                robot.clawPivot.setPosition(0.93);                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
+                robot.clawPivot.setPosition(0.93);                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
 
                 robot.claw.setPosition(0.84);
@@ -206,17 +197,16 @@ public class Right extends LinearOpMode {
             }
  else {
 
-                robot.centerSlide.setPower(0.1);
                 robot.leftSlide.setPower(0);
                 robot.rightSlide.setPower(0);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
                 robot.claw.setPosition(0.84);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawRotate.setPosition(0.3906);
 
                 robot.clawPivot.setPosition(0.93);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
 
                 return false;
@@ -236,13 +226,12 @@ public class Right extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             double grabTimer = getRuntime()-stamp;
             if (grabTimer<0.2){
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 return  true;
             }
            else if (grabTimer<0.4){
                     robot.leftSlide.setPower(0);
                     robot.rightSlide.setPower(0);
-                    robot.centerSlide.setPower(0);
                     robot.claw.setPosition(0.58);
                return true;
 
@@ -253,7 +242,7 @@ public class Right extends LinearOpMode {
             else if (grabTimer<1.1){
 
                 robot.clawRotate.setPosition(0.3906);
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
                 robot.extendo.setPower(-1);
                return true;
@@ -285,7 +274,6 @@ public class Right extends LinearOpMode {
              if (grabTimer<0.3){
                 robot.leftSlide.setPower(0);
                 robot.rightSlide.setPower(0);
-                robot.centerSlide.setPower(0);
                 robot.claw.setPosition(0.58);
                 return true;
 
@@ -296,7 +284,7 @@ public class Right extends LinearOpMode {
             else if (grabTimer<1){
 
                 robot.clawRotate.setPosition(0.3906);
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
                 robot.extendo.setPower(-1);
                 return true;
@@ -328,7 +316,6 @@ public class Right extends LinearOpMode {
              if (getRuntime()-stamp<0.2){
                     robot.leftSlide.setPower(0);
                     robot.rightSlide.setPower(0);
-                    robot.centerSlide.setPower(0);
                     robot.claw.setPosition(0.58);
                 robot.claw.setPosition(0.58);
                     return true;
@@ -338,10 +325,9 @@ public class Right extends LinearOpMode {
 
                     robot.leftSlide.setPower(0);
                     robot.rightSlide.setPower(0);
-                    robot.centerSlide.setPower(0);
 
                 robot.clawRotate.setPosition(0.3906);
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
 
                     return true;
@@ -354,7 +340,7 @@ public class Right extends LinearOpMode {
                     robot.claw.setPosition(0.58);
                 }
                 robot.clawRotate.setPosition(0.3906);
-                robot.clawMove.setPosition(0.8);
+                robot.clawLeftMove.setPosition(0.8);
                 robot.clawPivot.setPosition(0.12);
                 robot.extendo.setPower(-1);
                 return true;
@@ -387,7 +373,6 @@ public class Right extends LinearOpMode {
 
                     robot.leftSlide.setPower(-1);
                     robot.rightSlide.setPower(-1);
-                    robot.centerSlide.setPower(-1);
 
                     return true;
 
@@ -396,7 +381,6 @@ public class Right extends LinearOpMode {
 
                     robot.leftSlide.setPower(0);
                     robot.rightSlide.setPower(0);
-                    robot.centerSlide.setPower(0);
 
                     return true;
 
@@ -405,7 +389,6 @@ public class Right extends LinearOpMode {
             } else if (grabTimer<0.7) {
                     robot.leftSlide.setPower(0);
                     robot.rightSlide.setPower(0);
-                    robot.centerSlide.setPower(0);
                     robot.claw.setPosition(0.58);
 
                     return true;
@@ -419,7 +402,7 @@ public class Right extends LinearOpMode {
 
 
                 robot.clawRotate.setPosition(0.95);
-                robot.clawMove.setPosition(0.6);
+                robot.clawLeftMove.setPosition(0.6);
                 robot.clawPivot.setPosition(0.62);
 
                     robot.extendo.setPower(-1);
@@ -445,12 +428,10 @@ public class Right extends LinearOpMode {
             }
             if (getRuntime()-stamp<1.05) {
                 robot.leftSlide.setPower(-1);
-                robot.centerSlide.setPower(-1);
                 robot.rightSlide.setPower(-1);
                 return true;
             }   else {
                 robot.leftSlide.setPower(0.1);
-                robot.centerSlide.setPower(0.1);
                 robot.rightSlide.setPower(0.1);
                 return false;
             }
@@ -474,7 +455,7 @@ public class Right extends LinearOpMode {
                 }
                 robot.clawRotate.setPosition(0.3906);
                 robot.clawPivot.setPosition(0.62);
-                robot.clawMove.setPosition(0.6);
+                robot.clawLeftMove.setPosition(0.6);
                 robot.extendo.setPower(1);
 
                 return true;
@@ -483,7 +464,6 @@ public class Right extends LinearOpMode {
                 robot.extendo.setPower(0);
                 robot.leftSlide.setPower(1);
                 robot.rightSlide.setPower(1);
-                robot.centerSlide.setPower(1);
 
                 return true;
 
@@ -491,8 +471,7 @@ public class Right extends LinearOpMode {
             } else {
                 robot.leftSlide.setPower(0);
                 robot.rightSlide.setPower(0);
-                robot.centerSlide.setPower(0);
-                robot.clawMove.setPosition(0.48);
+                robot.clawLeftMove.setPosition(0.48);
                 robot.clawPivot.setPosition(0.93);
                 robot.claw.setPosition(0.84);
                 return false;
@@ -614,13 +593,12 @@ public class Right extends LinearOpMode {
 
 
         robot.claw.setPosition(0.6);
-        robot.clawMove.setPosition(0.5);
+        robot.clawLeftMove.setPosition(0.5);
         robot.clawPivot.setPosition(0.2);
         robot.clawRotate.setPosition(0.38);
 
         robot.leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.centerSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
@@ -674,7 +652,7 @@ public class Right extends LinearOpMode {
 
         Actions.runBlocking(trajectory4.build());
         robot.clawRotate.setPosition(0.3906);
-        robot.clawMove.setPosition(0.8);
+        robot.clawLeftMove.setPosition(0.8);
         robot.clawPivot.setPosition(0.12);
         sleep(1000);
         robot.claw.setPosition(0.84);
@@ -683,7 +661,7 @@ public class Right extends LinearOpMode {
         Actions.runBlocking(trajectory5.build());
         robot.claw.setPosition(0.6);
         robot.clawRotate.setPosition(0.95);
-        robot.clawMove.setPosition(0.6);
+        robot.clawLeftMove.setPosition(0.6);
         robot.clawPivot.setPosition(0.62);
         sleep(600);
 

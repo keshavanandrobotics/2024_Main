@@ -432,14 +432,13 @@ public class Drive_V4 extends LinearOpMode {
 
         double automationTime = getRuntime() - G2_START_PRESSED_TIME;
         if (automationTime < 0.25) {
-            robot.claw.setPosition(CLAW_LOOSE_GRAB);
+            robot.claw.setPosition(CLAW_CLOSED);
         } else {
             robot.clawLeftMove.setPosition(MOVE_SPECIMEN_SCORE);
             robot.clawRightMove.setPosition(1-MOVE_SPECIMEN_SCORE);
             robot.clawPivot.setPosition(PIVOT_SPECIMEN_SCORE);
             robot.clawRotate.setPosition(ROTATE_NEUTRAL);
             if (automationTime > 0.8){
-                robot.claw.setPosition(CLAW_CLOSED);
                 G2_START_PRESSED = false;
             }
             if (G2_BACK_PRESSED){
