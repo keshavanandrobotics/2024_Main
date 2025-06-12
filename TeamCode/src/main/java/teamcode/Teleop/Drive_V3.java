@@ -226,8 +226,7 @@ public class Drive_V3 extends LinearOpMode{
             useColorSensor= false;
         }
 
-        robot.rightHook.setPosition(RIGHT_SPRING_OFF);
-        robot.leftHook.setPosition(LEFT_SPRING_OFF);
+
 
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
@@ -1038,13 +1037,10 @@ public class Drive_V3 extends LinearOpMode{
                 } else if (time < 0.5){
                     HANG_2_TARGET = false;
                     PID_MODE = false;
-                    robot.rightHook.setPosition(RIGHT_SPRING_ON);
-                    robot.leftHook.setPosition(LEFT_SPRING_ON);
+
                 }
                 else if (linearSlidePosition + linearSlideZeroPosition < HANG_3 + linearSlideZeroPosition && HANG_3_TARGET){
                     target = (int) (HANG_3 + linearSlideZeroPosition);
-                    robot.leftHook.setPosition(LEFT_SPRING_IN);
-                    robot.rightHook.setPosition(RIGHT_SPRING_IN);
                     PID_MODE = true;
                     if (linearSlidePosition + linearSlideZeroPosition > HANG_3 + linearSlideZeroPosition - 1000){
                         HANG_3_TARGET = false;
