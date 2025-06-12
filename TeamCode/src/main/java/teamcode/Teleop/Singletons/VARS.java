@@ -84,29 +84,29 @@ public class VARS {
 
 
 
-    public static int HIGH_SPECIMEN_POS = 22750;
+    public static int HIGH_SPECIMEN_POS = 22750/4;
 
-    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 21100;
+    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 21100/4;
 
-    public static int HIGH_SPECIMEN_POS_TELE = 26000;
+    public static int HIGH_SPECIMEN_POS_TELE = 26000/4;
 
-    public static int LOWER_SLIDES_MISS = 18000;
+    public static int LOWER_SLIDES_MISS = 18000/4;
 
-    public static int AUTO_PARK_SLIDE_POS = 23000;
+    public static int AUTO_PARK_SLIDE_POS = 23000/4;
 
-    public static int HIGH_SAMPLE_POS = 83500;
-    public static int HANG_1 = 43000;
+    public static int HIGH_SAMPLE_POS = 83500/4;
+    public static int HANG_1 = 43000/4;
 
-    public static int HANG_2 = 13000;
-    public static int HANG_3 = 69000;
+    public static int HANG_2 = 13000/4;
+    public static int HANG_3 = 69000/4;
 
-    public static int HANG_4 = 59250;
+    public static int HANG_4 = 59250/4;
 
-    public static int EXTENDO_MAX_TELE = 28000;
-    public static int EXTENDO_SOFTMAX_TELE = 21000;
+    public static int EXTENDO_MAX_TELE = 28000/4;
+    public static int EXTENDO_SOFTMAX_TELE = 21000/4;
 
 
-    public static int EXTENDO_HANG = 14000;
+    public static int EXTENDO_HANG = 14000/4;
 
     public static boolean USING_LIMELIGHT = false;
 
