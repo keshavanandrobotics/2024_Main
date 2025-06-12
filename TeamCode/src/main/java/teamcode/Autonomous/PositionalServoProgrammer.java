@@ -51,8 +51,6 @@ public class PositionalServoProgrammer extends LinearOpMode {
 
             if (LEFT_HOLD != 0.501){robot.leftStabilizer.setPosition(LEFT_HOLD);}
             if (RIGHT_HOLD != 0.501){robot.rightStabilizer.setPosition(RIGHT_HOLD);}
-            if (LEFT_SPRING != 0.501){robot.leftHook.setPosition(LEFT_SPRING);}
-            if (RIGHT_SPRING != 0.501){robot.rightHook.setPosition(RIGHT_SPRING);}
 
 
 

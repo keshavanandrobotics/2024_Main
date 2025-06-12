@@ -4,6 +4,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -55,8 +56,8 @@ public class Robot {
     public Servo rightStabilizer;
     public Servo leftStabilizer;
 
-    public Servo rightHook;
-    public Servo leftHook;
+    public CRServo rightHook;
+    public CRServo leftHook;
 
     public Servo leftPTO;
     public Servo rightPTO;
@@ -113,8 +114,8 @@ public class Robot {
 
         leftStabilizer = hardwareMap.servo.get("leftStabilizer");
         rightStabilizer = hardwareMap.servo.get("rightStabilizer");
-        leftHook = hardwareMap.servo.get("leftHookServo");
-        rightHook = hardwareMap.servo.get("rightHookServo");
+        leftHook = hardwareMap.get(CRServo.class, "leftHookServo");
+        rightHook = hardwareMap.get(CRServo.class, "rightHookServo");
         leftPTO = hardwareMap.servo.get("leftPTOServo");
         rightPTO = hardwareMap.servo.get("rightPTOServo");
 
