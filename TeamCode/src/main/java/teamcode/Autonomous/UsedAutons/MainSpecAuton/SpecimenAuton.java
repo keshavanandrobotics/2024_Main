@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
@@ -346,6 +347,15 @@ public class SpecimenAuton extends LinearOpMode {
         TrajectoryActionBuilder retrySpec = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
                 .strafeToLinearHeading(new Vector2d(RETRY_SPEC_X,RETRY_SPEC_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
                 .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+
+        robot.drive.rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.drive.rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        robot.drive.leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.drive.leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        robot.rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         while(opModeInInit()){
 

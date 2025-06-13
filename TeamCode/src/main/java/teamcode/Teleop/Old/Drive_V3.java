@@ -1,4 +1,4 @@
-package teamcode.Teleop;
+package teamcode.Teleop.Old;
 
 import static teamcode.Autonomous.Disabled.Poses.AUTON_END_POSE;
 import static teamcode.Teleop.Singletons.VARS.*;
@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,6 +25,7 @@ import teamcode.Teleop.Singletons.MotorWeights;
 
 @Config
 @TeleOp
+@Disabled
 
 public class Drive_V3 extends LinearOpMode{
     private static MultipleTelemetry TELE;

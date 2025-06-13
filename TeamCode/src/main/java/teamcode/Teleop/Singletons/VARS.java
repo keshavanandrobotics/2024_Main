@@ -9,6 +9,8 @@ public class VARS {
 
     //Keshav was Here
 
+    //Keshav and Daniel was here
+
     public static double SLOWDOWN_SPEED = 0.7;
     public static double WAIT_BACK_BUTTON = 1;
     public static double CLAW_CLOSED = 0.76;
@@ -46,7 +48,7 @@ public class VARS {
     public static double MOVE_RAISED = 0.1;
 
 
-    public static double MOVE_PICKUP_SAMPLE = 0.47;
+    public static double MOVE_PICKUP_SAMPLE = 0.5;
     public static double MOVE_AUTONOMOUS_INIT = 0.3;
 
     public static double MOVE_AUTON_DRAG = 0.3;
@@ -100,7 +102,10 @@ public class VARS {
 
     public static int AUTO_PARK_SLIDE_POS = 23000;
 
-    public static int HIGH_SAMPLE_POS = 83500;
+    public static int HIGH_SAMPLE_POS = 70000;
+
+    public static int HANG_SLIDES_HEIGHT = 63000;
+
     public static int HANG_1 = 43000;
 
     public static int HANG_2 = 13000;
@@ -112,7 +117,17 @@ public class VARS {
     public static int EXTENDO_SOFTMAX_TELE = 30000;
 
 
-    public static int EXTENDO_HANG = 20000;
+    public static int EXTENDO_HANG = 15000;
+
+    public static double HOOKS_UP_TIME = 1.3;
+
+    public static double HOOKS_DOWN_TIME = 0.6;
+
+    public static double PTO_TIME = 2.0;
+
+
+    public static int HANG_SLIDES_HEIGHT_2 = 56000;
+
 
     public static boolean USING_LIMELIGHT = false;
 

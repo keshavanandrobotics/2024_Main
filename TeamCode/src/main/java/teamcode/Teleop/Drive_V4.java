@@ -11,6 +11,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -48,6 +49,8 @@ public class Drive_V4 extends LinearOpMode {
     public double offset = 0;
 
     public double p = 0.0003, i = 0, d = 0.00001;
+
+    public int HANG_STATE = 0;
     public static int target = 30000;
 
     public PIDController controller;
@@ -143,7 +146,7 @@ public class Drive_V4 extends LinearOpMode {
 
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            if (gamepad1.y) {
+            if (G1_Y.wasJustPressed()) {
                 FailoverAction.failover();
                 return false;
             }
@@ -157,6 +160,9 @@ public class Drive_V4 extends LinearOpMode {
                 specTicker++;
             }
 
+            G1_X.readValue();
+            G1_Y.readValue();
+
 
             return true;
         }
@@ -167,7 +173,7 @@ public class Drive_V4 extends LinearOpMode {
 
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-                if (gamepad1.y) {
+                if (G1_Y.wasJustPressed()) {
                     FailoverAction.failover();
                     return false;
                 }
@@ -180,6 +186,9 @@ public class Drive_V4 extends LinearOpMode {
                 if (G1_X.wasJustPressed()){
                     specTicker++;
                 }
+
+                G1_X.readValue();
+                G1_Y.readValue();
 
 
                 return true;
@@ -571,15 +580,12 @@ public class Drive_V4 extends LinearOpMode {
                 limitSwitch();
 
                 toggles();
+
+                hang();
+
             } else {
 
-
                 autoScore();
-
-
-
-
-
 
 
             }
@@ -680,6 +686,9 @@ public class Drive_V4 extends LinearOpMode {
 
         linearSlidePosition = -robot.linearSlideEncoder.getCurrentPosition();
 
+
+        linearSlidePower = 0;
+
         if (gamepad2.right_trigger > 0.5) {
             linearSlidePower += 1;
         } else {
@@ -702,11 +711,6 @@ public class Drive_V4 extends LinearOpMode {
 
                 robot.leftSlide.setPower(linearSlidePower);
                 robot.rightSlide.setPower(linearSlidePower);
-                if (linearSlidePower < 0.12) {
-                        robot.leftSlide.setPower(0.08);
-                } else {
-                        robot.leftSlide.setPower(0.08);
-                }
 
 
             }
@@ -716,7 +720,7 @@ public class Drive_V4 extends LinearOpMode {
         if (!linearAutomation && PID_MODE) {
             controller.setPID(p, i, d);
             double PID = controller.calculate(linearSlidePosition, target);
-            PID += 0.08;
+            PID += 0;
 
             robot.rightSlide.setPower(PID);
             robot.leftSlide.setPower(PID);
@@ -728,7 +732,7 @@ public class Drive_V4 extends LinearOpMode {
         }
 
         if (-gamepad2.left_stick_y < -0.5) {
-            target = (int) linearSlideZeroPosition;
+            target = (int) linearSlideZeroPosition - 400;
             PID_MODE = true;
         } else if (-gamepad2.left_stick_y > 0.5) {
             target = (int) linearSlideZeroPosition + HIGH_SAMPLE_POS;
@@ -1036,94 +1040,129 @@ public class Drive_V4 extends LinearOpMode {
         }
     }
     public void hang() {
+
         double time = getRuntime() - G1_B_PRESSED_TIME;
 
+        if (HANG_STATE ==1){
 
-        if (linearSlidePosition + linearSlideZeroPosition < HANG_1 + linearSlideZeroPosition && HANG_1_TARGET){
+            target = HANG_SLIDES_HEIGHT;
+
+            PID_MODE = true;
+
+            linearAutomation = false;
+
+            robot.clawLeftMove.setPosition(MOVE_AUTONOMOUS_INIT);
+            robot.clawRightMove.setPosition(1-MOVE_AUTONOMOUS_INIT);
+
+            robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
+
+            extendoHoldIn = false;
+
+            extendoIn = false;
+
+            extendoHoldOut = false;
+
+            extendoOut = robot.extendoEncoder.getCurrentPosition() < EXTENDO_HANG;
+
             robot.leftStabilizer.setPosition(LEFT_HOLD_ON);
 
             robot.rightStabilizer.setPosition(RIGHT_HOLD_ON);
 
-            robot.clawLeftMove.setPosition(MOVE_WALL_INTAKE);
-            robot.clawRightMove.setPosition(1-MOVE_WALL_INTAKE);
-            robot.clawPivot.setPosition(PIVOT_WALL_INTAKE);
+            if (time < HOOKS_UP_TIME){
+                robot.leftHook.setPower(1);
+                robot.rightHook.setPower(1);
+            } else {
+                robot.leftHook.setPower(0);
+                robot.rightHook.setPower(0);
+            }
 
-            target = (int) (HANG_1 + linearSlideZeroPosition);
-            PID_MODE = true;
-            if (linearSlidePosition + linearSlideZeroPosition > HANG_1 + linearSlideZeroPosition - 1000){
-                HANG_1_TARGET = false;
-            }
-        } else if (linearSlidePosition + linearSlideZeroPosition > HANG_2 + linearSlideZeroPosition && HANG_2_TARGET){
-            HANG_1_TARGET = false;
-            target = (int) (HANG_2 + linearSlideZeroPosition);
-            PID_MODE = true;
-            G1_B_PRESSED_TIME = getRuntime();
-            if (linearSlidePosition + linearSlideZeroPosition < HANG_2 + linearSlideZeroPosition + 1000){
-                HANG_2_TARGET = false;
-            }
-        } else if (time < 0.5){
-            HANG_2_TARGET = false;
-            PID_MODE = false;
-        }
-        else if (linearSlidePosition + linearSlideZeroPosition < HANG_3 + linearSlideZeroPosition && HANG_3_TARGET){
-            target = (int) (HANG_3 + linearSlideZeroPosition);
-            PID_MODE = true;
-            if (linearSlidePosition + linearSlideZeroPosition > HANG_3 + linearSlideZeroPosition - 1000){
-                HANG_3_TARGET = false;
-            }
-        }
-        else if (robot.extendo.getCurrentPosition() < EXTENDO_HANG && EXTENDO_HANG_TARGET){
-            HANG_3_TARGET = false;
-            robot.clawLeftMove.setPosition(MOVE_RAISED);
-            robot.clawRightMove.setPosition(1-MOVE_RAISED);
-            extendoOut = true;
-            if (robot.extendo.getCurrentPosition() > EXTENDO_HANG - 1000){
+            TELE.addLine("Hanging");
+
+            TELE.addData("e", extendoOut);
+
+
+
+
+
+        } else if (HANG_STATE >=2){
+            if (time < HOOKS_DOWN_TIME){
+                robot.leftHook.setPower(-1);
+                robot.rightHook.setPower(-1);
+            } else if (linearSlidePosition > HANG_SLIDES_HEIGHT_2) {
+
+                PID_MODE = false;
+                linearAutomation = true;
+
+                robot.leftSlide.setPower(-1);
+                robot.rightSlide.setPower(-1);
+
+                G1_B_PRESSED_TIME = getRuntime();
+
+            } else if (time < PTO_TIME) {
+
+                robot.leftHook.setPower(0);
+                robot.rightHook.setPower(0);
+
+                robot.leftSlide.setPower(0);
+                robot.rightSlide.setPower(0);
+
+                robot.leftPTO.setPosition(LEFT_PTO_ON);
+                robot.rightPTO.setPosition(RIGHT_PTO_ON);
+
+                robot.frontLeftMotor.setPower(-0.5);
+                robot.backLeftMotor.setPower(-0.5);
+                robot.backRightMotor.setPower(-0.5);
+                robot.frontRightMotor.setPower(-0.5);
+
+
                 extendoOut = false;
-                robot.extendo.setPower(0);
-                EXTENDO_HANG_TARGET = false;
-            }
-        }
-        else if (linearSlidePosition + linearSlideZeroPosition > HANG_4 + linearSlideZeroPosition && HANG_4_TARGET){
-            extendoOut = false;
-            target = (int) (HANG_4 + linearSlideZeroPosition);
-            PID_MODE = true;
-            G1_B_PRESSED_TIME = getRuntime();
-            if (linearSlidePosition + linearSlideZeroPosition < HANG_4 + linearSlideZeroPosition + 1000){
-                HANG_4_TARGET = false;
-            }
-        }
-        else if (!magneticSwitch && !magneticSwitchHang){
-            HANG_4_TARGET = false;
-            extendoHoldIn = false;
-            extendoHoldOut = false;
-            extendoOut = false;
-            PID_MODE = false;
-            linearAutomation = true;
-            robot.leftSlide.setPower(0);
-            robot.rightSlide.setPower(0);
-            if (time > 0.5){
-                robot.extendo.setPower(-1);
+
+                extendoHoldOut = false;
+
                 extendoIn = true;
+
+
+
+            } else if (time < PTO_TIME + 2){
+                robot.frontLeftMotor.setPower(0);
+                robot.backLeftMotor.setPower(0);
+                robot.backRightMotor.setPower(0);
+                robot.frontRightMotor.setPower(0);
+
+                robot.leftHook.setPower(0);
+                robot.rightHook.setPower(0);
+
+                robot.leftSlide.setPower(0);
+                robot.rightSlide.setPower(0);
+
+                extendoOut = false;
+
+                extendoHoldOut = false;
+
+                extendoIn = true;
+
+                robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
+
+                robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
+
+
+            }
+
+            else {
+                extendoHoldIn = true;
+
+                robot.frontLeftMotor.setPower(-1);
+                robot.backLeftMotor.setPower(-1);
+                robot.backRightMotor.setPower(-1);
+                robot.frontRightMotor.setPower(-1);
+
+                robot.leftSlide.setPower(-1);
+                robot.rightSlide.setPower(-1);
+
             }
         }
 
-        else {
-            magneticSwitchHang = true;
-            extendoIn = false;
-            robot.extendo.setPower(0);
-            robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
-            robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
 
-
-            PID_MODE = false;
-
-            linearAutomation = true;
-
-            robot.leftSlide.setPower(-1);
-            robot.rightSlide.setPower(-1);
-
-            G1_B_PRESSED = false;
-        }
 
     }
     public void automation() {
@@ -1243,13 +1282,13 @@ public class Drive_V4 extends LinearOpMode {
             G1_B_PRESSED = true;
 
             G1_B_PRESSED_TIME = getRuntime();
+
+            HANG_STATE ++;
         }
 
         G1_B.readValue();
 
-        while (G1_B_PRESSED){
-            hang();
-        }
+
 
         //OFFSET CORRECTION IN FC DRIVE
 
@@ -1355,8 +1394,9 @@ public class Drive_V4 extends LinearOpMode {
         if (G2_BACK.wasJustReleased() || G1_RIGHT_BUMPER.wasJustReleased()) {
             G2_BACK_RELEASED = true;
         }
-        if (G2_BACK_RELEASED && getRuntime() - G2_BACK_PRESSED_TIME > WAIT_BACK_BUTTON){
-            target = (int) linearSlideZeroPosition;
+        if (G2_BACK_RELEASED && (getRuntime() - G2_BACK_PRESSED_TIME > WAIT_BACK_BUTTON)){
+            target = (int) linearSlideZeroPosition - 400;
+            G2_BACK_RELEASED = false;
             PID_MODE = true;
         }
 
