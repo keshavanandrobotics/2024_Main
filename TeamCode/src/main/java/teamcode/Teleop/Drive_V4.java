@@ -1,10 +1,22 @@
 package teamcode.Teleop;
 import static teamcode.Teleop.Singletons.VARS.*;
+import static teamcode.Autonomous.UsedAutons.MainSpecAuton.SPEC_AUTO_VARS.*;
+
+import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -26,10 +38,12 @@ public class Drive_V4 extends LinearOpMode {
 
     Robot robot;
     private MultipleTelemetry TELE;
-
+    public static double ESTIMATED_SPEC_TRAJ_TIME = 1.5;
+    public static double ESTIMATED_GRAB_TRAJ_TIME = 1.5;
     public static String MODE = "SAM";
 
     public boolean scoreAutomation = false;
+
     public double offset = 0;
 
     public double p = 0.0003, i = 0, d = 0.00001;
@@ -51,11 +65,22 @@ public class Drive_V4 extends LinearOpMode {
 
     public boolean magneticSwitchHang = false;
 
+    public int specTicker = 0;
+
+    public Action scoreSpec;
+
+    public Action wallGrab;
+
+    public TranslationalVelConstraint VEL_CONSTRAINT2 = new TranslationalVelConstraint(MAX_CYCLING_VEL);
+    public ProfileAccelConstraint ACCEL_CONSTRAINT2 = new ProfileAccelConstraint(-Math.abs(MAX_CYCLING_DECCEL), MAX_CYCLING_ACCEL);
+
+
+
     // Gamepads
     GamepadEx g1, g2;
 
     // Declare ButtonReaders as instance variables
-    ButtonReader G1_START, G1_B, G1_DPAD_UP, G1_DPAD_DOWN, G1_LEFT_BUMPER, G1_RIGHT_BUMPER, G1_A;
+    ButtonReader G1_START, G1_B, G1_DPAD_UP, G1_DPAD_DOWN, G1_LEFT_BUMPER, G1_RIGHT_BUMPER, G1_A, G1_X, G1_Y;
     ButtonReader G2_B, G2_Y, G2_X, G2_RIGHT_BUMPER, G2_START, G2_BACK, G2_DPAD_DOWN, G2_DPAD_UP;
 
     // Corresponding booleans for press states
@@ -88,7 +113,312 @@ public class Drive_V4 extends LinearOpMode {
     public boolean HANG_4_TARGET = true;
     public boolean EXTENDO_HANG_TARGET = true;
 
+    public static class FailoverAction implements Action {
+            private final Action mainAction;
+            private final Action failoverAction;
+            private static boolean failedOver = false;
+
+            public FailoverAction(Action mainAction, Action failoverAction) {
+                this.mainAction = mainAction;
+                this.failoverAction = failoverAction;
+            }
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (failedOver) {
+                    return failoverAction.run(telemetryPacket);
+                }
+
+                return mainAction.run(telemetryPacket);
+            }
+
+            public static void failover() {
+                failedOver = true;
+            }
+    }
+
+    Action updateAction = new Action() {
+        @Override
+
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            if (gamepad1.y) {
+                FailoverAction.failover();
+                return false;
+            }
+
+            if (getRuntime()>ESTIMATED_SPEC_TRAJ_TIME){
+                FailoverAction.failover();
+                return false;
+            }
+
+            if (G1_X.wasJustPressed()){
+                specTicker++;
+            }
+
+
+            return true;
+        }
+    };
+
+    Action updateAction2 = new Action() {
+            @Override
+
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                if (gamepad1.y) {
+                    FailoverAction.failover();
+                    return false;
+                }
+
+                if (getRuntime()>ESTIMATED_GRAB_TRAJ_TIME){
+                    FailoverAction.failover();
+                    return false;
+                }
+
+                if (G1_X.wasJustPressed()){
+                    specTicker++;
+                }
+
+
+                return true;
+            }
+        };
+
+    Action doNothing = new Action() {
+            @Override
+
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+
+                return false;
+            }
+        };
+
+    public Action Servos(double clawPos, double rotatePos, double movePos, double pivotPos){
+
+        return new Action() {
+
+            boolean claw = true;
+            boolean rotate = true;
+            boolean move = true;
+            boolean pivot = true;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                if (clawPos == 0.501){
+                    claw = false;
+                } else {
+
+
+                    robot.claw.setPosition(clawPos);
+
+
+                }
+                if (rotatePos == 0.501){
+                    rotate = false;
+                } else {
+
+
+
+
+                    robot.clawRotate.setPosition(rotatePos);
+                }
+                if (movePos== 0.501){
+                    move = false;
+                } else {
+
+
+
+
+                    robot.clawLeftMove.setPosition(movePos);
+                    robot.clawRightMove.setPosition(1-movePos);
+                }
+                if (pivotPos== 0.501){
+                    pivot = false;
+                } else {
+
+                    robot.clawPivot.setPosition(pivotPos);
+                }
+
+
+
+
+                return false;
+
+
+
+
+            }
+        };
+
+
+    }
+    public Action ExtendoPID(int position, double power, double holdPower){
+
+            return new Action() {
+
+                int pos = position;
+
+                int ticker = 1;
+
+                double finalPower = 0.0;
+
+                double finalHoldPower = 0.0;
+
+
+                boolean reversed = false;
+
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                    if (ticker ==1){
+
+                        if (robot.extendoEncoder.getCurrentPosition() < pos){
+                            finalPower = power;
+
+                            finalHoldPower = holdPower;
+
+                            reversed = false;
+                        } else {
+                            finalPower = -power;
+                            finalHoldPower = -holdPower;
+
+                            reversed = true;
+
+                        }
+
+
+
+                    }
+
+                    ticker++;
+
+                    if ((robot.extendoEncoder.getCurrentPosition() < pos) && !reversed){
+
+                        robot.extendo.setPower(finalPower);
+
+
+
+                        return true;
+
+                    }
+
+                    else if ((robot.extendoEncoder.getCurrentPosition() > pos) && reversed){
+
+                        robot.extendo.setPower(finalPower);
+
+
+
+
+                        return true;
+
+                    }
+
+
+                    else {
+
+                        robot.extendo.setPower(finalHoldPower);
+
+
+
+                        return false;
+
+
+                    }
+
+                }
+
+            };
+        }
+
+
+    public Action LinearSlidePID(int position, double holdPower){
+
+        return new Action() {
+
+            private final PIDController controller = new PIDController(0.0006,0,0.00001);
+
+
+
+
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                double linearSlidePosition = -robot.linearSlideEncoder.getCurrentPosition();
+
+                controller.setPID(0.0006,0,0.00001);
+
+                double power = controller.calculate(linearSlidePosition, position) + 0.08;
+
+                robot.leftSlide.setPower(power);
+                robot.rightSlide.setPower(power);
+
+                telemetry.addData("power", power);
+                telemetry.addData("Target", position);
+                telemetry.addData("pos", linearSlidePosition);
+
+                if (Math.abs(position - linearSlidePosition)<475){
+                    telemetry.addLine("Success");
+                    telemetry.update();
+
+
+                    robot.leftSlide.setPower(holdPower);
+                    robot.rightSlide.setPower(holdPower);
+
+
+                    return false;
+
+                } else {
+
+
+                    telemetry.update();
+
+                    return  true;
+
+                }
+
+            }
+
+        };
+    }
+
+    public Action Wait (double time){
+        return new Action() {
+
+            int ticker = 1;
+
+            double stamp = 0.0;
+
+            final double desiredTime = time;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                if (ticker ==1){
+                    stamp = getRuntime();
+                }
+
+                ticker ++;
+
+                double runTime = getRuntime() - stamp;
+
+                return (runTime < desiredTime);
+
+
+            }
+
+        };
+    }
+
+
+
+
     public void initialize() {
+
+        FailoverAction.failedOver = false;
         
         robot = new Robot(hardwareMap);
 
@@ -143,6 +473,14 @@ public class Drive_V4 extends LinearOpMode {
                 g1, GamepadKeys.Button.A
         );
 
+        G1_Y = new ButtonReader(
+                g1, GamepadKeys.Button.Y
+        );
+
+        G1_X = new ButtonReader(
+                g1, GamepadKeys.Button.X
+        );
+
 
         G2_B = new ButtonReader(
                 g2, GamepadKeys.Button.B
@@ -177,6 +515,10 @@ public class Drive_V4 extends LinearOpMode {
                 g2, GamepadKeys.Button.DPAD_UP
         );
 
+
+
+
+
     }
 
     @Override
@@ -202,9 +544,22 @@ public class Drive_V4 extends LinearOpMode {
                 limitSwitch();
 
                 toggles();
+            } else {
+
+
+                autoScore();
+
+
+
+
+
+
+
             }
 
             displayTelemetry();
+
+            automation();
 
         }
 
@@ -748,7 +1103,116 @@ public class Drive_V4 extends LinearOpMode {
         }
 
     }
+    public void automation() {
+
+        if (G1_Y.wasJustPressed()){
+
+            scoreAutomation = !scoreAutomation;
+
+            robot.drive = new PinpointDrive(hardwareMap, new Pose2d(WALL_GRAB_X,WALL_GRAB_Y, 0));
+
+            Action subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
+                            .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), Math.toRadians(0),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
+                            .build();
+
+
+            Action subsequentScores = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
+                            .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
+                            .build();
+
+            SequentialAction grab =
+                    new SequentialAction(
+                            Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
+                            Wait(CLAW_OPEN_TIME),
+                            new ParallelAction(
+                                subsequentWallGrabs,
+
+                                new SequentialAction(
+                                        ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
+                                        new ParallelAction(
+                                                LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
+                                                Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
+                                        )
+                                )
+                            )
+
+                    );
+
+            SequentialAction clip =
+                    new SequentialAction(
+                            Wait(HUMAN_PLAYER_WAIT),
+                            ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
+                            Wait(EXTENDO_IN_WAIT),
+                            Servos(CLAW_CLOSED, 0.501, 0.501, .501),
+                            Wait(CLAW_CLOSE_TIME),
+                            new ParallelAction(
+                                    subsequentScores,
+                                    Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
+                                    LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
+                                    new SequentialAction(
+                                            Wait(EXTENDO_OUT_WAIT),
+                                            ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1)
+                                    )
+
+                            )
+                    );
+
+
+            scoreSpec = new FailoverAction(clip, doNothing);
+
+            wallGrab = new FailoverAction(grab, doNothing);
+
+
+            specTicker = 1;
+
+        }
+
+        G1_Y.readValue();
+
+        if (G1_X.wasJustPressed()){
+
+
+            specTicker++;
+
+        }
+
+        G1_X.readValue();
+
+
+
+
+
+    }
+
+    public void autoScore() {
+        if (specTicker > 0){
+
+
+            Actions.runBlocking(
+                new ParallelAction(
+
+                    scoreSpec, updateAction
+
+                )
+            );
+
+            Actions.runBlocking(
+                new ParallelAction(
+
+                    wallGrab, updateAction2
+
+                )
+            );
+
+            specTicker--;
+
+        }
+
+    }
+
     public void toggles () {
+
+
 
         //HANG
 

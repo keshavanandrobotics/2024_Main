@@ -18,8 +18,10 @@ public class PositionalServoProgrammer extends LinearOpMode {
 
     public static double LEFT_HOLD = 0.501;
     public static double RIGHT_HOLD = 0.501;
-    public static double LEFT_SPRING= 0.501;
-    public static double RIGHT_SPRING = 0.501;
+    public static double LEFT_HOOK_POWER= 0.501;
+    public static double RIGHT_HOOK_POWER = 0.501;
+    public static double LEFT_PTO = 0.501;
+    public static double RIGHT_PTO = 0.501;
 
 
 
@@ -51,12 +53,11 @@ public class PositionalServoProgrammer extends LinearOpMode {
 
             if (LEFT_HOLD != 0.501){robot.leftStabilizer.setPosition(LEFT_HOLD);}
             if (RIGHT_HOLD != 0.501){robot.rightStabilizer.setPosition(RIGHT_HOLD);}
-
-
-
-
-
-
+            if (LEFT_PTO != 0.501){robot.leftPTO.setPosition(LEFT_HOLD);}
+            if (RIGHT_PTO != 0.501){robot.leftPTO.setPosition(LEFT_HOLD);}
+            if (LEFT_HOOK_POWER != 0.501){robot.leftHook.setPower(LEFT_HOOK_POWER);}
+            if (RIGHT_HOOK_POWER != 0.501){robot.rightHook.setPower(RIGHT_HOOK_POWER);}
+            
         }
 
 

@@ -29,7 +29,7 @@ import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
-@Autonomous (preselectTeleOp = "Drive_V3")
+@Autonomous (preselectTeleOp = "Drive_V4")
 public class SpecimenAuton extends LinearOpMode {
 
     Robot robot;
@@ -238,10 +238,6 @@ public class SpecimenAuton extends LinearOpMode {
             }
 
         };
-    }
-
-    public boolean limitClawChecker (){
-        return (!robot.pin00.getState() || !robot.pin01.getState());
     }
 
     public Action Wait (double time){
