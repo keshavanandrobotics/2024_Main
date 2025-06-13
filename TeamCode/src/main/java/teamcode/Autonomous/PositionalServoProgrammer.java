@@ -1,6 +1,7 @@
 package teamcode.Autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,7 +10,6 @@ import teamcode.Robot;
 @Config
 @TeleOp
 public class PositionalServoProgrammer extends LinearOpMode {
-
     public static double MOVE_POSITION = 0.501;
     public static double PIVOT_POSITION = 0.501;
     public static double CLAW_POSITION= 0.501;
