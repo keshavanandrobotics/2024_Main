@@ -952,7 +952,7 @@ public class Drive_V4 extends LinearOpMode {
             } else {
                 robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
                 robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
-                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+                robot.clawPivot.setPosition(PIVOT_HOVER_SAMPLE);
                 robot.clawRotate.setPosition(ROTATE_90);
                 robot.claw.setPosition(CLAW_CLOSED);
             }
@@ -969,7 +969,7 @@ public class Drive_V4 extends LinearOpMode {
             } else {
                 robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
                 robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
-                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+                robot.clawPivot.setPosition(PIVOT_HOVER_SAMPLE);
                 robot.clawRotate.setPosition(ROTATE_90);
                 robot.claw.setPosition(CLAW_OPEN);
             }
@@ -1406,7 +1406,7 @@ public class Drive_V4 extends LinearOpMode {
             robot.claw.setPosition(CLAW_OPEN);
             robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
             robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
-            robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+            robot.clawPivot.setPosition(PIVOT_HOVER_SAMPLE);
             robot.clawRotate.setPosition(ROTATE_90);
 
             if (!extendoOut) {
@@ -1466,7 +1466,7 @@ public class Drive_V4 extends LinearOpMode {
             } else if (robot.clawPivot.getPosition() > (PIVOT_SAMPLE_PICKUP - 0.15)) {
                 robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
                 robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
-                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+                robot.clawPivot.setPosition(PIVOT_HOVER_SAMPLE);
 
             }
 
