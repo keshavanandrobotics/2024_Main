@@ -25,6 +25,7 @@ public class Robot {
     public DcMotorEx backLeftMotor;
     public DcMotorEx leftSlide;
     public DcMotorEx rightSlide;
+
     public DcMotorEx extendo;
 
 
@@ -91,10 +92,13 @@ public class Robot {
 
 
 
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -118,6 +122,8 @@ public class Robot {
         rightHook = hardwareMap.get(CRServo.class, "rightHookServo");
         leftPTO = hardwareMap.servo.get("leftPTOServo");
         rightPTO = hardwareMap.servo.get("rightPTOServo");
+
+        rightHook.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 

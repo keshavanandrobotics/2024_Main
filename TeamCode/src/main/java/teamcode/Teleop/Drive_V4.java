@@ -24,6 +24,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.Objects;
 
@@ -51,7 +52,7 @@ public class Drive_V4 extends LinearOpMode {
 
     public PIDController controller;
     public double linearSlideZeroPosition = 0;
-    public double slidesZeroPower = 0.08;
+    public double slidesZeroPower = 0;
 
     public boolean linearAutomation = false;
     public boolean PID_MODE = false;
@@ -431,6 +432,32 @@ public class Drive_V4 extends LinearOpMode {
         robot.backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
+        TELE.addData("bl", robot.backLeftMotor.getDirection());
+        TELE.addData("br", robot.backRightMotor.getDirection());
+        TELE.addData("fl", robot.frontLeftMotor.getDirection());
+        TELE.addData("fr", robot.frontRightMotor.getDirection());
+
+        robot.backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        robot.frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        robot.rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        robot.leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
+
+        TELE.addData("bl", robot.backLeftMotor.getDirection());
+        TELE.addData("br", robot.backRightMotor.getDirection());
+        TELE.addData("fl", robot.frontLeftMotor.getDirection());
+        TELE.addData("fr", robot.frontRightMotor.getDirection());
+
+        telemetry.update();
+
+
         robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -577,10 +604,6 @@ public class Drive_V4 extends LinearOpMode {
 
         double botHeading = robot.drive.pose.heading.toDouble() - offset;
 
-
-        telemetry.addData("botHeading", Math.toDegrees(botHeading));
-
-        telemetry.addData("offset", Math.toDegrees(offset));
 
 
         if (Objects.equals(mode, "SAM")) {

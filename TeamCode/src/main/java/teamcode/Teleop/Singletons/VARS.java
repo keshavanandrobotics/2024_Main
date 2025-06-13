@@ -9,32 +9,32 @@ public class VARS {
 
     public static double SLOWDOWN_SPEED = 0.7;
     public static double WAIT_BACK_BUTTON = 1;
-    public static double CLAW_CLOSED = 0.535;
+    public static double CLAW_CLOSED = 0.76;
     ;
-    public static double CLAW_OPEN = 0.37;
-    public static double CLAW_LESS_OPEN = 0.45;
+    public static double CLAW_OPEN = 0.52;
+    public static double CLAW_LESS_OPEN = 0.63;
 
-    public static double CLAW_LOOSE_GRAB = 0.51;
+    public static double CLAW_LOOSE_GRAB = 0.74;
 
-    public static double ROTATE_NEUTRAL = 0.94;
+    public static double ROTATE_NEUTRAL = 0.9;
 
 
     public static double ROTATE_MTI_AUTON_SCORE = 0.28;
 
-    public static double ROTATE_AUTON_SPEC_SCORE = 0.81;
+    public static double ROTATE_AUTON_SPEC_SCORE = 0.75;
 
 
 
-    public static double ROTATE_90 = 0.47;
+    public static double ROTATE_90 = 0.44;
     public static double ROTATE_FLIP = 0;
     public static double ROTATE_LM3_SPECIMEN_AUTON = 0.23;
 
 
 
-    public static double MOVE_WALL_INTAKE = 1;
+    public static double MOVE_WALL_INTAKE = 0.9;
 
 
-    public static double MOVE_OUTTAKE = 1;
+    public static double MOVE_OUTTAKE = 0.9;
     public static double MOVE_SPECIMEN_SCORE = 0.46;
     public static double MOVE_ALL_OUT = 0.4;
     public static double MOVE_HOVER_SAMPLE = 0.48;
@@ -52,8 +52,8 @@ public class VARS {
 
 
 
-    public static double PIVOT_OUTTAKE = 0;
-    public static double PIVOT_WALL_INTAKE = 0;
+    public static double PIVOT_OUTTAKE = 0.48;
+    public static double PIVOT_WALL_INTAKE = 0.48;
 
     public static double PIVOT_AUTON_DRAG = 0.6;
     public static double PIVOT_AUTON_HOVER = 0.5;
