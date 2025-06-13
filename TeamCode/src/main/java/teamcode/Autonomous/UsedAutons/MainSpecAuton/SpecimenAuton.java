@@ -298,10 +298,12 @@ public class SpecimenAuton extends LinearOpMode {
         robot.clawLeftMove.setPosition(MOVE_AUTONOMOUS_INIT);
         robot.clawRightMove.setPosition(1-MOVE_AUTONOMOUS_INIT);
         robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
-        robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+        robot.clawRotate.setPosition(ROTATE_FLIP);
 
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
+        robot.leftPTO.setPosition(LEFT_PTO_OFF);
+        robot.rightPTO.setPosition(RIGHT_PTO_OFF);
 
         //Trajectories
 

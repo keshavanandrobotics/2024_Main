@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import teamcode.Robot;
 
@@ -37,6 +38,11 @@ public class PID_Test extends LinearOpMode {
 
         controller.setTolerance(50);
         robot = new Robot (hardwareMap);
+
+
+        robot.rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
