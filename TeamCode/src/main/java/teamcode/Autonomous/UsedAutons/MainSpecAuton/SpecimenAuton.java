@@ -302,6 +302,8 @@ public class SpecimenAuton extends LinearOpMode {
 
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
+        robot.leftPTO.setPosition(LEFT_PTO_OFF);
+        robot.rightPTO.setPosition(RIGHT_PTO_OFF);
 
         //Trajectories
 

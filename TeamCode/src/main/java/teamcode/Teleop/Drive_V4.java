@@ -1317,10 +1317,8 @@ public class Drive_V4 extends LinearOpMode {
         }
 
         if (G1_LEFT_BUMPER.wasJustReleased() || G2_START.wasJustReleased()) {
-
             target = (int) (HIGH_SPECIMEN_POS_TELE + linearSlideZeroPosition);
             PID_MODE = true;
-
         }
 
         G1_LEFT_BUMPER.readValue();

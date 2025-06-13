@@ -26,15 +26,15 @@ public class VARS {
 
 
     public static double ROTATE_90 = 0.52;
-    public static double ROTATE_FLIP = 0.06;
+    public static double ROTATE_FLIP = 0.04;
     public static double ROTATE_LM3_SPECIMEN_AUTON = 0.23;
 
 
 
-    public static double MOVE_WALL_INTAKE = 0.07;
+    public static double MOVE_WALL_INTAKE = 0.05;
 
 
-    public static double MOVE_OUTTAKE = 0.07;
+    public static double MOVE_OUTTAKE = 0.05;
     public static double MOVE_SPECIMEN_SCORE = 0.45;
     public static double MOVE_ALL_OUT = 0.45;
     public static double MOVE_HOVER_SAMPLE = 0.44;
@@ -60,8 +60,8 @@ public class VARS {
 
     public static double PIVOT_SPECIMEN_SCORE = 0.4;
     public static double PIVOT_ALL_OUT = 0.6;
-    public static double PIVOT_HOVER_SAMPLE = 0.895;
-    public static double PIVOT_SAMPLE_PICKUP = 0.87;
+    public static double PIVOT_HOVER_SAMPLE = 0.9;
+    public static double PIVOT_SAMPLE_PICKUP = 0.85;
 
     public static double PIVOT_AUTONOMOUS_INIT = 0.3;
     public static double LEFT_SPRING_OFF = 0.45;
@@ -88,29 +88,29 @@ public class VARS {
 
 
     //TO BE DETERMINED
-    public static int HIGH_SPECIMEN_POS = 22750/4;
+    public static int HIGH_SPECIMEN_POS = 22750;
 
-    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 21100/4;
+    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 21100;
 
-    public static int HIGH_SPECIMEN_POS_TELE = 26000/4;
+    public static int HIGH_SPECIMEN_POS_TELE = 26000;
 
-    public static int LOWER_SLIDES_MISS = 18000/4;
+    public static int LOWER_SLIDES_MISS = 18000;
 
-    public static int AUTO_PARK_SLIDE_POS = 23000/4;
+    public static int AUTO_PARK_SLIDE_POS = 23000;
 
-    public static int HIGH_SAMPLE_POS = 83500/4;
-    public static int HANG_1 = 43000/4;
+    public static int HIGH_SAMPLE_POS = 83500;
+    public static int HANG_1 = 43000;
 
-    public static int HANG_2 = 13000/4;
-    public static int HANG_3 = 69000/4;
+    public static int HANG_2 = 13000;
+    public static int HANG_3 = 69000;
 
-    public static int HANG_4 = 59250/4;
+    public static int HANG_4 = 59250;
 
-    public static int EXTENDO_MAX_TELE = 28000/4;
-    public static int EXTENDO_SOFTMAX_TELE = 21000/4;
+    public static int EXTENDO_MAX_TELE = 38000;
+    public static int EXTENDO_SOFTMAX_TELE = 30000;
 
 
-    public static int EXTENDO_HANG = 14000/4;
+    public static int EXTENDO_HANG = 20000;
 
     public static boolean USING_LIMELIGHT = false;
 
