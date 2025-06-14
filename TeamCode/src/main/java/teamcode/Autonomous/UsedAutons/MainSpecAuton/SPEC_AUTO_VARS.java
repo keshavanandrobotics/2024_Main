@@ -21,10 +21,32 @@ public class SPEC_AUTO_VARS {
     public static double X9 = 50, Y9 = -50; // PICKING UP FIRST SPEC
     public static double X10 = 10, Y10 = -46; // GETTING READY TO SCORE FIRST SPEC
 
+    //Sub Pickup Coordinates
+
+    public static double SUB_PICKUP_X1 = 25, SUB_PICKUP_Y1 = 17;
+    public static double SUB_PICKUP_X2 = 25, SUB_PICKUP_Y2 = 11;
+    public static double SUB_PICKUP_X3 = 25, SUB_PICKUP_Y3 = 3;
+    public static double SUB_PICKUP_X4 = 25, SUB_PICKUP_Y4 = -5;
+    public static double SUB_PICKUP_X5 = 28, SUB_PICKUP_Y5 = 17;
+    public static double SUB_PICKUP_X6 = 28, SUB_PICKUP_Y6 = 11;
+    public static double SUB_PICKUP_X7 = 28, SUB_PICKUP_Y7 = 3;
+    public static double SUB_PICKUP_X8 = 28, SUB_PICKUP_Y8 = -5;
+
+    public static double DROP_X = 24, DROP_Y = -12, DROP_HEADING = -135;
+
+
+
+
+
+
+
+
     //Cycling Coordinates
 
     public static double FIRST_WALL_GRAB_X = 0, FIRST_WALL_GRAB_Y = -22; // SPOT FOR HUMAN PLAYER GRAB FIRST SPEC
     public static double WALL_GRAB_X = 1, WALL_GRAB_Y = -22; //SPOT FOR HUMAN PLAYER GRAB
+
+    public static double FIRST_SPEC_SCORE_X = 25, FIRST_SPEC_SCORE_Y = 8; // SPOT FOR PRELOAD SCORE
 
     public static double SPEC_SCORE_X = 25, SPEC_SCORE_Y = 8, SPEC_SCORE_HEADING = 30; //SPOT FOR SCORING
     public static double RETRY_SPEC_X = 15, RETRY_SPEC_Y = -22; // SPOT TO MOVE TO IF FAILED SPEC
@@ -69,6 +91,8 @@ public class SPEC_AUTO_VARS {
     public static int EXTENDO_CYCLE_HUMAN_PLAYER = 3000; //POSITION BEFORE EXTENDO GOES IN AND GRABS 2-5 SPEC
 
     public static double EXTENDO_RETRACT_WAIT = 0.6;
+
+    public static double FIRST_SCORE_WAIT = 0.8;
 
     public static int LINEAR_SLIDE_LOWER_THRESHOLD = 500; //SHOULD NOT NEED EDITING, POSITION WHERE LINEAR SLIDE LOWERING ACTION ENDS
 

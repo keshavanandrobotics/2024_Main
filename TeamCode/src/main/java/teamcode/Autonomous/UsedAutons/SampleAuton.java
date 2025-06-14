@@ -27,7 +27,7 @@ import teamcode.Robot;
 
 @Config
 @Autonomous (preselectTeleOp = "Drive_V3")
-public class LT_Sample4 extends LinearOpMode{
+public class SampleAuton extends LinearOpMode{
 
     Robot robot;
 
