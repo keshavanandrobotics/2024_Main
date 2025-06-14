@@ -133,6 +133,10 @@ public class VARS {
 
     public static boolean SPEC_MODE = false;
 
+    public static double SPECHEADING_AUTO_SCORE_DRIFT = -2.0;
+    public static double SPECY_AUTO_SCORE_DRIFT = 0.2;
+    public static double SPECX_AUTO_SCORE_DRIFT = 0;
+
 
     public static boolean AUTON_RED = true;
 

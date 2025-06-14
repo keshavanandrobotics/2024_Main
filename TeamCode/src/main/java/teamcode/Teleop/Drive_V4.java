@@ -1170,11 +1170,11 @@ public class Drive_V4 extends LinearOpMode {
     public void autoScore() {
         if (specTicker > 0 && scoreAutomation){
 
-            subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y+0.17*globalSpecCount, Math.toRadians(SPEC_SCORE_HEADING-2.7*globalSpecCount)))
+            subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X+SPECX_AUTO_SCORE_DRIFT*globalSpecCount, SPEC_SCORE_Y+SPECY_AUTO_SCORE_DRIFT*globalSpecCount, Math.toRadians(SPEC_SCORE_HEADING+SPECHEADING_AUTO_SCORE_DRIFT*globalSpecCount)))
                     .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), Math.toRadians(0),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
             subsequentScores = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
-                    .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y+0.17*globalSpecCount), Math.toRadians(SPEC_SCORE_HEADING-2.7*globalSpecCount),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                    .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X+SPECX_AUTO_SCORE_DRIFT*globalSpecCount,SPEC_SCORE_Y+SPECY_AUTO_SCORE_DRIFT*globalSpecCount), Math.toRadians(SPEC_SCORE_HEADING+SPECHEADING_AUTO_SCORE_DRIFT*globalSpecCount),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
 
 
