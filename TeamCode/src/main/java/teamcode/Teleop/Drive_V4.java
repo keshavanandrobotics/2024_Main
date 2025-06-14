@@ -425,6 +425,9 @@ public class Drive_V4 extends LinearOpMode {
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
 
+        robot.leftPTO.setPosition(LEFT_PTO_OFF);
+        robot.rightPTO.setPosition(RIGHT_PTO_OFF);
+
         controller = new PIDController(p, i, d);
 
         GamepadEx g2 = new GamepadEx(gamepad2);
@@ -690,7 +693,7 @@ public class Drive_V4 extends LinearOpMode {
             target = (int) linearSlideZeroPosition - 400;
             PID_MODE = true;
         } else if (-gamepad2.left_stick_y > 0.5) {
-            target = (int) linearSlideZeroPosition + HIGH_SAMPLE_POS;
+            target = (int) linearSlideZeroPosition + HIGH_SAMPLE_POS_TELE;
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
             robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
             robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);

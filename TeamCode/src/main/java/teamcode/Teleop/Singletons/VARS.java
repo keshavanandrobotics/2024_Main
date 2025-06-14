@@ -45,7 +45,7 @@ public class VARS {
 
     public static double MOVE_AUTO_HOVER = 0.45;
 
-    public static double MOVE_RAISED = 0.1;
+    public static double MOVE_RAISED = 0.2;
 
 
     public static double MOVE_PICKUP_SAMPLE = 0.5;
@@ -102,7 +102,9 @@ public class VARS {
 
     public static int AUTO_PARK_SLIDE_POS = 23000;
 
-    public static int HIGH_SAMPLE_POS = 72000;
+    public static int HIGH_SAMPLE_POS = 70000;
+
+    public static int HIGH_SAMPLE_POS_TELE = 72000;
 
     public static int HANG_SLIDES_HEIGHT = 63000;
 
