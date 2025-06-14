@@ -47,79 +47,22 @@ public class SpecimenAuton extends LinearOpMode {
 
 
 
-    public Action ExtendoPID(int position, double power, double holdPower){
+    public Action ExtendoPID(double power){
 
         return new Action() {
 
-            int pos = position;
-
-            int ticker = 1;
-
-            double finalPower = 0.0;
-
-            double finalHoldPower = 0.0;
 
 
-            boolean reversed = false;
+            final double finalPower = power;
+
+
+
 
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-                if (ticker ==1){
-
-                    if (robot.extendoEncoder.getCurrentPosition() < pos){
-                        finalPower = power;
-
-                        finalHoldPower = holdPower;
-
-                        reversed = false;
-                    } else {
-                        finalPower = -power;
-                        finalHoldPower = -holdPower;
-
-                        reversed = true;
-
-                    }
-
-
-
-                }
-
-                ticker++;
-
-                if ((robot.extendoEncoder.getCurrentPosition() < pos) && !reversed){
-
-                    robot.extendo.setPower(finalPower);
-
-
-
-                    return true;
-
-                }
-
-                else if ((robot.extendoEncoder.getCurrentPosition() > pos) && reversed){
-
-                    robot.extendo.setPower(finalPower);
-
-
-
-
-                    return true;
-
-                }
-
-
-                else {
-
-                    robot.extendo.setPower(finalHoldPower);
-
-
-
-                    return false;
-
-
-                }
-
+                robot.extendo.setPower(finalPower);
+                return false;
             }
 
         };
@@ -389,11 +332,11 @@ public class SpecimenAuton extends LinearOpMode {
 
         if (opModeIsActive()){
 
-
             Actions.runBlocking(
                     new ParallelAction(
                             pushing.build(),
                             new SequentialAction(
+                                    ExtendoPID(-0.2),
                                     Wait(PUSHING_SERVO_ROTATE),
                                     Servos(0.501, ROTATE_FLIP, 0.501, 0.501),
                                     Wait(PUSHING_SERVO_OPEN),
@@ -401,8 +344,7 @@ public class SpecimenAuton extends LinearOpMode {
                                     Wait(PUSHING_SERVO_PIVOT),
                                     Servos(0.501, 0.501, 0.501, PIVOT_WALL_INTAKE),
                                     Wait(PUSHING_SERVO_MOVE),
-                                    Servos(0.501, 0.501, MOVE_WALL_INTAKE, 0.501),
-                                    ExtendoPID(EXTENDO_INITIAL_HUMAN_PLAYER, 1, 0)
+                                    Servos(0.501, 0.501, MOVE_WALL_INTAKE, 0.501)
                             )
 
                     )
@@ -416,8 +358,6 @@ public class SpecimenAuton extends LinearOpMode {
                     new SequentialAction(
                             firstWallGrab.build(),
                             Wait(HUMAN_PLAYER_WAIT),
-                            ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
-                            Wait(EXTENDO_IN_WAIT),
                             Servos(CLAW_CLOSED, 0.501, 0.501, .501),
                             Wait(CLAW_CLOSE_TIME)
                     )
@@ -432,7 +372,7 @@ public class SpecimenAuton extends LinearOpMode {
                             LinearSlidePID(HIGH_SPECIMEN_POS_AUTO_FIRST, 0.12),
                             new SequentialAction(
                                     Wait(EXTENDO_OUT_WAIT),
-                                    ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1)
+                                    ExtendoPID(1)
                             )
                     )
             );
@@ -446,10 +386,12 @@ public class SpecimenAuton extends LinearOpMode {
                                 new ParallelAction(
                                         subsequentWallGrabs.build(),
                                         new SequentialAction(
-                                                ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
+                                                ExtendoPID(-1),
+                                                Wait(EXTENDO_RETRACT_WAIT),
                                                 new ParallelAction(
                                                         LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
-                                                        Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
+                                                        Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE),
+                                                        ExtendoPID(-0.5)
 
                                                 )
                                         )
@@ -491,7 +433,7 @@ public class SpecimenAuton extends LinearOpMode {
                 Actions.runBlocking(
                         new SequentialAction(
                                 Wait(HUMAN_PLAYER_WAIT),
-                                ExtendoPID(EXTENDO_GRAB_THRESHOLD, 1, 1),
+                                ExtendoPID(-1),
                                 Wait(EXTENDO_IN_WAIT),
                                 Servos(CLAW_CLOSED, 0.501, 0.501, .501),
                                 Wait(CLAW_CLOSE_TIME),
@@ -501,7 +443,7 @@ public class SpecimenAuton extends LinearOpMode {
                                         LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
                                         new SequentialAction(
                                                 Wait(EXTENDO_OUT_WAIT),
-                                                ExtendoPID(EXTENDO_SCORE_THRESHOLD, 1, 1)
+                                                ExtendoPID(1)
                                         )
 
                                 )
@@ -517,11 +459,12 @@ public class SpecimenAuton extends LinearOpMode {
                             new ParallelAction(
                                     subsequentWallGrabs.build(),
                                     new SequentialAction(
-                                            ExtendoPID(EXTENDO_CYCLE_HUMAN_PLAYER, 1, 0),
+                                            ExtendoPID(-1),
+                                            Wait(EXTENDO_RETRACT_WAIT),
                                             new ParallelAction(
                                                     LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
-                                                    Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
-
+                                                    Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE),
+                                                    ExtendoPID(0)
                                             )
                                     )
                             )

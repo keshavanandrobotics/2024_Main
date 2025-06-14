@@ -92,9 +92,9 @@ public class VARS {
 
 
     //TO BE DETERMINED
-    public static int HIGH_SPECIMEN_POS = 22750;
+    public static int HIGH_SPECIMEN_POS = 23500;
 
-    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 21100;
+    public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 22000;
 
     public static int HIGH_SPECIMEN_POS_TELE = 26000;
 
