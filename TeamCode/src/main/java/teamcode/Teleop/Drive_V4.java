@@ -18,6 +18,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.acmerobotics.roadrunner.ftc.FileServingKt;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -58,6 +59,13 @@ public class Drive_V4 extends LinearOpMode {
     public double slidesZeroPower = 0;
 
     public boolean linearAutomation = false;
+
+    public int globalSpecCount = 0;
+
+    public TrajectoryActionBuilder subsequentWallGrabs;
+
+    public TrajectoryActionBuilder subsequentScores;
+
     public boolean PID_MODE = false;
     public boolean pickupSample = true;
     public boolean magneticSwitch = false;
@@ -71,9 +79,6 @@ public class Drive_V4 extends LinearOpMode {
 
     public int specTicker = 0;
 
-    public Action scoreSpec;
-
-    public Action wallGrab;
 
     public TranslationalVelConstraint VEL_CONSTRAINT2 = new TranslationalVelConstraint(MAX_CYCLING_VEL);
     public ProfileAccelConstraint ACCEL_CONSTRAINT2 = new ProfileAccelConstraint(-Math.abs(MAX_CYCLING_DECCEL), MAX_CYCLING_ACCEL);
@@ -84,7 +89,7 @@ public class Drive_V4 extends LinearOpMode {
     GamepadEx g1, g2;
 
     // Declare ButtonReaders as instance variables
-    ButtonReader G1_START, G1_B, G1_DPAD_UP, G1_DPAD_DOWN, G1_LEFT_BUMPER, G1_RIGHT_BUMPER, G1_A, G1_X, G1_Y;
+    ButtonReader G1_START, G1_B, G1_DPAD_UP, G1_DPAD_DOWN, G1_LEFT_BUMPER, G1_RIGHT_BUMPER, G1_A, G1_X, G1_BACK, G1_Y;
     ButtonReader G2_B, G2_Y, G2_X, G2_RIGHT_BUMPER, G2_START, G2_BACK, G2_DPAD_DOWN, G2_DPAD_UP;
 
     // Corresponding booleans for press states
@@ -117,93 +122,97 @@ public class Drive_V4 extends LinearOpMode {
     public boolean HANG_4_TARGET = true;
     public boolean EXTENDO_HANG_TARGET = true;
 
-    public static class FailoverAction implements Action {
-            private final Action mainAction;
-            private final Action failoverAction;
-            private static boolean failedOver = false;
+    public Action SpecTicker(double estimatedTime) {
 
-            public FailoverAction(Action mainAction, Action failoverAction) {
-                this.mainAction = mainAction;
-                this.failoverAction = failoverAction;
-            }
+
+
+
+        return new Action() {
+
+            int ticker = 0;
+
+            double stamp = 0.0;
+
 
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                if (failedOver) {
-                    return failoverAction.run(telemetryPacket);
+
+                if (ticker ==0){
+
+                    stamp = getRuntime();
                 }
 
-                return mainAction.run(telemetryPacket);
-            }
+                ticker++;
 
-            public static void failover() {
-                failedOver = true;
+                if ((getRuntime() - stamp) < estimatedTime){
+
+                    if (G1_X.wasJustPressed()){
+                        specTicker++;
+                    }
+
+
+                    if (G1_BACK.wasJustPressed()){
+                        scoreAutomation = false;
+
+                        return false;
+                    }
+
+                    G1_BACK.readValue();
+
+                    G1_X.readValue();
+
+
+                    TELE.addData("Spec Ticker", specTicker);
+
+                    TELE.update();
+
+                    return true;
+
+
+
+
+
+
+
+                } else {
+
+                    return false;
+                }
+
+
+
+
+
             }
+        };
+
     }
 
-    Action updateAction = new Action() {
-        @Override
 
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+    public Action ExtendoPID(double power){
 
-            if (G1_Y.wasJustPressed()) {
-                FailoverAction.failover();
-                return false;
-            }
-
-            if (getRuntime()>ESTIMATED_SPEC_TRAJ_TIME){
-                FailoverAction.failover();
-                return false;
-            }
-
-            if (G1_X.wasJustPressed()){
-                specTicker++;
-            }
-
-            G1_X.readValue();
-            G1_Y.readValue();
+        return new Action() {
 
 
-            return true;
-        }
-    };
 
-    Action updateAction2 = new Action() {
+            final double finalPower = power;
+
+
+
+
             @Override
-
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-                if (G1_Y.wasJustPressed()) {
-                    FailoverAction.failover();
-                    return false;
-                }
-
-                if (getRuntime()>ESTIMATED_GRAB_TRAJ_TIME){
-                    FailoverAction.failover();
-                    return false;
-                }
-
-                if (G1_X.wasJustPressed()){
-                    specTicker++;
-                }
-
-                G1_X.readValue();
-                G1_Y.readValue();
-
-
-                return true;
-            }
-        };
-
-    Action doNothing = new Action() {
-            @Override
-
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-
+                robot.extendo.setPower(finalPower);
                 return false;
             }
+
         };
+    }
+
+
+
+
 
     public Action Servos(double clawPos, double rotatePos, double movePos, double pivotPos){
 
@@ -265,20 +274,6 @@ public class Drive_V4 extends LinearOpMode {
 
 
     }
-    public Action ExtendoPID(double power){
-
-            return new Action() {
-
-                final double ePower = power;
-
-                @Override
-                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                    robot.extendo.setPower(ePower);
-                    return false;
-                }
-            };
-        }
-
 
     public Action LinearSlidePID(int position, double holdPower){
 
@@ -322,7 +317,24 @@ public class Drive_V4 extends LinearOpMode {
 
                     telemetry.update();
 
-                    return  true;
+                    if (scoreAutomation) {
+
+                        return true;
+                    } else {
+                        robot.leftSlide.setPower(0);
+                        robot.rightSlide.setPower(0);
+                        robot.extendo.setPower(0);
+
+                        robot.drive.rightFront.setPower(0);
+
+                        robot.drive.leftFront.setPower(0);
+
+                        robot.drive.rightBack.setPower(0);
+
+                        robot.drive.leftBack.setPower(0);
+
+                        return false;
+                    }
 
                 }
 
@@ -362,10 +374,13 @@ public class Drive_V4 extends LinearOpMode {
 
 
 
+
+
+
+
     public void initialize() {
 
-        FailoverAction.failedOver = false;
-        
+
         robot = new Robot(hardwareMap);
 
         TELE = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -443,6 +458,10 @@ public class Drive_V4 extends LinearOpMode {
 
         G1_A = new ButtonReader(
                 g1, GamepadKeys.Button.A
+        );
+
+        G1_BACK = new ButtonReader(
+                g1, GamepadKeys.Button.BACK
         );
 
         G1_Y = new ButtonReader(
@@ -1103,62 +1122,27 @@ public class Drive_V4 extends LinearOpMode {
     }
     public void automation() {
 
+        if (G1_BACK.wasJustPressed()){
+
+            scoreAutomation = false;
+        }
+
+        G1_BACK.readValue();
+
+
+
         if (G1_Y.wasJustPressed()){
 
-            scoreAutomation = !scoreAutomation;
+            scoreAutomation = true;
 
             robot.drive = new PinpointDrive(hardwareMap, new Pose2d(WALL_GRAB_X,WALL_GRAB_Y, 0));
 
-            Action subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
-                            .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), Math.toRadians(0),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
-                            .build();
+            subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
+                            .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), Math.toRadians(0),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
+            subsequentScores = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
+                            .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-            Action subsequentScores = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
-                            .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
-                            .build();
-
-            SequentialAction grab =
-                    new SequentialAction(
-                            Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
-                            Wait(CLAW_OPEN_TIME),
-                            new ParallelAction(
-                                subsequentWallGrabs,
-
-                                new SequentialAction(
-                                        ExtendoPID(-1),
-                                        new ParallelAction(
-                                                LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
-                                                Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE)
-                                        )
-                                )
-                            )
-
-                    );
-
-            SequentialAction clip =
-                    new SequentialAction(
-                            Wait(HUMAN_PLAYER_WAIT),
-                            ExtendoPID(-1),
-                            Wait(EXTENDO_IN_WAIT),
-                            Servos(CLAW_CLOSED, 0.501, 0.501, .501),
-                            Wait(CLAW_CLOSE_TIME),
-                            new ParallelAction(
-                                    subsequentScores,
-                                    Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
-                                    LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
-                                    new SequentialAction(
-                                            Wait(EXTENDO_OUT_WAIT),
-                                            ExtendoPID(1)
-                                    )
-
-                            )
-                    );
-
-
-            scoreSpec = new FailoverAction(clip, doNothing);
-
-            wallGrab = new FailoverAction(grab, doNothing);
 
 
             specTicker = 1;
@@ -1172,6 +1156,7 @@ public class Drive_V4 extends LinearOpMode {
 
             specTicker++;
 
+
         }
 
         G1_X.readValue();
@@ -1183,26 +1168,86 @@ public class Drive_V4 extends LinearOpMode {
     }
 
     public void autoScore() {
-        if (specTicker > 0){
+        if (specTicker > 0 && scoreAutomation){
+
+            subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y+0.17*globalSpecCount, Math.toRadians(SPEC_SCORE_HEADING-2.7*globalSpecCount)))
+                    .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), Math.toRadians(0),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+
+            subsequentScores = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
+                    .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y+0.17*globalSpecCount), Math.toRadians(SPEC_SCORE_HEADING-2.7*globalSpecCount),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+
+
+
+
 
 
             Actions.runBlocking(
-                new ParallelAction(
 
-                    scoreSpec, updateAction
+                    new ParallelAction(
+                            SpecTicker(ESTIMATED_SPEC_TRAJ_TIME),
+                            new SequentialAction(
+                                    Wait(HUMAN_PLAYER_WAIT),
+                                    ExtendoPID(-1),
+                                    Wait(EXTENDO_IN_WAIT),
+                                    Servos(CLAW_CLOSED, 0.501, 0.501, .501),
+                                    Wait(CLAW_CLOSE_TIME),
+                                    new ParallelAction(
+                                            subsequentScores.build(),
+                                            Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
+                                            LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
+                                            new SequentialAction(
+                                                    Wait(EXTENDO_OUT_WAIT),
+                                                    ExtendoPID(1)
+                                            )
 
-                )
+                                    )
+                            )
+                    )
+
             );
 
-            Actions.runBlocking(
-                new ParallelAction(
+            if (scoreAutomation) {
 
-                    wallGrab, updateAction2
+                Actions.runBlocking(
 
-                )
-            );
+                        new ParallelAction(
+                                SpecTicker(ESTIMATED_GRAB_TRAJ_TIME),
 
+                                new SequentialAction(
+                                        Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
+                                        Wait(CLAW_OPEN_TIME),
+                                        new ParallelAction(
+                                                subsequentWallGrabs.build(),
+                                                new SequentialAction(
+                                                        ExtendoPID(-1),
+                                                        Wait(EXTENDO_RETRACT_WAIT),
+                                                        new ParallelAction(
+                                                                LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
+                                                                Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE),
+                                                                ExtendoPID(-0.5)
+
+                                                        )
+                                                )
+                                        )
+
+                                )
+
+
+                        )
+
+
+                );
+
+            }
+            
             specTicker--;
+
+            globalSpecCount++;
+
+
+
+
+
 
         }
 
@@ -1517,6 +1562,9 @@ public class Drive_V4 extends LinearOpMode {
 
         TELE.addData("pin10:", robot.pin10.getState());
         TELE.addData("pin11:", robot.pin11.getState());
+
+        TELE.addData("Automation", scoreAutomation);
+        TELE.addData("Spec Ticker", specTicker -1);
 
         TELE.update();
 

@@ -102,7 +102,7 @@ public class VARS {
 
     public static int AUTO_PARK_SLIDE_POS = 23000;
 
-    public static int HIGH_SAMPLE_POS = 70000;
+    public static int HIGH_SAMPLE_POS = 72000;
 
     public static int HANG_SLIDES_HEIGHT = 63000;
 
