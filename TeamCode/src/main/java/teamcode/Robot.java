@@ -148,11 +148,10 @@ public class Robot {
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
 
-        if (VARS.USING_LIMELIGHT){
 
-            limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-        }
+
 
         // Digital Sensors
         pin00 = hardwareMap.digitalChannel.get("digital0_0");
