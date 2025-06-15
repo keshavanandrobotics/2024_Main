@@ -26,10 +26,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
+
+import java.util.List;
+import java.util.Objects;
+
+import teamcode.javalimelight.Vision.LL_Tracker;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+
+import teamcode.javalimelight.trclib.pathdrive.TrcPose2D;
+import teamcode.javalimelight.trclib.pathdrive.TrcPose3D;
+
 
 @Config
 @Autonomous (preselectTeleOp = "Drive_V3")
@@ -43,7 +52,7 @@ public class SampleAuton extends LinearOpMode{
     public int TARGET = 0;
     public static int EXTENDO_SAMPLE_PICKUP = 20000;
 
-    public static int LINEAR_SLIDES_LOWER = 1500;
+    public static int LINEAR_SLIDES_LOWER = 7500;
 
     public static double SAMPLE_DOWN_TIME = 0.5;
     public static double SAMPLE_SCORE_TIME = 0.25;
@@ -52,8 +61,8 @@ public class SampleAuton extends LinearOpMode{
     public static double SAMPLE_NET_X1 = 9, SAMPLE_NET_Y1 = 20;
     public static double SAMPLE_NET_X2 = 5, SAMPLE_NET_Y2 = 20;
     public static double SAMPLE_NET_HEADING = -45;
-    public static double SAMPLE_X1 = 14, SAMPLE_Y1 = 9;
-    public static double SAMPLE_X2 = 14, SAMPLE_Y2 = 20;
+    public static double SAMPLE_X1 = 20, SAMPLE_Y1 = 9;
+    public static double SAMPLE_X2 = 20, SAMPLE_Y2 = 20;
     public static double SAMPLE_X3 = 37, SAMPLE_Y3 = 6, SAMPLE_HEADING3 = 90;
     public static double PARK_X1 = 56, PARK_Y1 = 0;
     public static double PARK_X2 = 56, PARK_Y2 = -30;
@@ -61,8 +70,8 @@ public class SampleAuton extends LinearOpMode{
 
     public Action limelightTracker (double x_coordinate, double y_coordinate, double heading) {
         return new Action() {
-            double tx = 0.0;
-            double ty = 0.0;
+            double tx;
+            double ty;
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 LLResult result = robot.limelight.getLatestResult();
@@ -72,20 +81,25 @@ public class SampleAuton extends LinearOpMode{
 
                     telemetry.addData("Target X", tx);
                     telemetry.addData("Target Y", ty);
+                    telemetry.update();
+                    TrajectoryActionBuilder limelightTrack = robot.drive.actionBuilder(new Pose2d(x_coordinate, y_coordinate, heading))
+                            .strafeToLinearHeading(new Vector2d(x_coordinate - ty, y_coordinate - tx), heading,
+                                    new TranslationalVelConstraint((double) SPEED /2));
+
+                    Actions.runBlocking(limelightTrack.build());
+                    return false;
                 } else {
                     telemetry.addData("Limelight", "No Targets");
+                    telemetry.update();
+                    robot.backLeftMotor.setPower(1);
+                    robot.frontLeftMotor.setPower(1);
+                    robot.frontRightMotor.setPower(1);
+                    robot.backRightMotor.setPower(1);
                     return true;
                 }
-
-                TrajectoryActionBuilder limelightTrack = robot.drive.actionBuilder(new Pose2d(x_coordinate, y_coordinate, heading))
-                        .strafeToLinearHeading(new Vector2d(x_coordinate - ty, y_coordinate - tx), heading,
-                                new TranslationalVelConstraint(SPEED/2));
-
-                Actions.runBlocking(limelightTrack.build());
-                return false;
-
             }
         };
+
 
     }
 
@@ -455,7 +469,8 @@ public class SampleAuton extends LinearOpMode{
                         new TranslationalVelConstraint(SPEED));
 
         TrajectoryActionBuilder firstSampleNet = robot.drive.actionBuilder(new Pose2d(SAMPLE_X1, SAMPLE_Y1, 0))
-                .strafeToLinearHeading(new Vector2d(SAMPLE_NET_X2, SAMPLE_NET_Y2), Math.toRadians(SAMPLE_NET_HEADING));
+                .strafeToLinearHeading(new Vector2d(SAMPLE_NET_X2, SAMPLE_NET_Y2), Math.toRadians(SAMPLE_NET_HEADING),
+                        new TranslationalVelConstraint(SPEED));
 
 
         TrajectoryActionBuilder secondSamplePickup = robot.drive.actionBuilder(new Pose2d(SAMPLE_NET_X2, SAMPLE_NET_Y2, Math.toRadians(SAMPLE_NET_HEADING)))
@@ -529,8 +544,12 @@ public class SampleAuton extends LinearOpMode{
 
             sleep(100);
 
-            Actions.runBlocking(new ServosPickupSample());
 
+            Actions.runBlocking(limelightTracker(SAMPLE_X1,SAMPLE_Y1,0));
+
+            sleep(10000);
+
+            Actions.runBlocking(new ServosPickupSample());
             TARGET = HIGH_SAMPLE_POS;
 
             Actions.runBlocking(
@@ -570,6 +589,11 @@ public class SampleAuton extends LinearOpMode{
                     )
 
             );
+
+            sleep(100);
+
+            Actions.runBlocking(limelightTracker(SAMPLE_X2,SAMPLE_Y2,0));
+
             sleep( 100);
 
 

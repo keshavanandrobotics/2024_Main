@@ -25,7 +25,6 @@ import teamcode.Teleop.Singletons.MotorWeights;
 
 @Config
 @TeleOp
-@Disabled
 
 public class Drive_V3 extends LinearOpMode{
     private static MultipleTelemetry TELE;

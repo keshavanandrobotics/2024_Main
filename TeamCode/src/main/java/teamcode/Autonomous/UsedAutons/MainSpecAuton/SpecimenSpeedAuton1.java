@@ -51,30 +51,7 @@ public class SpecimenSpeedAuton1 extends LinearOpMode {
     public TranslationalVelConstraint VEL_CONSTRAINT2 = new TranslationalVelConstraint(MAX_CYCLING_VEL);
     public ProfileAccelConstraint ACCEL_CONSTRAINT2 = new ProfileAccelConstraint(-Math.abs(MAX_CYCLING_DECCEL), MAX_CYCLING_ACCEL);
 
-    public Action LimelightRotate(){
 
-        return new Action() {
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                LLResult result = robot.limelight.getLatestResult();
-
-
-                double[] pythonOutputs = result.getPythonOutput();
-
-                if (pythonOutputs != null && pythonOutputs.length > 0) {
-                    angle = pythonOutputs[3];
-
-                    if (angle > 90) {
-                        angle -= 180;
-                    }
-
-                    telemetry.addData("ANGLE", angle);
-                }
-
-                return false;
-            }
-        };
-    }
 
     public Action ExtendoPID(double power){
 
