@@ -24,20 +24,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
+import teamcode.javalimelight.trclib.LL_Tracker;
 
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
-
-import java.util.List;
-import java.util.Objects;
-
-import teamcode.javalimelight.Vision.LL_Tracker;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-
-import teamcode.javalimelight.trclib.pathdrive.TrcPose2D;
-import teamcode.javalimelight.trclib.pathdrive.TrcPose3D;
 
 
 @Config
@@ -52,17 +42,18 @@ public class SampleAuton extends LinearOpMode{
     public int TARGET = 0;
     public static int EXTENDO_SAMPLE_PICKUP = 20000;
 
-    public static int LINEAR_SLIDES_LOWER = 7500;
+    public static int LINEAR_SLIDES_LOWER = 2000;
 
     public static double SAMPLE_DOWN_TIME = 0.5;
     public static double SAMPLE_SCORE_TIME = 0.25;
     public static double EXTENDO_OUT = 1.5;
+    public static double PREDICTED_TIME_UP = 1.5;
 
     public static double SAMPLE_NET_X1 = 9, SAMPLE_NET_Y1 = 20;
     public static double SAMPLE_NET_X2 = 5, SAMPLE_NET_Y2 = 20;
     public static double SAMPLE_NET_HEADING = -45;
-    public static double SAMPLE_X1 = 20, SAMPLE_Y1 = 9;
-    public static double SAMPLE_X2 = 20, SAMPLE_Y2 = 20;
+    public static double SAMPLE_X1 = 14, SAMPLE_Y1 = 9;
+    public static double SAMPLE_X2 = 14, SAMPLE_Y2 = 20;
     public static double SAMPLE_X3 = 37, SAMPLE_Y3 = 6, SAMPLE_HEADING3 = 90;
     public static double PARK_X1 = 56, PARK_Y1 = 0;
     public static double PARK_X2 = 56, PARK_Y2 = -30;
@@ -189,7 +180,7 @@ public class SampleAuton extends LinearOpMode{
             telemetry.addData("Target", TARGET);
             telemetry.addData("pos", linearSlidePosition);
 
-            if ((Math.abs(TARGET - linearSlidePosition)<LINEAR_SLIDES_LOWER) || linearSlidePosition > HIGH_SAMPLE_POS && TARGET == HIGH_SAMPLE_POS){
+            if ((Math.abs(TARGET - linearSlidePosition)<LINEAR_SLIDES_LOWER) || (linearSlidePosition > HIGH_SAMPLE_POS_TELE && TARGET == HIGH_SAMPLE_POS_TELE) || (getRuntime() - timeStamp > PREDICTED_TIME_UP && linearSlidePosition > HIGH_SAMPLE_POS && TARGET == HIGH_SAMPLE_POS_TELE)){
                 telemetry.addLine("Success");
                 telemetry.update();
 
@@ -501,7 +492,7 @@ public class SampleAuton extends LinearOpMode{
 
         if (opModeIsActive()){
 
-            TARGET = HIGH_SAMPLE_POS;
+            TARGET = HIGH_SAMPLE_POS_TELE;
 
             Actions.runBlocking(
                     new ParallelAction(
@@ -545,12 +536,8 @@ public class SampleAuton extends LinearOpMode{
             sleep(100);
 
 
-            Actions.runBlocking(limelightTracker(SAMPLE_X1,SAMPLE_Y1,0));
-
-            sleep(10000);
-
             Actions.runBlocking(new ServosPickupSample());
-            TARGET = HIGH_SAMPLE_POS;
+            TARGET = HIGH_SAMPLE_POS_TELE;
 
             Actions.runBlocking(
                     new ParallelAction(
@@ -592,14 +579,10 @@ public class SampleAuton extends LinearOpMode{
 
             sleep(100);
 
-            Actions.runBlocking(limelightTracker(SAMPLE_X2,SAMPLE_Y2,0));
-
-            sleep( 100);
-
 
             Actions.runBlocking(new ServosPickupSample());
 
-            TARGET = HIGH_SAMPLE_POS;
+            TARGET = HIGH_SAMPLE_POS_TELE;
 
             Actions.runBlocking(
                         new ParallelAction(
@@ -639,7 +622,7 @@ public class SampleAuton extends LinearOpMode{
 
             Actions.runBlocking(new ServosPickupSample());
 
-            TARGET = HIGH_SAMPLE_POS;
+            TARGET = HIGH_SAMPLE_POS_TELE;
 
             Actions.runBlocking(
                     new ParallelAction(

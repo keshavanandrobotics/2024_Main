@@ -697,6 +697,16 @@ public class Drive_V4 extends LinearOpMode {
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
             robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
             robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);
+            robot.clawRotate.setPosition(ROTATE_90);
+
+            PID_MODE = true;
+
+        } else if (-gamepad2.left_stick_x > 0.5){
+            target = (int) linearSlideZeroPosition + LOW_SAMPLE_POS_TELE;
+            robot.clawPivot.setPosition(PIVOT_OUTTAKE);
+            robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
+            robot.clawRightMove.setPosition(1-MOVE_OUTTAKE);
+            robot.clawRotate.setPosition(ROTATE_90);
 
             PID_MODE = true;
 
@@ -1414,11 +1424,15 @@ public class Drive_V4 extends LinearOpMode {
             target = (int) (0 + linearSlideZeroPosition);
             PID_MODE = true;
 
-            G1_DPAD_DOWN_PRESSED = true;
 
 
             G2_DPAD_DOWN_PRESSED_TIME = getRuntime();
             dpadDownServoLock = false;
+
+            robot.claw.setPosition(CLAW_OPEN);
+            robot.clawLeftMove.setPosition(MOVE_ALL_OUT);
+            robot.clawRightMove.setPosition(1-MOVE_ALL_OUT);
+            robot.clawPivot.setPosition(PIVOT_ALL_OUT);
         }
 
         if (G2_DPAD_DOWN.wasJustReleased()) {

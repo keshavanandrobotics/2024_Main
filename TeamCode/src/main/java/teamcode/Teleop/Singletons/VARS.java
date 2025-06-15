@@ -65,7 +65,7 @@ public class VARS {
     public static double PIVOT_SPECIMEN_SCORE = 0.4;
     public static double PIVOT_ALL_OUT = 0.6;
     public static double PIVOT_HOVER_SAMPLE = 0.9;
-    public static double PIVOT_SAMPLE_PICKUP = 0.85;
+    public static double PIVOT_SAMPLE_PICKUP = 0.82;
 
     public static double PIVOT_AUTONOMOUS_INIT = 0.3;
     public static double LEFT_SPRING_OFF = 0.45;
@@ -84,8 +84,8 @@ public class VARS {
     public static double RIGHT_HOLD_ON = 1;
 
 
-    public static double LEFT_PTO_OFF = 0.28;
-    public static double LEFT_PTO_ON = 0.41;
+    public static double LEFT_PTO_OFF = 0.5;
+    public static double LEFT_PTO_ON = 0.7;
     public static double RIGHT_PTO_OFF = 0.9;
     public static double RIGHT_PTO_ON = 0.78;
 
@@ -102,9 +102,11 @@ public class VARS {
 
     public static int AUTO_PARK_SLIDE_POS = 23000;
 
-    public static int HIGH_SAMPLE_POS = 70000;
+    public static int HIGH_SAMPLE_POS = 68000;
 
-    public static int HIGH_SAMPLE_POS_TELE = 72000;
+    public static int HIGH_SAMPLE_POS_TELE = 70500;
+
+    public static int LOW_SAMPLE_POS_TELE = 38000;
 
     public static int HANG_SLIDES_HEIGHT = 63000;
 
@@ -115,7 +117,7 @@ public class VARS {
 
     public static int HANG_4 = 59250;
 
-    public static int EXTENDO_MAX_TELE = 38000;
+    public static int EXTENDO_MAX_TELE = 37000;
     public static int EXTENDO_SOFTMAX_TELE = 30000;
 
 
