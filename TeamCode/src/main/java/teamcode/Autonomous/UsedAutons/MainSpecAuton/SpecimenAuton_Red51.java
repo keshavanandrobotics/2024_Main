@@ -1,8 +1,7 @@
 package teamcode.Autonomous.UsedAutons.MainSpecAuton;
 
-import static teamcode.Autonomous.Disabled.Poses.AUTON_START_POSE;
+import static teamcode.Autonomous.Disabled.Poses.*;
 import static teamcode.Autonomous.UsedAutons.MainSpecAuton.SPEC_AUTO_VARS.*;
-
 import static teamcode.Teleop.Singletons.VARS.*;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
@@ -19,26 +17,22 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
 @Autonomous (preselectTeleOp = "Drive_V4")
-public class SpecimenSpeedAuton1 extends LinearOpMode {
+public class SpecimenAuton_Red51 extends LinearOpMode {
 
-    public double angle = 0.0;
     Robot robot;
 
 
@@ -258,19 +252,33 @@ public class SpecimenSpeedAuton1 extends LinearOpMode {
         //Trajectories
 
 
-        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(AUTON_START_POSE)
-                .strafeToLinearHeading(new Vector2d(FIRST_SPEC_SCORE_X, FIRST_SPEC_SCORE_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+        TrajectoryActionBuilder pushing = robot.drive.actionBuilder(AUTON_START_POSE)
+                .splineToConstantHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X2, Y2), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X3, Y3), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
-        TrajectoryActionBuilder subPickup = robot.drive.actionBuilder(new Pose2d(FIRST_SPEC_SCORE_X, FIRST_SPEC_SCORE_Y, 0))
-                .strafeToLinearHeading(new Vector2d(SUB_PICKUP_X1, SUB_PICKUP_Y1), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(X4, Y4), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
 
-        TrajectoryActionBuilder subDrop = robot.drive.actionBuilder(new Pose2d(SUB_PICKUP_X1, SUB_PICKUP_Y1, 0))
-                .strafeToLinearHeading(new Vector2d(DROP_X, DROP_Y), Math.toRadians(DROP_HEADING));
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X6, Y6), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(X7, Y7), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(X8, Y8), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+                .splineToConstantHeading(new Vector2d(X9, Y9), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(X10, Y10), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+        //.strafeToLinearHeading(new Vector2d(X9, Y9), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X10, Y10, 0))
                 .strafeToLinearHeading(new Vector2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder secondScore = robot.drive.actionBuilder(new Pose2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y, 0))
+        TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y, 0))
                 .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
@@ -279,6 +287,9 @@ public class SpecimenSpeedAuton1 extends LinearOpMode {
         TrajectoryActionBuilder subsequentScores = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
                 .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
+        TrajectoryActionBuilder retrySpec = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
+                .strafeToLinearHeading(new Vector2d(RETRY_SPEC_X,RETRY_SPEC_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
+                .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         robot.drive.rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.drive.rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -321,33 +332,26 @@ public class SpecimenSpeedAuton1 extends LinearOpMode {
 
         if (opModeIsActive()){
 
-
-
             Actions.runBlocking(
                     new ParallelAction(
-                            firstScore.build(),
-                            LinearSlidePID(HIGH_SPECIMEN_POS_AUTO_FIRST, 0),
-                            Servos(CLAW_CLOSED, ROTATE_NEUTRAL, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
+                            pushing.build(),
                             new SequentialAction(
-                                    Wait(FIRST_SCORE_WAIT),
-                                    ExtendoPID(1)
+                                    ExtendoPID(-0.2),
+                                    Wait(PUSHING_SERVO_ROTATE),
+                                    Servos(0.501, ROTATE_FLIP, 0.501, 0.501),
+                                    Wait(PUSHING_SERVO_OPEN),
+                                    Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
+                                    Wait(PUSHING_SERVO_PIVOT),
+                                    Servos(0.501, 0.501, 0.501, PIVOT_WALL_INTAKE),
+                                    Wait(PUSHING_SERVO_MOVE),
+                                    Servos(0.501, 0.501, MOVE_WALL_INTAKE, 0.501)
                             )
+
                     )
             );
 
-            Actions.runBlocking(
-                    new ParallelAction(
-                            ExtendoPID(-1),
-                            LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, 0)
-                    )
-            );
+            //Actions.runBlocking(firstWallGrab.build());
 
-            Actions.runBlocking(
-                    new ParallelAction(
-                            Servos(CLAW_OPEN, ROTATE_90, MOVE_HOVER_SAMPLE, MOVE_PICKUP_SAMPLE),
-                            ExtendoPID(1)
-                    )
-            );
 
 
             Actions.runBlocking(
@@ -363,7 +367,7 @@ public class SpecimenSpeedAuton1 extends LinearOpMode {
 
             Actions.runBlocking(
                     new ParallelAction(
-                            secondScore.build(),
+                            firstScore.build(),
                             Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
                             LinearSlidePID(HIGH_SPECIMEN_POS_AUTO_FIRST, 0.12),
                             new SequentialAction(

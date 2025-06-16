@@ -2,8 +2,8 @@ package teamcode.javalimelight.trclib;
 
 import static java.lang.Math.*;
 
-import static teamcode.Autonomous.UsedAutons.SampleAuton.*;
 import static teamcode.Teleop.Singletons.VARS.*;
+import static teamcode.Autonomous.UsedAutons.SampleAuton_NoLimelight.*;
 
 import androidx.annotation.NonNull;
 
@@ -15,24 +15,14 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import teamcode.Robot;
-import teamcode.javalimelight.trclib.LL_Tracker;
-import teamcode.javalimelight.trclib.pathdrive.TrcPose2D;
-import teamcode.javalimelight.trclib.pathdrive.TrcPose3D;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-
-import java.util.List;
 
 @Config
 @TeleOp
@@ -41,12 +31,9 @@ public class Limelight_Test extends LinearOpMode {
 
     public static boolean CHECK_ANGLE = false;
     private MultipleTelemetry TELE;
-
-    Robot robot;
-
     LL_Tracker llTracker;
 
-    LLResult result;
+    Robot robot;
 
     private boolean Initialize () {
 
@@ -59,22 +46,9 @@ public class Limelight_Test extends LinearOpMode {
 //        robot.limelight.pipelineSwitch(9);
 //        robot.limelight.start();
         llTracker = new LL_Tracker();
-        final boolean init = llTracker.Init(robot, hardwareMap, TELE, COLOR);
-        return init;
-    }
-    private void slowstrafeRight (double power) {
-        robot.frontLeftMotor.setPower(power);
-        robot.backLeftMotor.setPower(-power);
-        robot.frontRightMotor.setPower(-power);
-        robot.backRightMotor.setPower(power);
+        return llTracker.Init(robot, hardwareMap, TELE, COLOR);
     }
 
-    private void slowstrafeLeft (double power) {
-        robot.frontLeftMotor.setPower(-power);
-        robot.backLeftMotor.setPower(power);
-        robot.frontRightMotor.setPower(power);
-        robot.backRightMotor.setPower(-power);
-    }
 
     private void stopstrafe () {
         robot.frontLeftMotor.setPower(0);
@@ -83,47 +57,6 @@ public class Limelight_Test extends LinearOpMode {
         robot.backRightMotor.setPower(0);
     }
 
-    private void strafeAlign (LLResult llResult) {
-        double targetTx = llResult.getTx();
-        double drivePower = 0.0;
-        final double MIN_DRIVE_POWER = 0.15;
-        final double TARGET_POSITION_TOLERANCE = 3.0;
-        final double HORIZONTAL_FOV_RANGE = 26.0;
-        final double DRIVE_POWER_REDUCTION = 2.0;
-
-        // Only with valid data and if too far off target
-        if ((llResult.getPythonOutput()[0]==1) && (Math.abs(targetTx) > TARGET_POSITION_TOLERANCE))
-        {
-
-            // Adjust Robot Speed based on how far the target is located
-            // Only drive at half speed max
-            drivePower = targetTx/HORIZONTAL_FOV_RANGE / DRIVE_POWER_REDUCTION;
-
-            // Make sure we have enough power to actually drive the wheels
-            if (abs(drivePower) < MIN_DRIVE_POWER) {
-                if (drivePower > 0.0) {
-                    drivePower = MIN_DRIVE_POWER;
-                } else {
-                    drivePower = -MIN_DRIVE_POWER;
-                }
-
-            }
-            telemetry.addData("drivePower: ", drivePower);
-
-            if (drivePower > 0.0) {
-                slowstrafeLeft(abs(drivePower));
-            } else
-            {
-                slowstrafeRight(abs(drivePower));
-            }
-
-        }
-        else {
-            telemetry.addData("drivePower", "No Target or Movement Needed");
-            stopstrafe();
-        }
-        telemetry.update();
-    }
 
 
 
@@ -218,8 +151,8 @@ public class Limelight_Test extends LinearOpMode {
         robot.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
-        robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
-        robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
+        robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE_LIMELIGHT);
+        robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE_LIMELIGHT);
         robot.claw.setPosition(CLAW_OPEN);
         robot.linearSlideEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.linearSlideEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -243,15 +176,11 @@ public class Limelight_Test extends LinearOpMode {
             if (Initialize()&&!CHECK_ANGLE){
                 while (!llTracker.Track()){
                     CHECK_ANGLE = false;
-                    Actions.runBlocking(
-                            new SequentialAction(
-                                    LinearSlidePID(LINEAR_SLIDES_HOVER_LIMELIGHT,0)
-                            )
-                    );
-                    robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
-                    robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
+                    robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE_LIMELIGHT);
+                    robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE_LIMELIGHT);
                     robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
                     robot.claw.setPosition(CLAW_OPEN);
+                    sleep(1);
                 }
                 stopstrafe();
                 llTracker.Stop();
@@ -272,6 +201,12 @@ public class Limelight_Test extends LinearOpMode {
                 );
                 sleep(300);
                 robot.claw.setPosition(CLAW_CLOSED);
+            } else {
+                Actions.runBlocking(
+                        new SequentialAction(
+                                LinearSlidePID(LINEAR_SLIDES_HOVER_LIMELIGHT,0)
+                        )
+                );
             }
 
 

@@ -40,8 +40,9 @@ public class VARS {
 
     public static double MOVE_OUTTAKE = 0.05;
     public static double MOVE_SPECIMEN_SCORE = 0.45;
-    public static double MOVE_ALL_OUT = 0.47;
-    public static double MOVE_HOVER_SAMPLE = 0.47;
+    public static double MOVE_ALL_OUT = 0.42;
+    public static double MOVE_HOVER_SAMPLE = 0.42;
+    public static double MOVE_HOVER_SAMPLE_LIMELIGHT = 0.47;
 
 
     public static double MOVE_AUTO_HOVER = 0.45;
@@ -88,10 +89,10 @@ public class VARS {
     public static double RIGHT_HOLD_ON = 1;
 
 
-    public static double LEFT_PTO_OFF = 0.5;
-    public static double LEFT_PTO_ON = 0.7;
-    public static double RIGHT_PTO_OFF = 1;
-    public static double RIGHT_PTO_ON = 1;
+    public static double LEFT_PTO_OFF = 0.4;
+    public static double LEFT_PTO_ON = 0.4;
+    public static double RIGHT_PTO_OFF = 0.5;
+    public static double RIGHT_PTO_ON = 0.5;
 
 
 
@@ -104,7 +105,7 @@ public class VARS {
 
     public static int LOWER_SLIDES_MISS = 18000;
 
-    public static int AUTO_PARK_SLIDE_POS = 23000;
+    public static int AUTO_PARK_SLIDE_POS = 35000;
 
     public static int HIGH_SAMPLE_POS = 68000;
 

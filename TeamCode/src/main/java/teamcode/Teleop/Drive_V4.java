@@ -1229,6 +1229,7 @@ public class Drive_V4 extends LinearOpMode {
                                 new SequentialAction(
                                         Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
                                         Wait(CLAW_OPEN_TIME),
+                                        Servos(0.501, 0.501, 0.501, PIVOT_ALL_OUT),
                                         new ParallelAction(
                                                 subsequentWallGrabs.build(),
                                                 new SequentialAction(
