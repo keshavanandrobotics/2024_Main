@@ -2,11 +2,18 @@ package teamcode.javalimelight.trclib;
 
 import static java.lang.Math.*;
 
+import static teamcode.Autonomous.UsedAutons.SampleAuton.*;
 import static teamcode.Teleop.Singletons.VARS.*;
+
+import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
@@ -22,45 +29,28 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.dashboard.FtcDashboard;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 import java.util.List;
 
-
 @Config
 @TeleOp
 public class Limelight_Test extends LinearOpMode {
+    public static int COLOR = 9;
+
+    public static boolean CHECK_ANGLE = false;
     private MultipleTelemetry TELE;
 
     Robot robot;
 
     LL_Tracker llTracker;
-    private void Initialize () {
 
-        TELE = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    LLResult result;
 
-        // Base Robot must be initialized first.
-        robot = new Robot(hardwareMap);
+    private boolean Initialize () {
 
-        //robot.drive = new PinpointDrive(hardwareMap, AUTON_END_POSE);
 
-        // Motors
-        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        robot.backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        robot.frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        robot.clawPivot.setPosition(PIVOT_ALL_OUT);
-        robot.clawLeftMove.setPosition(MOVE_ALL_OUT);
-        robot.clawRightMove.setPosition(1-MOVE_ALL_OUT);
 
 
         // Limelight Init
@@ -69,20 +59,21 @@ public class Limelight_Test extends LinearOpMode {
 //        robot.limelight.pipelineSwitch(9);
 //        robot.limelight.start();
         llTracker = new LL_Tracker();
-        llTracker.Init(robot, hardwareMap, TELE);
+        final boolean init = llTracker.Init(robot, hardwareMap, TELE, COLOR);
+        return init;
     }
     private void slowstrafeRight (double power) {
         robot.frontLeftMotor.setPower(power);
         robot.backLeftMotor.setPower(-power);
-        robot.frontRightMotor.setPower(power);
-        robot.backRightMotor.setPower(-power);
+        robot.frontRightMotor.setPower(-power);
+        robot.backRightMotor.setPower(power);
     }
 
     private void slowstrafeLeft (double power) {
         robot.frontLeftMotor.setPower(-power);
         robot.backLeftMotor.setPower(power);
-        robot.frontRightMotor.setPower(-power);
-        robot.backRightMotor.setPower(power);
+        robot.frontRightMotor.setPower(power);
+        robot.backRightMotor.setPower(-power);
     }
 
     private void stopstrafe () {
@@ -134,114 +125,112 @@ public class Limelight_Test extends LinearOpMode {
         telemetry.update();
     }
 
-    private TrcPose2D getTargetPose(TrcPose3D cameraPose, LLResult llResult )
-    {
-        TrcPose2D targetPose;
-        double camPitchRadians = Math.toRadians(cameraPose.pitch);
-        double targetPitchDegrees = llResult.getTy();
-        double targetYawDegrees = llResult.getTx();
-        double targetPitchRadians = Math.toRadians(targetPitchDegrees);
-        double targetYawRadians = Math.toRadians(targetYawDegrees);
-        double groundOffset = 0; //targetGroundOffset.getOffset(resultType);
 
-        double targetDepth =
-                (groundOffset - cameraPose.z) / Math.tan(camPitchRadians + targetPitchRadians);
-        targetPose = new TrcPose2D(
-                targetDepth * Math.sin(targetYawRadians), targetDepth * Math.cos(targetYawRadians), targetYawDegrees);
-        telemetry.addData(
-                "LimelightObject." + "Python",
-                "groundOffset=%.1f, cameraZ=%.1f, camPitch=%.1f, targetPitch=%.1f, targetDepth=%.1f, targetYaw=%.1f, " +
-                        "targetPose=%s",
-                groundOffset, cameraPose.z, cameraPose.pitch, targetPitchDegrees, targetDepth, targetYawDegrees,
-                targetPose);
-        telemetry.update();
-        return targetPose;
-    }   //getTargetPose
 
-    private void getLimelightResults () {
-        TrcPose3D cameraPose = new TrcPose3D(0.0,0.0,10.0, 0.0, 90.0, 0.0);
+    public Action LinearSlidePID(int position, double holdPower){
 
-        LLStatus status = robot.limelight.getStatus();
-        telemetry.addData("Name", "%s",
-                status.getName());
-        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
-                status.getTemp(), status.getCpu(),(int)status.getFps());
-        telemetry.addData("Pipeline", "Index: %d, Type: %s",
-                status.getPipelineIndex(), status.getPipelineType());
+        return new Action() {
 
-        LLResult result = robot.limelight.getLatestResult();
-        if (result != null) {
-            // Access general information
-            Pose3D botpose = result.getBotpose();
-            double captureLatency = result.getCaptureLatency();
-            double targetingLatency = result.getTargetingLatency();
-            double parseLatency = result.getParseLatency();
-            telemetry.addData("LL Latency", captureLatency + targetingLatency);
-            telemetry.addData("Parse Latency", parseLatency);
-            telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
-            telemetry.addData("tx", result.getTx());
+            private final PIDController controller = new PIDController(0.0006,0,0.00001);
 
-            if (result.isValid()) {
-                telemetry.addData("tx", result.getTx());
-                telemetry.addData("txnc", result.getTxNC());
-                telemetry.addData("ty", result.getTy());
-                telemetry.addData("tync", result.getTyNC());
 
-                telemetry.addData("Botpose", botpose.toString());
 
-                // Access barcode results
-                List<LLResultTypes.BarcodeResult> barcodeResults = result.getBarcodeResults();
-                for (LLResultTypes.BarcodeResult br : barcodeResults) {
-                    telemetry.addData("Barcode", "Data: %s", br.getData());
+
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                double linearSlidePosition = -robot.linearSlideEncoder.getCurrentPosition();
+
+                controller.setPID(0.0006,0,0.00001);
+
+                double power = controller.calculate(linearSlidePosition, position) + 0.08;
+
+                robot.leftSlide.setPower(power);
+                robot.rightSlide.setPower(power);
+
+                telemetry.addData("power", power);
+                telemetry.addData("Target", position);
+                telemetry.addData("pos", linearSlidePosition);
+
+                if (Math.abs(position - linearSlidePosition)<475){
+                    telemetry.addLine("Success");
+                    telemetry.update();
+
+
+                    robot.leftSlide.setPower(holdPower);
+                    robot.rightSlide.setPower(holdPower);
+
+
+                    return false;
+
+                } else {
+
+
+                    telemetry.update();
+
+                    return  true;
+
                 }
 
-                // Access classifier results
-                List<LLResultTypes.ClassifierResult> classifierResults = result.getClassifierResults();
-                for (LLResultTypes.ClassifierResult cr : classifierResults) {
-                    telemetry.addData("Classifier", "Class: %s, Confidence: %.2f", cr.getClassName(), cr.getConfidence());
-                }
-
-                // Access detector results
-                List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
-                for (LLResultTypes.DetectorResult dr : detectorResults) {
-                    telemetry.addData("Detector", "Class: %s, Area: %.2f", dr.getClassName(), dr.getTargetArea());
-                }
-
-                // Access fiducial results
-                List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-                for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                    telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(),fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                }
-
-                // Access color results
-                List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
-                for (LLResultTypes.ColorResult cr : colorResults) {
-                    telemetry.addData("Color", "X: %.2f, Y: %.2f", cr.getTargetXDegrees(), cr.getTargetYDegrees());
-                }
-            }
-            if (result.getPythonOutput()[0] == 0.0) {
-                // No Target so slow strafe right to look
-                slowstrafeRight(0.3);
-            }
-            else {
-                // Target Found, perform fine alignment
-                strafeAlign(result);
             }
 
-        } else {
-            telemetry.addData("Limelight", "Nodata available");
-        }
+        };
+    }
 
-        //getTargetPose(cameraPose, result);
-
-        telemetry.update();
+    public Action extendoPID (int position){
+        return new Action() {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (position == EXTENDO_SAMPLE_PICKUP && robot.extendoEncoder.getCurrentPosition() < EXTENDO_SAMPLE_PICKUP){
+                    robot.extendo.setPower(1);
+                    return true;
+                } else if (position == EXTENDO_PICKUP_SAMPLE && robot.extendoEncoder.getCurrentPosition() > EXTENDO_PICKUP_SAMPLE) {
+                    robot.extendo.setPower(-0.5);
+                    return true;
+                } else{
+                    robot.extendo.setPower(0);
+                    return false;
+                }
+            }
+        };
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
+        TELE = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        Initialize();
+        // Base Robot must be initialized first.
+        robot = new Robot(hardwareMap);
 
+        //robot.drive = new PinpointDrive(hardwareMap, AUTON_END_POSE);
+
+        // Motors
+        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        robot.backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        robot.frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+        robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
+        robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
+        robot.claw.setPosition(CLAW_OPEN);
+        robot.linearSlideEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.linearSlideEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Actions.runBlocking(
+                new SequentialAction(
+                        LinearSlidePID(LINEAR_SLIDES_HOVER_LIMELIGHT,0),
+                        extendoPID(EXTENDO_SAMPLE_PICKUP)
+                )
+        );
         waitForStart();
 
         if (isStopRequested()) return;
@@ -251,7 +240,39 @@ public class Limelight_Test extends LinearOpMode {
 
             //controlDrivetrain();
             //getLimelightResults();
-            llTracker.Track();
+            if (Initialize()&&!CHECK_ANGLE){
+                while (!llTracker.Track()){
+                    CHECK_ANGLE = false;
+                    Actions.runBlocking(
+                            new SequentialAction(
+                                    LinearSlidePID(LINEAR_SLIDES_HOVER_LIMELIGHT,0)
+                            )
+                    );
+                    robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE);
+                    robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE);
+                    robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+                    robot.claw.setPosition(CLAW_OPEN);
+                }
+                stopstrafe();
+                llTracker.Stop();
+                CHECK_ANGLE = true;
+            }
+
+
+            if (CHECK_ANGLE){
+                telemetry.addData("Angle", llTracker.getSampleAngle());
+                robot.clawRightMove.setPosition(1-MOVE_PICKUP_SAMPLE_LIMELIGHT);
+                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE_LIMELIGHT);
+                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP_LIMELIGHT);
+                sleep(200);
+                Actions.runBlocking(
+                        new SequentialAction(
+                                LinearSlidePID(LINEAR_SLIDES_PICKUP_LIMELIGHT,0)
+                        )
+                );
+                sleep(300);
+                robot.claw.setPosition(CLAW_CLOSED);
+            }
 
 
             //TELEMETRY:
@@ -283,7 +304,6 @@ public class Limelight_Test extends LinearOpMode {
 
 
         }
-        llTracker.Stop();
         //robot.limelight.stop();
 
     }

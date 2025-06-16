@@ -34,9 +34,13 @@ public class LL_Tracker {
     // Moves passenger side or right during search
     // Positive is driver's side or left
     // Negative is passenger's side or right
-    private final double STRAFE_SEARCH_SPEED = -0.65;
+    private final double STRAFE_SEARCH_SPEED = 0.5;
 
     private Robot robot;
+
+    ;
+
+
     private static MultipleTelemetry TELE;
     private PIDController strafePID, backupPID;
     public final double S_PID_P = 0.5, S_PID_I = 0.1, S_PID_D = 0.05;
@@ -51,7 +55,7 @@ public class LL_Tracker {
 
     // Initialize Limelight
     // Returns False if limelight not found
-    public boolean Init (Robot myRobot, HardwareMap myHardwareMap, MultipleTelemetry myTele) {
+    public boolean Init (Robot myRobot, HardwareMap myHardwareMap, MultipleTelemetry myTele, int color) {
         boolean initStatus = true;
 
         robot = myRobot;
@@ -64,7 +68,7 @@ public class LL_Tracker {
             // Limelight Init
             robot.limelight = myHardwareMap.get(Limelight3A.class, "limelight");
             TELE.setMsTransmissionInterval(11);
-            robot.limelight.pipelineSwitch(9);
+            robot.limelight.pipelineSwitch(color);
             robot.limelight.start();
         }
         catch (Exception e) {
@@ -75,6 +79,8 @@ public class LL_Tracker {
         TELE.update();
         return initStatus;
     }
+
+
 
     // Turns Off Limielight Processing
     public boolean Stop () {
@@ -103,60 +109,59 @@ public class LL_Tracker {
                 status.getTemp(), status.getCpu(),(int)status.getFps());
         TELE.addData("Pipeline", "Index: %d, Type: %s",
                 status.getPipelineIndex(), status.getPipelineType());
-
+        TELE.addLine("im here");
         LLResult result = robot.limelight.getLatestResult();
-        if (result != null) {
+
+
             // Access general information
-            Pose3D botpose = result.getBotpose();
-            double captureLatency = result.getCaptureLatency();
-            double targetingLatency = result.getTargetingLatency();
-            double parseLatency = result.getParseLatency();
-            TELE.addData("LL Latency", captureLatency + targetingLatency);
-            TELE.addData("Parse Latency", parseLatency);
-            TELE.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
+        Pose3D botpose = result.getBotpose();
+        double captureLatency = result.getCaptureLatency();
+        double targetingLatency = result.getTargetingLatency();
+        double parseLatency = result.getParseLatency();
+        TELE.addData("LL Latency", captureLatency + targetingLatency);
+        TELE.addData("Parse Latency", parseLatency);
+        TELE.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
+        TELE.addData("tx", result.getTx());
+
+        if (result.isValid()) {
             TELE.addData("tx", result.getTx());
+            TELE.addData("txnc", result.getTxNC());
+            TELE.addData("ty", result.getTy());
+            TELE.addData("tync", result.getTyNC());
 
-            if (result.isValid()) {
-                TELE.addData("tx", result.getTx());
-                TELE.addData("txnc", result.getTxNC());
-                TELE.addData("ty", result.getTy());
-                TELE.addData("tync", result.getTyNC());
+            TELE.addData("Botpose", botpose.toString());
 
-                TELE.addData("Botpose", botpose.toString());
-
-                // Access barcode results
-                List<LLResultTypes.BarcodeResult> barcodeResults = result.getBarcodeResults();
-                for (LLResultTypes.BarcodeResult br : barcodeResults) {
-                    TELE.addData("Barcode", "Data: %s", br.getData());
-                }
-
-                // Access classifier results
-                List<LLResultTypes.ClassifierResult> classifierResults = result.getClassifierResults();
-                for (LLResultTypes.ClassifierResult cr : classifierResults) {
-                    TELE.addData("Classifier", "Class: %s, Confidence: %.2f", cr.getClassName(), cr.getConfidence());
-                }
-
-                // Access detector results
-                List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
-                for (LLResultTypes.DetectorResult dr : detectorResults) {
-                    TELE.addData("Detector", "Class: %s, Area: %.2f", dr.getClassName(), dr.getTargetArea());
-                }
-
-                // Access fiducial results
-                List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-                for (LLResultTypes.FiducialResult fr : fiducialResults) {
-                    TELE.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(),fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                }
-
-                // Access color results
-                List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
-                for (LLResultTypes.ColorResult cr : colorResults) {
-                    TELE.addData("Color", "X: %.2f, Y: %.2f", cr.getTargetXDegrees(), cr.getTargetYDegrees());
-                }
+            // Access barcode results
+            List<LLResultTypes.BarcodeResult> barcodeResults = result.getBarcodeResults();
+            for (LLResultTypes.BarcodeResult br : barcodeResults) {
+                TELE.addData("Barcode", "Data: %s", br.getData());
             }
 
+            // Access classifier results
+            List<LLResultTypes.ClassifierResult> classifierResults = result.getClassifierResults();
+            for (LLResultTypes.ClassifierResult cr : classifierResults) {
+                TELE.addData("Classifier", "Class: %s, Confidence: %.2f", cr.getClassName(), cr.getConfidence());
+            }
+
+            // Access detector results
+            List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
+            for (LLResultTypes.DetectorResult dr : detectorResults) {
+                TELE.addData("Detector", "Class: %s, Area: %.2f", dr.getClassName(), dr.getTargetArea());
+            }
+
+            // Access fiducial results
+            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                TELE.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(),fr.getTargetXDegrees(), fr.getTargetYDegrees());
+            }
+
+            // Access color results
+            List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
+            for (LLResultTypes.ColorResult cr : colorResults) {
+                TELE.addData("Color", "X: %.2f, Y: %.2f", cr.getTargetXDegrees(), cr.getTargetYDegrees());
+            }
         } else {
-            TELE.addData("Limelight", "Nodata available");
+            TELE.addLine("No limelight");
         }
 
         //getTargetPose(cameraPose, result);
@@ -170,16 +175,16 @@ public class LL_Tracker {
     private void strafeMotors (double power) {
         robot.frontLeftMotor.setPower(power);
         robot.backLeftMotor.setPower(-power);
-        robot.frontRightMotor.setPower(power);
-        robot.backRightMotor.setPower(-power);
+        robot.frontRightMotor.setPower(-power);
+        robot.backRightMotor.setPower(power);
     }
 
     // Drive forward or backwards
     private void forwardMotors (double power) {
         robot.frontLeftMotor.setPower(-power);
         robot.backLeftMotor.setPower(-power);
-        robot.frontRightMotor.setPower(power);
-        robot.backRightMotor.setPower(power);
+        robot.frontRightMotor.setPower(-power);
+        robot.backRightMotor.setPower(-power);
     }
 
     // Stop all Motor Movement
@@ -315,40 +320,44 @@ public class LL_Tracker {
                 status.getPipelineIndex(), status.getPipelineType());
 
         LLResult result = robot.limelight.getLatestResult();
-        TELE.addData("tx", result.getTx());
-        TELE.addData("ty", result.getTy());
 
-        if (result.getPythonOutput()[0] == 0.0) {
-            // No Target so slow strafe right to look
+        if (result != null){
+            if (result.getPythonOutput()[0] == 0.0) {
+                // No Target so slow strafe right to look
 
 
-            strafeMotors(STRAFE_SEARCH_SPEED);
-        }
-        else {
-            // Target Found, perform fine alignment
-            // This algorithm allows the motors to bounce back and forth
-            // between strafe align and front to back align.
-            // Other implementations could use a state machine if we didn't want
-            // continued tracking in both directions or we could combine both
-            // movements to try to speed this up.
-            // This algorithm was chosen for simplicity and ease of debugging.
-
-            // Side to Side Tracking
-            strafeAligned = strafeAlign(result);
-
-            // Front to Back Tracking
-            // So the thought is to have two different procedure for front
-            // and back due to sing different mechanisms for movement.
-            // Right now backupAlign is doing both.
-
-            // Move back with wheel motors
-            if (strafeAligned) {
-                backupAligned = backupAlign(result);
+                strafeMotors(STRAFE_SEARCH_SPEED);
             }
-            // Move forward with crane
-            // TBD procedure with slight algorithm change to backup to
-            // make it only check for movement needed in the backwards direction.
+            else {
+                // Target Found, perform fine alignment
+                // This algorithm allows the motors to bounce back and forth
+                // between strafe align and front to back align.
+                // Other implementations could use a state machine if we didn't want
+                // continued tracking in both directions or we could combine both
+                // movements to try to speed this up.
+                // This algorithm was chosen for simplicity and ease of debugging.
+
+                // Side to Side Tracking
+                strafeAligned = strafeAlign(result);
+
+                // Front to Back Tracking
+                // So the thought is to have two different procedure for front
+                // and back due to sing different mechanisms for movement.
+                // Right now backupAlign is doing both.
+
+                // Move back with wheel motors
+                if (strafeAligned) {
+                    backupAligned = backupAlign(result);
+                }
+                // Move forward with crane
+                // TBD procedure with slight algorithm change to backup to
+                // make it only check for movement needed in the backwards direction.
+            }
+        } else {
+            TELE.addLine("No limelight");
         }
+
+
 
         return strafeAligned && backupAligned;
 
@@ -363,6 +372,7 @@ public class LL_Tracker {
         if (pythonOutputs != null && pythonOutputs.length > 0) {
             sampleAngle = pythonOutputs[3];
         }
+        robot.clawRotate.setPosition(sampleAngle/180);
 
         return sampleAngle;
     }
