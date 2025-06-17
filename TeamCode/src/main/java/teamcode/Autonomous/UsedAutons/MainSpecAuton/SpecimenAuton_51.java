@@ -293,9 +293,9 @@ public class SpecimenAuton_51 extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y),0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder sampleScore = robot.drive.actionBuilder(new Pose2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y, 0))
-                .strafeToLinearHeading(new Vector2d(SAMPLE_SCORE_X1, WALL_GRAB_Y), Math.toRadians(SAMPLE_SCORE_TRAVELHEADING), VEL_CONSTRAINT3,ACCEL_CONSTRAINT3)
                 .strafeToLinearHeading(new Vector2d(SAMPLE_SCORE_X1, SAMPLE_SCORE_Y1), Math.toRadians(SAMPLE_SCORE_TRAVELHEADING), VEL_CONSTRAINT3,ACCEL_CONSTRAINT3)
-                .strafeToLinearHeading(new Vector2d(SAMPLE_SCORE_X2, SAMPLE_SCORE_Y2), Math.toRadians(SAMPLE_SCORE_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(SAMPLE_SCORE_X2, SAMPLE_SCORE_Y2), Math.toRadians(SAMPLE_SCORE_TRAVELHEADING), VEL_CONSTRAINT3,ACCEL_CONSTRAINT3)
+                .strafeToLinearHeading(new Vector2d(SAMPLE_SCORE_X3, SAMPLE_SCORE_Y3), Math.toRadians(SAMPLE_SCORE_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
 
         robot.drive.rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
