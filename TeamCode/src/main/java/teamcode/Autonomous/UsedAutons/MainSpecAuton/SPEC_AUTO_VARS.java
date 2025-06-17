@@ -36,10 +36,30 @@ public class SPEC_AUTO_VARS {
     public static double FIRST_WALL_GRAB_X = -1, FIRST_WALL_GRAB_Y = -22; // SPOT FOR HUMAN PLAYER GRAB FIRST SPEC
     public static double WALL_GRAB_X = 1, WALL_GRAB_Y = -22; //SPOT FOR HUMAN PLAYER GRAB
 
-    public static double FIRST_SPEC_SCORE_X = 25, FIRST_SPEC_SCORE_Y = 8; // SPOT FOR PRELOAD SCORE
+    public static double FIRST_SPEC_SCORE_X = 20, FIRST_SPEC_SCORE_Y = 10; // SPOT FOR PRELOAD SCORE
 
     public static double SPEC_SCORE_X = 25, SPEC_SCORE_Y = 8, SPEC_SCORE_HEADING = 30; //SPOT FOR SCORING
+
+    public static double SPEC_SCORE_X2 = 25, SPEC_SCORE_Y2 = 9, SPEC_SCORE_HEADING2 = 20;
     public static double RETRY_SPEC_X = 15, RETRY_SPEC_Y = -22; // SPOT TO MOVE TO IF FAILED SPEC
+
+    // Pickup up coordinates
+    public static double PICKUP_X1 = 18, PICKUP_Y1 = -10;
+    public static double PICKUP_X2 = 14, PICKUP_Y2 = -22;
+    public static double PICKUP_X3 = 14, PICKUP_Y3 = -34;
+    public static double PICKUP_HEADING = -45;
+    public static double DROP_X1 = 18, DROP_Y1 = -8;
+    public static double DROP_X2 = 18, DROP_Y2 = -16;
+    public static double DROP_X3 = 18, DROP_Y3 = -24;
+    public static double DROP_HEADING = -135;
+
+    //sample score
+    public static double SAMPLE_SCORE_X1 = 5, SAMPLE_SCORE_Y1 = 68, SAMPLE_SCORE_TRAVELHEADING = -90;
+    public static double SAMPLE_SCORE_X2 = 5, SAMPLE_SCORE_Y2 = 72, SAMPLE_SCORE_HEADING = -45;
+
+
+
+
 
     //Trajectory Speeds - SHOULD NOT NEED EDITING
 
@@ -54,20 +74,33 @@ public class SPEC_AUTO_VARS {
     public static double MAX_CYCLING_ACCEL = 140;
     public static double MAX_CYCLING_DECCEL = 40; //Only input positive number
 
+    //SPEEDS FOR SCORING SAMPLE
+    public static double MAX_SAMPLE_VEL = 200;
+    public static double MAX_SAMPLE_ACCEL = 200;
+    public static double MAX_SAMPLE_DECCEL = 100;
+
     //WAITS
     public static double PUSHING_SERVO_ROTATE = 1; //SHOULD NOT NEED EDITING, TIME BEFORE SERVO ROTATES WHILE PUSHING
     public static double PUSHING_SERVO_OPEN = 1; //SHOULD NOT NEED EDITING, TIME BTWN ROTATION AND OPENING
     public static double PUSHING_SERVO_PIVOT = 1; //SHOULD NOT NEED EDITING, TIME BTWN OPENING AND PIVOT MOVING
     public static double PUSHING_SERVO_MOVE = 1; //SHOULD NOT NEED EDITING, TIME BTWN PIVOT MOVING AND MOVE MOVING
 
-    public static double HUMAN_PLAYER_WAIT = 0.1; //TIME ROBOT RESTS BEFORE EXTENDO IN TO GRAB SPECIMEN
+    public static double HUMAN_PLAYER_WAIT = 0.0; //TIME ROBOT RESTS BEFORE EXTENDO IN TO GRAB SPECIMEN
 
     public static double CLAW_CLOSE_TIME = 0.25; //SHOULD NOT NEED EDITING, TIME THAT CLAW CLOSES FOR WALL GRABS
     public static double CLAW_OPEN_TIME = 0.1; //TIME THAT CLAW OPENS FOR WHEN SCORING SPEC
+    public static double CLAW_DOWN_TIME = 0.1;
+    public static double SAMPLE_DOWN_TIME = 0.5;
 
     public static double EXTENDO_OUT_WAIT = 1; //WAIT TIME FOR EXTENDO TO GO OUT WHILE SCORING
+    public static double EXTENDO_ALL_OUT = 0.5;
+    public static double EXTENDO_PICKUP_WAIT = 1;
+    public static double EXTENDO_FIRST_WAIT = 0.2;
 
     public static double EXTENDO_IN_WAIT = 0.1;
+    public static double MOVE_WAIT = 1;
+
+    public static double LEAVE_OBS = 1.0;
     public static double LINEAR_SLIDE_UP = 0.8; // WAIT TIME FOR LINEAR SIDES TO GO UP
 
     //PID POSITIONS

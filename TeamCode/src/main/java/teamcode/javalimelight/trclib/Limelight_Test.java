@@ -173,41 +173,54 @@ public class Limelight_Test extends LinearOpMode {
 
             //controlDrivetrain();
             //getLimelightResults();
-            if (Initialize()&&!CHECK_ANGLE){
-                while (!llTracker.Track()){
+            if (Initialize() && !CHECK_ANGLE){
+                if (!llTracker.Track()){
                     CHECK_ANGLE = false;
                     robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE_LIMELIGHT);
                     robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE_LIMELIGHT);
                     robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
                     robot.claw.setPosition(CLAW_OPEN);
                     sleep(1);
+                } else {
+                    CHECK_ANGLE = true;
+                    stopstrafe();
+                    llTracker.Stop();
                 }
-                stopstrafe();
-                llTracker.Stop();
-                CHECK_ANGLE = true;
+
+                if (CHECK_ANGLE){
+
+                    telemetry.addData("Angle", llTracker.getSampleAngle());
+                    robot.clawRightMove.setPosition(1-MOVE_PICKUP_SAMPLE_LIMELIGHT);
+                    robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE_LIMELIGHT);
+                    robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP_LIMELIGHT);
+                    sleep(200);
+                    Actions.runBlocking(
+                            new SequentialAction(
+                                    LinearSlidePID(LINEAR_SLIDES_PICKUP_LIMELIGHT,0)
+                            )
+                    );
+                    sleep(300);
+                    robot.claw.setPosition(CLAW_CLOSED);
+                    sleep(200);
+                    robot.clawLeftMove.setPosition(MOVE_HOVER_SAMPLE_LIMELIGHT);
+                    robot.clawRightMove.setPosition(1-MOVE_HOVER_SAMPLE_LIMELIGHT);
+                    sleep(5000);
+                    robot.claw.setPosition(CLAW_OPEN);
+                    CHECK_ANGLE = false;
+                } else {
+                    Actions.runBlocking(
+                            new SequentialAction(
+                                    LinearSlidePID(LINEAR_SLIDES_HOVER_LIMELIGHT,0)
+                            )
+                    );
+                }
+
+            } else if (!Initialize()){
+                TELE.addLine("No limelight");
             }
 
 
-            if (CHECK_ANGLE){
-                telemetry.addData("Angle", llTracker.getSampleAngle());
-                robot.clawRightMove.setPosition(1-MOVE_PICKUP_SAMPLE_LIMELIGHT);
-                robot.clawLeftMove.setPosition(MOVE_PICKUP_SAMPLE_LIMELIGHT);
-                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP_LIMELIGHT);
-                sleep(200);
-                Actions.runBlocking(
-                        new SequentialAction(
-                                LinearSlidePID(LINEAR_SLIDES_PICKUP_LIMELIGHT,0)
-                        )
-                );
-                sleep(300);
-                robot.claw.setPosition(CLAW_CLOSED);
-            } else {
-                Actions.runBlocking(
-                        new SequentialAction(
-                                LinearSlidePID(LINEAR_SLIDES_HOVER_LIMELIGHT,0)
-                        )
-                );
-            }
+
 
 
             //TELEMETRY:

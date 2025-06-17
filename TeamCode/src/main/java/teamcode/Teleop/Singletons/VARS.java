@@ -13,12 +13,12 @@ public class VARS {
 
     public static double SLOWDOWN_SPEED = 0.7;
     public static double WAIT_BACK_BUTTON = 1;
-    public static double CLAW_CLOSED = 0.76;
+    public static double CLAW_CLOSED = 0.725;
     ;
-    public static double CLAW_OPEN = 0.52;
-    public static double CLAW_LESS_OPEN = 0.63;
+    public static double CLAW_OPEN = 0.43;
+    public static double CLAW_LESS_OPEN = 0.58;
 
-    public static double CLAW_LOOSE_GRAB = 0.74;
+    public static double CLAW_LOOSE_GRAB = 0.7;
 
     public static double ROTATE_NEUTRAL = 0.98;
 
@@ -26,6 +26,8 @@ public class VARS {
     public static double ROTATE_MTI_AUTON_SCORE = 0.28;
 
     public static double ROTATE_AUTON_SPEC_SCORE = 0.8;
+
+    public static double ROTATE_PICKUP_SAMPLE = 0.22;
 
 
 
@@ -68,7 +70,7 @@ public class VARS {
     public static double PIVOT_SPECIMEN_SCORE = 0.4;
     public static double PIVOT_ALL_OUT = 0.6;
     public static double PIVOT_HOVER_SAMPLE = 0.9;
-    public static double PIVOT_SAMPLE_PICKUP_LIMELIGHT = 0.73;
+    public static double PIVOT_SAMPLE_PICKUP_LIMELIGHT = 0.74;
     public static double PIVOT_SAMPLE_PICKUP = 0.82;
 
 
@@ -90,14 +92,14 @@ public class VARS {
 
 
     public static double LEFT_PTO_OFF = 0.4;
-    public static double LEFT_PTO_ON = 0.4;
-    public static double RIGHT_PTO_OFF = 0.5;
-    public static double RIGHT_PTO_ON = 0.5;
+    public static double LEFT_PTO_ON = 0.7;
+    public static double RIGHT_PTO_OFF = 0.55;
+    public static double RIGHT_PTO_ON = 0.3;
 
 
 
     //TO BE DETERMINED
-    public static int HIGH_SPECIMEN_POS = 23500;
+    public static int HIGH_SPECIMEN_POS = 24000;
 
     public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 22000;
 
@@ -107,7 +109,7 @@ public class VARS {
 
     public static int AUTO_PARK_SLIDE_POS = 35000;
 
-    public static int HIGH_SAMPLE_POS = 68000;
+    public static int HIGH_SAMPLE_POS = 67000;
 
     public static int HIGH_SAMPLE_POS_TELE = 70500;
 
@@ -122,7 +124,7 @@ public class VARS {
 
     public static int HANG_4 = 59250;
 
-    public static int EXTENDO_MAX_TELE = 37000;
+    public static int EXTENDO_MAX_TELE = 36000;
     public static int EXTENDO_SOFTMAX_TELE = 30000;
     public static int EXTENDO_SAMPLE_PICKUP = 20000;
     public static int EXTENDO_PICKUP_SAMPLE = 22500;

@@ -52,7 +52,7 @@ import teamcode.javalimelight.trclib.LL_Tracker;
 
 
 @Config
-@Autonomous (preselectTeleOp = "Drive_V3")
+@Autonomous (preselectTeleOp = "Drive_V4")
 public class SampleAuton_NoLimelight extends LinearOpMode{
 
     Robot robot;
@@ -71,11 +71,16 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
     public static int LINEAR_SLIDES_PICKUP_LIMELIGHT = 7000;
 
     public static int LINEAR_SLIDES_LOWER = 1500;
-    public static int LINEAR_SLIDES_LOWER_CHECK = 2000;
+    public static int LINEAR_SLIDES_LOWER_CHECK = 2500;
+    public static double MOVE_3 = 0.54;
 
     public static double SAMPLE_DOWN_TIME = 0.5;
     public static double SAMPLE_SCORE_TIME = 0.25;
     public static double EXTENDO_OUT = 1.5;
+    public static double LINEAR_SLIDES_TIME = 1.7;
+    public static double PARK_TIME = 1.0;
+
+
     public static double PREDICTED_TIME_UP = 1.5;
 
     public static double SAMPLE_NET_X1 = 9, SAMPLE_NET_Y1 = 20;
@@ -84,8 +89,8 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
     public static double SAMPLE_X1 = 14, SAMPLE_Y1 = 9;
     public static double SAMPLE_X2 = 14, SAMPLE_Y2 = 20;
     public static double SAMPLE_X3 = 37, SAMPLE_Y3 = 6, SAMPLE_HEADING3 = 90;
-    public static double PARK_X1 = 56, PARK_Y1 = 0;
-    public static double PARK_X2 = 56, PARK_Y2 = -30;
+    public static double PARK_X1 = 50, PARK_Y1 = 0;
+    public static double PARK_X2 = 56, PARK_Y2 = -25;
     public static double PARK_HEADING = -90;
 
 
@@ -136,6 +141,7 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
         return new Action() {
 
             private final PIDController controller = new PIDController(0.0006,0,0.00001);
+            double stamp = getRuntime();
 
 
 
@@ -153,13 +159,13 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
                 robot.leftSlide.setPower(power);
                 robot.rightSlide.setPower(power);
 
-                telemetry.addData("power", power);
-                telemetry.addData("Target", position);
-                telemetry.addData("pos", linearSlidePosition);
+                TELE.addData("power", power);
+                TELE.addData("Target", position);
+                TELE.addData("pos", linearSlidePosition);
 
-                if (Math.abs(position - linearSlidePosition)<475 || (linearSlidePosition > HIGH_SAMPLE_POS && position == HIGH_SAMPLE_POS_TELE) || (linearSlidePosition < LINEAR_SLIDES_LOWER_CHECK && position ==  LINEAR_SLIDES_LOWER)){
-                    telemetry.addLine("Success");
-                    telemetry.update();
+                if (Math.abs(position - linearSlidePosition)<475 || (linearSlidePosition > HIGH_SAMPLE_POS && position == HIGH_SAMPLE_POS_TELE) || (linearSlidePosition < LINEAR_SLIDES_LOWER_CHECK && position ==  LINEAR_SLIDES_LOWER) || getRuntime()-stamp > LINEAR_SLIDES_TIME){
+                    TELE.addLine("Success");
+                    TELE.update();
 
 
                     robot.leftSlide.setPower(holdPower);
@@ -171,7 +177,7 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
                 } else {
 
 
-                    telemetry.update();
+                    TELE.update();
 
                     return  true;
 
@@ -181,6 +187,7 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
 
         };
     }
+
 
     public Action Wait (double time) {
 
@@ -219,7 +226,7 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
 
 
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
-            robot.clawRotate.setPosition(ROTATE_NEUTRAL);
+            robot.clawRotate.setPosition(ROTATE_90);
             robot.clawLeftMove.setPosition(MOVE_RAISED);
             robot.clawRightMove.setPosition(1-MOVE_RAISED);
 
@@ -322,7 +329,49 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
         }
     }
 
+    public class ServosPickupSample3 implements Action {
 
+        double ticker = 1;
+
+        double stamp;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            if (ticker ==1){
+                stamp = getRuntime();
+            }
+
+            ticker ++;
+
+            if (getRuntime() - stamp < 0.4){
+                robot.clawLeftMove.setPosition(MOVE_3);
+                robot.clawRightMove.setPosition(1-MOVE_3);
+
+
+
+                robot.clawPivot.setPosition(PIVOT_SAMPLE_PICKUP);
+
+                return true;
+
+            } else if ( getRuntime() - stamp < 0.6){
+
+                robot.clawLeftMove.setPosition(MOVE_3);
+                robot.clawRightMove.setPosition(1-MOVE_3);
+                robot.claw.setPosition(CLAW_CLOSED);
+                return true;
+            } else {
+
+                robot.clawLeftMove.setPosition(MOVE_3);
+                robot.clawRightMove.setPosition(1-MOVE_3);
+                robot.claw.setPosition(CLAW_CLOSED);
+                return false;
+            }
+
+
+
+        }
+    }
     public class ExtendoOut implements Action {
 
 
@@ -372,7 +421,7 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
                 robot.extendo.setPower(-1);
 
 
-                telemetry.update();
+                TELE.update();
                 return true;
             } else if (getRuntime()-timer < 0.4){
                 return  true;
@@ -398,7 +447,7 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         robot = new Robot(hardwareMap);
         robot.drive = new PinpointDrive(hardwareMap, AUTON_START_POSE);
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        TELE = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot.backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -628,20 +677,17 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
             TARGET = AUTO_PARK_SLIDE_POS;
 
             Actions.runBlocking(
-
                     new ParallelAction(
                             park.build(),
+                            new SampleAuton_NoLimelight.ParkServos(),
                             new SequentialAction(
-
-                                    new ParkServos(),
-
+                                    Wait(SAMPLE_DOWN_TIME),
                                     LinearSlidesPID(TARGET,0),
-                                    Wait(EXTENDO_OUT),
-                                    new ExtendoOut()
-
+                                    Wait(PARK_TIME),
+                                    LinearSlidesPID(TARGET,-0.5)
                             )
-                    )
 
+                    )
             );
 
 

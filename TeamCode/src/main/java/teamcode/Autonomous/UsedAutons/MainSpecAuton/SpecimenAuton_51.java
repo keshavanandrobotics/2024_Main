@@ -26,12 +26,13 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
+import teamcode.Autonomous.Disabled.MTI;
 import teamcode.Autonomous.RoadRunner.PinpointDrive;
 import teamcode.Robot;
 
 @Config
 @Autonomous (preselectTeleOp = "Drive_V4")
-public class SpecimenAuton_Red51 extends LinearOpMode {
+public class SpecimenAuton_51 extends LinearOpMode {
 
     Robot robot;
 
@@ -44,6 +45,9 @@ public class SpecimenAuton_Red51 extends LinearOpMode {
 
     public TranslationalVelConstraint VEL_CONSTRAINT2 = new TranslationalVelConstraint(MAX_CYCLING_VEL);
     public ProfileAccelConstraint ACCEL_CONSTRAINT2 = new ProfileAccelConstraint(-Math.abs(MAX_CYCLING_DECCEL), MAX_CYCLING_ACCEL);
+
+    public TranslationalVelConstraint VEL_CONSTRAINT3 = new TranslationalVelConstraint(MAX_SAMPLE_VEL);
+    public ProfileAccelConstraint ACCEL_CONSTRAINT3 = new ProfileAccelConstraint(-Math.abs(MAX_SAMPLE_DECCEL), MAX_SAMPLE_ACCEL);
 
 
 
@@ -252,44 +256,47 @@ public class SpecimenAuton_Red51 extends LinearOpMode {
         //Trajectories
 
 
-        TrajectoryActionBuilder pushing = robot.drive.actionBuilder(AUTON_START_POSE)
-                .splineToConstantHeading(new Vector2d(X1, Y1), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                .splineToConstantHeading(new Vector2d(X2, Y2), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                .splineToConstantHeading(new Vector2d(X3, Y3), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+        TrajectoryActionBuilder score0 = robot.drive.actionBuilder(AUTON_START_POSE)
+                .strafeToLinearHeading(new Vector2d(FIRST_SPEC_SCORE_X, FIRST_SPEC_SCORE_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-                .setReversed(true)
-                .splineToConstantHeading(new Vector2d(X4, Y4), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+        TrajectoryActionBuilder pickup1 = robot.drive.actionBuilder(new Pose2d(FIRST_SPEC_SCORE_X, FIRST_SPEC_SCORE_Y, 0))
+                .strafeToLinearHeading(new Vector2d(PICKUP_X1, PICKUP_Y1), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-                .setReversed(false)
-                .splineToConstantHeading(new Vector2d(X5, Y5), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                .splineToConstantHeading(new Vector2d(X6, Y6), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+        TrajectoryActionBuilder drop1 = robot.drive.actionBuilder(new Pose2d(PICKUP_X1, PICKUP_Y1, Math.toRadians(PICKUP_HEADING)))
+                .strafeToLinearHeading(new Vector2d(DROP_X1, DROP_Y1), Math.toRadians(DROP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-                .setReversed(true)
-                .splineToConstantHeading(new Vector2d(X7, Y7), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+        TrajectoryActionBuilder pickup2 = robot.drive.actionBuilder(new Pose2d(DROP_X1, DROP_Y1, Math.toRadians(DROP_HEADING)))
+                .strafeToLinearHeading(new Vector2d(PICKUP_X2, PICKUP_Y2), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-                .setReversed(false)
-                .splineToConstantHeading(new Vector2d(X8, Y8), 0, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
-                .splineToConstantHeading(new Vector2d(X9, Y9), -Math.PI / 2, VEL_CONSTRAINT, ACCEL_CONSTRAINT)
+        TrajectoryActionBuilder drop2 = robot.drive.actionBuilder(new Pose2d(PICKUP_X2, PICKUP_Y2, Math.toRadians(PICKUP_HEADING)))
+                .strafeToLinearHeading(new Vector2d(DROP_X2, DROP_Y2), Math.toRadians(DROP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-                .setReversed(true)
-                .splineToConstantHeading(new Vector2d(X10, Y10), Math.PI, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
-        //.strafeToLinearHeading(new Vector2d(X9, Y9), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+        TrajectoryActionBuilder pickup3 = robot.drive.actionBuilder(new Pose2d(DROP_X2, DROP_Y2, Math.toRadians(DROP_HEADING)))
+                .strafeToLinearHeading(new Vector2d(PICKUP_X3, PICKUP_Y3), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(X10, Y10, 0))
+        TrajectoryActionBuilder drop3 = robot.drive.actionBuilder(new Pose2d(PICKUP_X3, PICKUP_Y3, Math.toRadians(PICKUP_HEADING)))
+                .strafeToLinearHeading(new Vector2d(DROP_X3, DROP_Y3), Math.toRadians(DROP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+
+        TrajectoryActionBuilder firstWallGrab = robot.drive.actionBuilder(new Pose2d(DROP_X3, DROP_Y3, DROP_HEADING))
                 .strafeToLinearHeading(new Vector2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y), 0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder firstScore = robot.drive.actionBuilder(new Pose2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y, 0))
-                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X2,SPEC_SCORE_Y2), Math.toRadians(SPEC_SCORE_HEADING2),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X, SPEC_SCORE_Y, Math.toRadians(SPEC_SCORE_HEADING)))
+        TrajectoryActionBuilder subsequentWallGrabs = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X2, SPEC_SCORE_Y2, Math.toRadians(SPEC_SCORE_HEADING2)))
                 .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), Math.toRadians(0),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder subsequentScores = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
-                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X,SPEC_SCORE_Y), Math.toRadians(SPEC_SCORE_HEADING),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(SPEC_SCORE_X2,SPEC_SCORE_Y2), Math.toRadians(SPEC_SCORE_HEADING2),VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
-        TrajectoryActionBuilder retrySpec = robot.drive.actionBuilder(new Pose2d(WALL_GRAB_X,WALL_GRAB_Y,0))
-                .strafeToLinearHeading(new Vector2d(RETRY_SPEC_X,RETRY_SPEC_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2)
-                .strafeToLinearHeading(new Vector2d(WALL_GRAB_X,WALL_GRAB_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+        TrajectoryActionBuilder lastWallGrab = robot.drive.actionBuilder(new Pose2d(SPEC_SCORE_X2, SPEC_SCORE_Y2, Math.toRadians(SPEC_SCORE_HEADING2)))
+                .strafeToLinearHeading(new Vector2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y),0, VEL_CONSTRAINT2,ACCEL_CONSTRAINT2);
+
+        TrajectoryActionBuilder sampleScore = robot.drive.actionBuilder(new Pose2d(FIRST_WALL_GRAB_X, FIRST_WALL_GRAB_Y, 0))
+                .strafeToLinearHeading(new Vector2d(SAMPLE_SCORE_X1, WALL_GRAB_Y), Math.toRadians(SAMPLE_SCORE_TRAVELHEADING), VEL_CONSTRAINT3,ACCEL_CONSTRAINT3)
+                .strafeToLinearHeading(new Vector2d(SAMPLE_SCORE_X1, SAMPLE_SCORE_Y1), Math.toRadians(SAMPLE_SCORE_TRAVELHEADING), VEL_CONSTRAINT3,ACCEL_CONSTRAINT3)
+                .strafeToLinearHeading(new Vector2d(SAMPLE_SCORE_X2, SAMPLE_SCORE_Y2), Math.toRadians(SAMPLE_SCORE_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+
 
         robot.drive.rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.drive.rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -334,29 +341,86 @@ public class SpecimenAuton_Red51 extends LinearOpMode {
 
             Actions.runBlocking(
                     new ParallelAction(
-                            pushing.build(),
+                            score0.build(),
+                            Servos(CLAW_CLOSED, ROTATE_NEUTRAL, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
                             new SequentialAction(
-                                    ExtendoPID(-0.2),
-                                    Wait(PUSHING_SERVO_ROTATE),
-                                    Servos(0.501, ROTATE_FLIP, 0.501, 0.501),
-                                    Wait(PUSHING_SERVO_OPEN),
+                                    LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
+                                    ExtendoPID(1),
+                                    Wait(EXTENDO_ALL_OUT),
                                     Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
-                                    Wait(PUSHING_SERVO_PIVOT),
-                                    Servos(0.501, 0.501, 0.501, PIVOT_WALL_INTAKE),
-                                    Wait(PUSHING_SERVO_MOVE),
-                                    Servos(0.501, 0.501, MOVE_WALL_INTAKE, 0.501)
+                                    ExtendoPID(-1),
+                                    Wait(EXTENDO_FIRST_WAIT)
                             )
-
                     )
             );
 
-            //Actions.runBlocking(firstWallGrab.build());
-
-
+            Actions.runBlocking(
+                    new ParallelAction(
+                            pickup1.build(),
+                            LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
+                            Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_HOVER_SAMPLE, PIVOT_SAMPLE_PICKUP),
+                            new SequentialAction(
+                                    Wait(EXTENDO_PICKUP_WAIT),
+                                    ExtendoPID(1),
+                                    Wait(EXTENDO_ALL_OUT),
+                                    ExtendoPID(-0.2)
+                            )
+                    )
+            );
 
             Actions.runBlocking(
                     new SequentialAction(
-                            firstWallGrab.build(),
+                            Servos(0.501,ROTATE_AUTON_SPEC_SCORE, MOVE_PICKUP_SAMPLE, 0.501),
+                            Wait(CLAW_DOWN_TIME),
+                            Servos(CLAW_CLOSED, ROTATE_AUTON_SPEC_SCORE,0.501,0.501),
+                            Wait(CLAW_CLOSE_TIME),
+                            new ParallelAction(
+                                    drop1.build(),
+                                    Servos(0.501,ROTATE_AUTON_SPEC_SCORE,MOVE_HOVER_SAMPLE,0.501)
+                            ),
+                            Servos(CLAW_OPEN,ROTATE_AUTON_SPEC_SCORE,0.501,0.501),
+                            Wait(CLAW_OPEN_TIME),
+                            pickup2.build(),
+                            Servos(0.501,ROTATE_AUTON_SPEC_SCORE, MOVE_PICKUP_SAMPLE, 0.501),
+                            Wait(CLAW_DOWN_TIME),
+                            Servos(CLAW_CLOSED, ROTATE_AUTON_SPEC_SCORE,0.501,0.501),
+                            Wait(CLAW_CLOSE_TIME),
+                            new ParallelAction(
+                                    drop2.build(),
+                                    Servos(0.501,ROTATE_AUTON_SPEC_SCORE,MOVE_HOVER_SAMPLE,0.501)
+                            ),
+                            Servos(CLAW_OPEN,ROTATE_AUTON_SPEC_SCORE,0.501,0.501),
+                            Wait(CLAW_OPEN_TIME),
+                            pickup3.build(),
+                            Servos(0.501,ROTATE_AUTON_SPEC_SCORE, MOVE_PICKUP_SAMPLE, 0.501),
+                            Wait(CLAW_DOWN_TIME),
+                            Servos(CLAW_CLOSED, ROTATE_AUTON_SPEC_SCORE,0.501,0.501),
+                            Wait(CLAW_CLOSE_TIME),
+                            new ParallelAction(
+                                    drop3.build(),
+                                    new SequentialAction(
+                                            ExtendoPID(-1),
+                                            Wait(EXTENDO_IN_WAIT),
+                                            ExtendoPID(0)
+                                    ),
+                                    Servos(0.501,ROTATE_AUTON_SPEC_SCORE,MOVE_HOVER_SAMPLE,0.501)
+                            ),
+                            Servos(CLAW_OPEN,ROTATE_AUTON_SPEC_SCORE,0.501,0.501),
+                            Wait(CLAW_OPEN_TIME)
+                    )
+            );
+
+            Actions.runBlocking(
+                    new SequentialAction(
+                            new ParallelAction(
+                                    ExtendoPID(-1),
+                                    firstWallGrab.build(),
+                                    new SequentialAction(
+                                            Servos(0.501, ROTATE_FLIP, MOVE_RAISED, PIVOT_WALL_INTAKE),
+                                            Wait(MOVE_WAIT),
+                                            Servos(0.501,0.501,MOVE_WALL_INTAKE,0.501)
+                                    )
+                            ),
                             Wait(HUMAN_PLAYER_WAIT),
                             Servos(CLAW_CLOSED, 0.501, 0.501, .501),
                             Wait(CLAW_CLOSE_TIME)
@@ -369,7 +433,7 @@ public class SpecimenAuton_Red51 extends LinearOpMode {
                     new ParallelAction(
                             firstScore.build(),
                             Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
-                            LinearSlidePID(HIGH_SPECIMEN_POS_AUTO_FIRST, 0.12),
+                            LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
                             new SequentialAction(
                                     Wait(EXTENDO_OUT_WAIT),
                                     ExtendoPID(1)
@@ -377,7 +441,7 @@ public class SpecimenAuton_Red51 extends LinearOpMode {
                     )
             );
 
-            for (int i = 0; i<4; i++) {
+            for (int i = 0; i<3; i++) {
 
                 Actions.runBlocking(
                         new SequentialAction(
@@ -457,14 +521,14 @@ public class SpecimenAuton_Red51 extends LinearOpMode {
                             Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
                             Wait(CLAW_OPEN_TIME),
                             new ParallelAction(
-                                    subsequentWallGrabs.build(),
+                                    lastWallGrab.build(),
                                     new SequentialAction(
                                             ExtendoPID(-1),
                                             Wait(EXTENDO_RETRACT_WAIT),
                                             new ParallelAction(
                                                     LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
                                                     Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE),
-                                                    ExtendoPID(0)
+                                                    ExtendoPID(-0.2)
                                             )
                                     )
                             )
@@ -472,6 +536,32 @@ public class SpecimenAuton_Red51 extends LinearOpMode {
                     )
 
 
+            );
+
+            Actions.runBlocking(
+                    new SequentialAction(
+                            Servos(CLAW_CLOSED, 0.501,0.501,0.501),
+                            Wait(CLAW_CLOSE_TIME),
+                            new ParallelAction(
+                                    sampleScore.build(),
+                                    new SequentialAction(
+                                            LinearSlidePID(3000,0),
+                                            Wait(LEAVE_OBS),
+                                            new ParallelAction(
+                                                    Servos(0.501, ROTATE_90, MOVE_RAISED, PIVOT_OUTTAKE),
+                                                    LinearSlidePID(HIGH_SAMPLE_POS, 0.2)
+                                            )
+                                    )
+                            )
+                    )
+            );
+
+            Actions.runBlocking(
+                    new SequentialAction(
+                            Servos(0.501,0.501,MOVE_OUTTAKE, 0.501),
+                            Wait(SAMPLE_DOWN_TIME),
+                            Servos(CLAW_OPEN, 0.501,0.501,0.501)
+                    )
             );
 
             sleep(10000);
