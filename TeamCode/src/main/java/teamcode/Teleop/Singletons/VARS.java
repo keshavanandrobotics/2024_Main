@@ -70,7 +70,7 @@ public class VARS {
     public static double PIVOT_SPECIMEN_SCORE = 0.4;
     public static double PIVOT_ALL_OUT = 0.6;
     public static double PIVOT_HOVER_SAMPLE = 0.9;
-    public static double PIVOT_SAMPLE_PICKUP_LIMELIGHT = 0.74;
+    public static double PIVOT_SAMPLE_PICKUP_LIMELIGHT = 0.75;
     public static double PIVOT_SAMPLE_PICKUP = 0.82;
 
 
