@@ -153,6 +153,10 @@ public class VARS {
 
     public static boolean AUTON_RED = true;
 
+    public static double STRAFE_SEARCH_SPEED = 0.5;
+
+    public static double ALIGN_POWER = 0.3;
+
 
 
 

@@ -11,6 +11,8 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 import static java.lang.Math.abs;
 
+import static teamcode.Teleop.Singletons.VARS.*;
+
 import teamcode.Robot;
 
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -34,7 +36,7 @@ public class LL_Tracker {
     // Moves passenger side or right during search
     // Positive is driver's side or left
     // Negative is passenger's side or right
-    public static double STRAFE_SEARCH_SPEED = 0.4;
+
 
     private Robot robot;
 
@@ -199,7 +201,7 @@ public class LL_Tracker {
         boolean aligned = false;
         double targetTx = llResult.getTx();
         double drivePower = 0.0;
-        final double MIN_DRIVE_POWER = 0.2;
+        final double MIN_DRIVE_POWER = ALIGN_POWER;
         final double TARGET_POSITION_TOLERANCE = 5.0;
         final double HORIZONTAL_FOV_RANGE = 26.0;
         final double DRIVE_POWER_REDUCTION = 2.0;
@@ -253,7 +255,7 @@ public class LL_Tracker {
         boolean aligned = false;
         double targetTy = llResult.getTy();
         double drivePower = 0.0;
-        final double MIN_DRIVE_POWER = 0.2;
+        final double MIN_DRIVE_POWER = ALIGN_POWER;
         final double TARGET_POSITION_TOLERANCE = 5.0;
         final double HORIZONTAL_FOV_RANGE = 26.0;
         final double DRIVE_POWER_REDUCTION = 2.0;
