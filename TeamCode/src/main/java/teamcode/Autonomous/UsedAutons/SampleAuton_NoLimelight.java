@@ -520,7 +520,8 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
         if(isStopRequested()) return;
 
         if (opModeIsActive()){
-
+            robot.leftPTO.setPosition(LEFT_PTO_OFF);
+            robot.rightPTO.setPosition(RIGHT_PTO_OFF);
             TARGET = HIGH_SAMPLE_POS_TELE;
 
             Actions.runBlocking(

@@ -137,7 +137,7 @@ public class SpecimenAuton extends LinearOpMode {
 
         return new Action() {
 
-            private final PIDController controller = new PIDController(0.0006,0,0.00001);
+            private final PIDController controller = new PIDController(0.0003,0,0.00001);
 
 
 
@@ -148,7 +148,7 @@ public class SpecimenAuton extends LinearOpMode {
 
                 double linearSlidePosition = -robot.linearSlideEncoder.getCurrentPosition();
 
-                controller.setPID(0.0006,0,0.00001);
+                controller.setPID(0.0003,0,0.00001);
 
                 double power = controller.calculate(linearSlidePosition, position) + 0.08;
 
@@ -249,6 +249,10 @@ public class SpecimenAuton extends LinearOpMode {
         robot.leftPTO.setPosition(LEFT_PTO_OFF);
         robot.rightPTO.setPosition(RIGHT_PTO_OFF);
 
+
+
+
+
         //Trajectories
 
 
@@ -331,7 +335,8 @@ public class SpecimenAuton extends LinearOpMode {
         if (isStopRequested()) return;
 
         if (opModeIsActive()){
-
+            robot.leftPTO.setPosition(LEFT_PTO_OFF);
+            robot.rightPTO.setPosition(RIGHT_PTO_OFF);
             Actions.runBlocking(
                     new ParallelAction(
                             pushing.build(),
@@ -369,10 +374,11 @@ public class SpecimenAuton extends LinearOpMode {
                     new ParallelAction(
                             firstScore.build(),
                             Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
-                            LinearSlidePID(HIGH_SPECIMEN_POS_AUTO_FIRST, 0.12),
+                            LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
                             new SequentialAction(
                                     Wait(EXTENDO_OUT_WAIT),
-                                    ExtendoPID(1)
+                                    ExtendoPID(1),
+                                    Wait(SAMPLE_DOWN_TIME)
                             )
                     )
             );
@@ -391,7 +397,7 @@ public class SpecimenAuton extends LinearOpMode {
                                                 new ParallelAction(
                                                         LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
                                                         Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE),
-                                                        ExtendoPID(-0.5)
+                                                        ExtendoPID(-0.2)
 
                                                 )
                                         )
@@ -443,7 +449,8 @@ public class SpecimenAuton extends LinearOpMode {
                                         LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
                                         new SequentialAction(
                                                 Wait(EXTENDO_OUT_WAIT),
-                                                ExtendoPID(1)
+                                                ExtendoPID(1),
+                                                Wait(SAMPLE_DOWN_TIME)
                                         )
 
                                 )

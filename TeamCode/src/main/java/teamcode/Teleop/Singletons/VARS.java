@@ -20,19 +20,19 @@ public class VARS {
 
     public static double CLAW_LOOSE_GRAB = 0.7;
 
-    public static double ROTATE_NEUTRAL = 0.98;
+    public static double ROTATE_NEUTRAL = 0.94;
 
 
     public static double ROTATE_MTI_AUTON_SCORE = 0.28;
 
-    public static double ROTATE_AUTON_SPEC_SCORE = 0.8;
+    public static double ROTATE_AUTON_SPEC_SCORE = 0.78;
 
-    public static double ROTATE_PICKUP_SAMPLE = 0.22;
+    public static double ROTATE_PICKUP_SAMPLE = 0.2;
 
 
 
-    public static double ROTATE_90 = 0.52;
-    public static double ROTATE_FLIP = 0.04;
+    public static double ROTATE_90 = 0.48;
+    public static double ROTATE_FLIP = 0.02;
     public static double ROTATE_LM3_SPECIMEN_AUTON = 0.23;
 
 
@@ -40,7 +40,7 @@ public class VARS {
     public static double MOVE_WALL_INTAKE = 0.05;
 
 
-    public static double MOVE_OUTTAKE = 0.05;
+    public static double MOVE_OUTTAKE = 0.02;
     public static double MOVE_SPECIMEN_SCORE = 0.45;
     public static double MOVE_ALL_OUT = 0.42;
     public static double MOVE_HOVER_SAMPLE = 0.42;
@@ -49,7 +49,7 @@ public class VARS {
 
     public static double MOVE_AUTO_HOVER = 0.45;
 
-    public static double MOVE_RAISED = 0.2;
+    public static double MOVE_RAISED = 0.18;
 
 
     public static double MOVE_PICKUP_SAMPLE = 0.5;
@@ -99,11 +99,11 @@ public class VARS {
 
 
     //TO BE DETERMINED
-    public static int HIGH_SPECIMEN_POS = 24000;
+    public static int HIGH_SPECIMEN_POS = 21700;
 
     public static int HIGH_SPECIMEN_POS_AUTO_FIRST = 22000;
 
-    public static int HIGH_SPECIMEN_POS_TELE = 26000;
+    public static int HIGH_SPECIMEN_POS_TELE = 24750;
 
     public static int LOWER_SLIDES_MISS = 18000;
 
@@ -115,7 +115,7 @@ public class VARS {
 
     public static int LOW_SAMPLE_POS_TELE = 38000;
 
-    public static int HANG_SLIDES_HEIGHT = 63000;
+    public static int HANG_SLIDES_HEIGHT = 66000;
 
     public static int HANG_1 = 43000;
 
@@ -126,13 +126,13 @@ public class VARS {
 
     public static int EXTENDO_MAX_TELE = 36000;
     public static int EXTENDO_SOFTMAX_TELE = 30000;
-    public static int EXTENDO_SAMPLE_PICKUP = 20000;
+    public static int EXTENDO_SAMPLE_PICKUP = 19000;
     public static int EXTENDO_PICKUP_SAMPLE = 22500;
 
 
     public static int EXTENDO_HANG = 15000;
 
-    public static double HOOKS_UP_TIME = 1.3;
+    public static double HOOKS_UP_TIME = 1.6;
 
     public static double HOOKS_DOWN_TIME = 0.6;
 
@@ -155,7 +155,10 @@ public class VARS {
 
     public static double STRAFE_SEARCH_SPEED = 0.5;
 
-    public static double ALIGN_POWER = 0.3;
+    public static double ALIGN_POWER = 0.25;
+
+    public static double SLIDES_DOWN_RATE = -1;
+    public static double SLIDES_HANG_HOLD = -0.3;
 
 
 

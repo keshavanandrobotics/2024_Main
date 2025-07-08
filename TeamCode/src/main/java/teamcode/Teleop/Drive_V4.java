@@ -43,6 +43,8 @@ public class Drive_V4 extends LinearOpMode {
     private MultipleTelemetry TELE;
     public static double ESTIMATED_SPEC_TRAJ_TIME = 1.5;
     public static double ESTIMATED_GRAB_TRAJ_TIME = 1.5;
+
+    public static boolean TEST_BOOLEAN = false;
     public static String MODE = "SAM";
 
     public boolean scoreAutomation = false;
@@ -425,8 +427,10 @@ public class Drive_V4 extends LinearOpMode {
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
 
-        robot.leftPTO.setPosition(LEFT_PTO_OFF);
-        robot.rightPTO.setPosition(RIGHT_PTO_OFF);
+
+
+
+
 
         controller = new PIDController(p, i, d);
 
@@ -547,7 +551,8 @@ public class Drive_V4 extends LinearOpMode {
 
 
             }
-
+            robot.leftPTO.setPosition(LEFT_PTO_OFF);
+            robot.rightPTO.setPosition(RIGHT_PTO_OFF);
             displayTelemetry();
 
             automation();
@@ -687,12 +692,13 @@ public class Drive_V4 extends LinearOpMode {
 
         if (gamepad2.left_trigger != 0 || gamepad2.right_trigger != 0) {
             PID_MODE = false;
+            linearAutomation = false;
         }
 
-        if (-gamepad2.left_stick_y < -0.5) {
+        if (-gamepad2.left_stick_y < -0.8) {
             target = (int) linearSlideZeroPosition - 400;
             PID_MODE = true;
-        } else if (-gamepad2.left_stick_y > 0.5) {
+        } else if (-gamepad2.left_stick_y > 0.8) {
             target = (int) linearSlideZeroPosition + HIGH_SAMPLE_POS_TELE;
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
             robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
@@ -701,7 +707,7 @@ public class Drive_V4 extends LinearOpMode {
 
             PID_MODE = true;
 
-        } else if (-gamepad2.left_stick_x > 0.5){
+        } else if (-gamepad2.left_stick_x > 0.8){
             target = (int) linearSlideZeroPosition + LOW_SAMPLE_POS_TELE;
             robot.clawPivot.setPosition(PIVOT_OUTTAKE);
             robot.clawLeftMove.setPosition(MOVE_OUTTAKE);
@@ -1011,8 +1017,7 @@ public class Drive_V4 extends LinearOpMode {
 
         double time = getRuntime() - G1_B_PRESSED_TIME;
 
-        if (HANG_STATE ==1){
-
+        if (HANG_STATE ==1) {
             target = HANG_SLIDES_HEIGHT;
 
             PID_MODE = true;
@@ -1020,7 +1025,7 @@ public class Drive_V4 extends LinearOpMode {
             linearAutomation = false;
 
             robot.clawLeftMove.setPosition(MOVE_AUTONOMOUS_INIT);
-            robot.clawRightMove.setPosition(1-MOVE_AUTONOMOUS_INIT);
+            robot.clawRightMove.setPosition(1 - MOVE_AUTONOMOUS_INIT);
 
             robot.clawPivot.setPosition(PIVOT_AUTONOMOUS_INIT);
 
@@ -1030,13 +1035,7 @@ public class Drive_V4 extends LinearOpMode {
 
             extendoHoldOut = false;
 
-            extendoOut = robot.extendoEncoder.getCurrentPosition() < EXTENDO_HANG;
-
-            robot.leftStabilizer.setPosition(LEFT_HOLD_ON);
-
-            robot.rightStabilizer.setPosition(RIGHT_HOLD_ON);
-
-            if (time < HOOKS_UP_TIME){
+            if (time < HOOKS_UP_TIME) {
                 robot.leftHook.setPower(1);
                 robot.rightHook.setPower(1);
             } else {
@@ -1046,88 +1045,17 @@ public class Drive_V4 extends LinearOpMode {
 
             TELE.addLine("Hanging");
 
-            TELE.addData("e", extendoOut);
-
-
-
-
-
-        } else if (HANG_STATE >=2){
-            if (time < HOOKS_DOWN_TIME){
-                robot.leftHook.setPower(-1);
-                robot.rightHook.setPower(-1);
-            } else if (linearSlidePosition > HANG_SLIDES_HEIGHT_2) {
-
-                PID_MODE = false;
-                linearAutomation = true;
-
-                robot.leftSlide.setPower(-1);
-                robot.rightSlide.setPower(-1);
-
-                G1_B_PRESSED_TIME = getRuntime();
-
-            } else if (time < PTO_TIME) {
-
-                robot.leftHook.setPower(0);
-                robot.rightHook.setPower(0);
-
-                robot.leftSlide.setPower(0);
-                robot.rightSlide.setPower(0);
-
-                robot.leftPTO.setPosition(LEFT_PTO_ON);
-                robot.rightPTO.setPosition(RIGHT_PTO_ON);
-
-                robot.frontLeftMotor.setPower(-0.5);
-                robot.backLeftMotor.setPower(-0.5);
-                robot.backRightMotor.setPower(-0.5);
-                robot.frontRightMotor.setPower(-0.5);
-
-
-                extendoOut = false;
-
-                extendoHoldOut = false;
-
-                extendoIn = true;
-
-
-
-            } else if (time < PTO_TIME + 2){
-                robot.frontLeftMotor.setPower(0);
-                robot.backLeftMotor.setPower(0);
-                robot.backRightMotor.setPower(0);
-                robot.frontRightMotor.setPower(0);
-
-                robot.leftHook.setPower(0);
-                robot.rightHook.setPower(0);
-
-                robot.leftSlide.setPower(0);
-                robot.rightSlide.setPower(0);
-
-                extendoOut = false;
-
-                extendoHoldOut = false;
-
-                extendoIn = true;
-
-                robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
-
-                robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
-
-
-            }
-
-            else {
-                extendoHoldIn = true;
-
-                robot.frontLeftMotor.setPower(-1);
-                robot.backLeftMotor.setPower(-1);
-                robot.backRightMotor.setPower(-1);
-                robot.frontRightMotor.setPower(-1);
-
-                robot.leftSlide.setPower(-1);
-                robot.rightSlide.setPower(-1);
-
-            }
+        } else if (HANG_STATE == 2) {
+            target = HANG_SLIDES_HEIGHT_2;
+        } else if (HANG_STATE ==3){
+            target = 0;
+            robot.leftHook.setPower(-1);
+            robot.rightHook.setPower(-1);
+        } else if (HANG_STATE == 4) {
+            robot.rightSlide.setPower(SLIDES_HANG_HOLD);
+            robot.leftSlide.setPower(SLIDES_HANG_HOLD);
+            robot.leftHook.setPower(0);
+            robot.rightHook.setPower(0);
         }
 
 

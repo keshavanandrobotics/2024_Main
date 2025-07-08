@@ -48,6 +48,8 @@ public class SpecimenAuton_51 extends LinearOpMode {
 
     public TranslationalVelConstraint VEL_CONSTRAINT3 = new TranslationalVelConstraint(MAX_SAMPLE_VEL);
     public ProfileAccelConstraint ACCEL_CONSTRAINT3 = new ProfileAccelConstraint(-Math.abs(MAX_SAMPLE_DECCEL), MAX_SAMPLE_ACCEL);
+    public TranslationalVelConstraint VEL_CONSTRAINT4 = new TranslationalVelConstraint(MAX_PICKUP_VEL);
+    public ProfileAccelConstraint ACCEL_CONSTRAINT4 = new ProfileAccelConstraint(-Math.abs(MAX_PICKUP_DECCEL), MAX_PICKUP_ACCEL);
 
 
 
@@ -69,6 +71,21 @@ public class SpecimenAuton_51 extends LinearOpMode {
                 return false;
             }
 
+        };
+    }
+
+    public Action ExtendoPIDPosition (int position){
+        return new Action() {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (robot.extendoEncoder.getCurrentPosition() < position){
+                    robot.extendo.setPower(1);
+                    return true;
+                } else {
+                    robot.extendo.setPower(0);
+                    return false;
+                }
+            }
         };
     }
 
@@ -141,8 +158,8 @@ public class SpecimenAuton_51 extends LinearOpMode {
 
         return new Action() {
 
-            private final PIDController controller = new PIDController(0.0006,0,0.00001);
-
+            private final PIDController controller = new PIDController(0.0003,0,0.00001);
+            double stamp = getRuntime();
 
 
 
@@ -152,7 +169,7 @@ public class SpecimenAuton_51 extends LinearOpMode {
 
                 double linearSlidePosition = -robot.linearSlideEncoder.getCurrentPosition();
 
-                controller.setPID(0.0006,0,0.00001);
+                controller.setPID(0.0003,0,0.00001);
 
                 double power = controller.calculate(linearSlidePosition, position) + 0.08;
 
@@ -163,8 +180,9 @@ public class SpecimenAuton_51 extends LinearOpMode {
                 telemetry.addData("Target", position);
                 telemetry.addData("pos", linearSlidePosition);
 
-                if (Math.abs(position - linearSlidePosition)<475){
+                if (Math.abs(position - linearSlidePosition)<475 || (LINEAR_SLIDES_UP < getRuntime() - stamp && position == HIGH_SAMPLE_POS)){
                     telemetry.addLine("Success");
+                    telemetry.addData("pos", linearSlidePosition);
                     telemetry.update();
 
 
@@ -235,6 +253,7 @@ public class SpecimenAuton_51 extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         //Motor Inits:
+        robot.rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         robot.linearSlideEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.linearSlideEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -250,8 +269,6 @@ public class SpecimenAuton_51 extends LinearOpMode {
 
         robot.rightStabilizer.setPosition(RIGHT_HOLD_OFF);
         robot.leftStabilizer.setPosition(LEFT_HOLD_OFF);
-        robot.leftPTO.setPosition(LEFT_PTO_OFF);
-        robot.rightPTO.setPosition(RIGHT_PTO_OFF);
 
         //Trajectories
 
@@ -260,19 +277,19 @@ public class SpecimenAuton_51 extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(FIRST_SPEC_SCORE_X, FIRST_SPEC_SCORE_Y), 0, VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder pickup1 = robot.drive.actionBuilder(new Pose2d(FIRST_SPEC_SCORE_X, FIRST_SPEC_SCORE_Y, 0))
-                .strafeToLinearHeading(new Vector2d(PICKUP_X1, PICKUP_Y1), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(PICKUP_X1, PICKUP_Y1), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT4, ACCEL_CONSTRAINT4);
 
         TrajectoryActionBuilder drop1 = robot.drive.actionBuilder(new Pose2d(PICKUP_X1, PICKUP_Y1, Math.toRadians(PICKUP_HEADING)))
                 .strafeToLinearHeading(new Vector2d(DROP_X1, DROP_Y1), Math.toRadians(DROP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder pickup2 = robot.drive.actionBuilder(new Pose2d(DROP_X1, DROP_Y1, Math.toRadians(DROP_HEADING)))
-                .strafeToLinearHeading(new Vector2d(PICKUP_X2, PICKUP_Y2), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(PICKUP_X2, PICKUP_Y2), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT4, ACCEL_CONSTRAINT4);
 
         TrajectoryActionBuilder drop2 = robot.drive.actionBuilder(new Pose2d(PICKUP_X2, PICKUP_Y2, Math.toRadians(PICKUP_HEADING)))
                 .strafeToLinearHeading(new Vector2d(DROP_X2, DROP_Y2), Math.toRadians(DROP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
 
         TrajectoryActionBuilder pickup3 = robot.drive.actionBuilder(new Pose2d(DROP_X2, DROP_Y2, Math.toRadians(DROP_HEADING)))
-                .strafeToLinearHeading(new Vector2d(PICKUP_X3, PICKUP_Y3), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
+                .strafeToLinearHeading(new Vector2d(PICKUP_X3, PICKUP_Y3), Math.toRadians(PICKUP_HEADING), VEL_CONSTRAINT4, ACCEL_CONSTRAINT4);
 
         TrajectoryActionBuilder drop3 = robot.drive.actionBuilder(new Pose2d(PICKUP_X3, PICKUP_Y3, Math.toRadians(PICKUP_HEADING)))
                 .strafeToLinearHeading(new Vector2d(DROP_X3, DROP_Y3), Math.toRadians(DROP_HEADING), VEL_CONSTRAINT2, ACCEL_CONSTRAINT2);
@@ -304,7 +321,7 @@ public class SpecimenAuton_51 extends LinearOpMode {
         robot.drive.leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.drive.leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        robot.rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
 
         while(opModeInInit()){
@@ -338,16 +355,17 @@ public class SpecimenAuton_51 extends LinearOpMode {
         if (isStopRequested()) return;
 
         if (opModeIsActive()){
-
+            robot.leftPTO.setPosition(LEFT_PTO_OFF);
+            robot.rightPTO.setPosition(RIGHT_PTO_OFF);
             Actions.runBlocking(
                     new ParallelAction(
                             score0.build(),
                             Servos(CLAW_CLOSED, ROTATE_NEUTRAL, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
                             new SequentialAction(
-                                    LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
+                                    LinearSlidePID(HIGH_SPECIMEN_POS_AUTO_FIRST, 0.04),
                                     ExtendoPID(1),
                                     Wait(EXTENDO_ALL_OUT),
-                                    Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
+                                    Servos(CLAW_OPEN, 0.501, 0.501, PIVOT_ALL_OUT),
                                     ExtendoPID(-1),
                                     Wait(EXTENDO_FIRST_WAIT)
                             )
@@ -361,9 +379,7 @@ public class SpecimenAuton_51 extends LinearOpMode {
                             Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_HOVER_SAMPLE, PIVOT_SAMPLE_PICKUP),
                             new SequentialAction(
                                     Wait(EXTENDO_PICKUP_WAIT),
-                                    ExtendoPID(1),
-                                    Wait(EXTENDO_ALL_OUT),
-                                    ExtendoPID(-0.2)
+                                    ExtendoPIDPosition((int) EXTENDO_PICKUP)
                             )
                     )
             );
@@ -421,6 +437,7 @@ public class SpecimenAuton_51 extends LinearOpMode {
                                             Servos(0.501,0.501,MOVE_WALL_INTAKE,0.501)
                                     )
                             ),
+                            ExtendoPID(-0.2),
                             Wait(HUMAN_PLAYER_WAIT),
                             Servos(CLAW_CLOSED, 0.501, 0.501, .501),
                             Wait(CLAW_CLOSE_TIME)
@@ -432,11 +449,12 @@ public class SpecimenAuton_51 extends LinearOpMode {
             Actions.runBlocking(
                     new ParallelAction(
                             firstScore.build(),
-                            Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
-                            LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
+                            Servos(0.501, ROTATE_NEUTRAL, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
+                            LinearSlidePID(HIGH_SPECIMEN_POS, 0.08),
                             new SequentialAction(
-                                    Wait(EXTENDO_OUT_WAIT),
-                                    ExtendoPID(1)
+                                    Wait(EXTENDO_OUT_WAIT-0.15),
+                                    ExtendoPID(1),
+                                    Wait(SAMPLE_DOWN_TIME-0.25)
                             )
                     )
             );
@@ -445,7 +463,7 @@ public class SpecimenAuton_51 extends LinearOpMode {
 
                 Actions.runBlocking(
                         new SequentialAction(
-                                Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
+                                Servos(CLAW_OPEN, 0.501, 0.501, PIVOT_ALL_OUT),
                                 Wait(CLAW_OPEN_TIME),
                                 new ParallelAction(
                                         subsequentWallGrabs.build(),
@@ -455,7 +473,7 @@ public class SpecimenAuton_51 extends LinearOpMode {
                                                 new ParallelAction(
                                                         LinearSlidePID(LINEAR_SLIDE_LOWER_THRESHOLD, -0.12),
                                                         Servos(CLAW_OPEN, ROTATE_FLIP, MOVE_WALL_INTAKE, PIVOT_WALL_INTAKE),
-                                                        ExtendoPID(-0.5)
+                                                        ExtendoPID(-0.2)
 
                                                 )
                                         )
@@ -503,11 +521,12 @@ public class SpecimenAuton_51 extends LinearOpMode {
                                 Wait(CLAW_CLOSE_TIME),
                                 new ParallelAction(
                                         subsequentScores.build(),
-                                        Servos(0.501, ROTATE_AUTON_SPEC_SCORE, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
+                                        Servos(0.501, ROTATE_NEUTRAL, MOVE_SPECIMEN_SCORE, PIVOT_SPECIMEN_SCORE),
                                         LinearSlidePID(HIGH_SPECIMEN_POS, 0.12),
                                         new SequentialAction(
                                                 Wait(EXTENDO_OUT_WAIT),
-                                                ExtendoPID(1)
+                                                ExtendoPID(1),
+                                                Wait(SAMPLE_DOWN_TIME-0.25)
                                         )
 
                                 )
@@ -518,7 +537,7 @@ public class SpecimenAuton_51 extends LinearOpMode {
 
             Actions.runBlocking(
                     new SequentialAction(
-                            Servos(CLAW_OPEN, 0.501, 0.501, 0.501),
+                            Servos(CLAW_OPEN, 0.501, 0.501, PIVOT_ALL_OUT),
                             Wait(CLAW_OPEN_TIME),
                             new ParallelAction(
                                     lastWallGrab.build(),
@@ -550,19 +569,13 @@ public class SpecimenAuton_51 extends LinearOpMode {
                                             new ParallelAction(
                                                     Servos(0.501, ROTATE_90, MOVE_RAISED, PIVOT_OUTTAKE),
                                                     LinearSlidePID(HIGH_SAMPLE_POS, 0.2)
-                                            )
+                                            ),
+                                            Servos(CLAW_OPEN, 0.501,MOVE_OUTTAKE,0.501)
                                     )
                             )
                     )
             );
 
-            Actions.runBlocking(
-                    new SequentialAction(
-                            Servos(0.501,0.501,MOVE_OUTTAKE, 0.501),
-                            Wait(SAMPLE_DOWN_TIME),
-                            Servos(CLAW_OPEN, 0.501,0.501,0.501)
-                    )
-            );
 
             sleep(10000);
 

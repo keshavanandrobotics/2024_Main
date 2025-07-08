@@ -57,21 +57,26 @@ public class SampleAuton_Limelight extends LinearOpMode{
     public static double SAMPLE_SCORE_TIME = 0.25;
     public static double LINEAR_SLIDES_UP = 2.0;
     public static double PARK_TIME = 1.0;
-    public static double EXTENDO_OUT = 1.5;
+    public static double EXTENDO_OUT = 0.5;
     public static double LINEAR_SLIDES_TIME = 1.7;
 
-    public static double SAMPLE_NET_X1 = 9, SAMPLE_NET_Y1 = 20;
-    public static double SAMPLE_NET_X2 = 5, SAMPLE_NET_Y2 = 20;
+    public static double SAMPLE_NET_X1 = 9.5, SAMPLE_NET_Y1 = 20;
+    public static double SAMPLE_NET_X2 = 3.5, SAMPLE_NET_Y2 = 20.5;
     public static double SAMPLE_NET_HEADING = -45;
     public static double SAMPLE_NET_HEADING_SUB = -30;
 
-    public static double SAMPLE_X1 = 14, SAMPLE_Y1 = 9;
-    public static double SAMPLE_X2 = 14, SAMPLE_Y2 = 20;
-    public static double SAMPLE_X3 = 37, SAMPLE_Y3 = 6, SAMPLE_HEADING3 = 90;
+    public static double SAMPLE_X1 = 16, SAMPLE_Y1 = 9.5;
+    public static double SAMPLE_X2 = 16, SAMPLE_Y2 = 19.5;
+    public static double SAMPLE_X3 = 36.5, SAMPLE_Y3 = 7, SAMPLE_HEADING3 = 90;
     public static double SUB_X1 = 50, SUB_Y1 = 0;
-    public static double SUB_X2 = 56, SUB_Y2 = -15;
+    public static double SUB_X2 = 60, SUB_Y2 = -15;
     public static double SUB_X3 = 56, SUB_Y3 = -25;
     public static double SUB_HEADING = -90;
+
+    public double startStamp = 0.0;
+
+    public static double TIME_ALLOWED = 29.0;
+    public static double LINEAR_SLIDES_SUB = 1.5;
 
     private boolean Initialize () {
 
@@ -137,7 +142,7 @@ public class SampleAuton_Limelight extends LinearOpMode{
 
         return new Action() {
 
-            private final PIDController controller = new PIDController(0.0006,0,0.00001);
+            private final PIDController controller = new PIDController(0.0003,0,0.00001);
             double stamp = getRuntime();
 
 
@@ -149,7 +154,7 @@ public class SampleAuton_Limelight extends LinearOpMode{
 
                 double linearSlidePosition = -robot.linearSlideEncoder.getCurrentPosition();
 
-                controller.setPID(0.0006,0,0.00001);
+                controller.setPID(0.0003,0,0.00001);
 
                 double power = controller.calculate(linearSlidePosition, position) + 0.08;
 
@@ -160,7 +165,7 @@ public class SampleAuton_Limelight extends LinearOpMode{
                 TELE.addData("Target", position);
                 TELE.addData("pos", linearSlidePosition);
 
-                if (Math.abs(position - linearSlidePosition)<475 || (linearSlidePosition > HIGH_SAMPLE_POS && position == HIGH_SAMPLE_POS_TELE) || (linearSlidePosition < LINEAR_SLIDES_LOWER_CHECK && position ==  LINEAR_SLIDES_LOWER) || getRuntime()-stamp > LINEAR_SLIDES_TIME){
+                if (Math.abs(position - linearSlidePosition)<475 || (linearSlidePosition > HIGH_SAMPLE_POS+1000 && position == HIGH_SAMPLE_POS_TELE) || (linearSlidePosition < LINEAR_SLIDES_LOWER_CHECK && position ==  LINEAR_SLIDES_LOWER) || (getRuntime()-stamp > LINEAR_SLIDES_TIME && linearSlidePosition > HIGH_SAMPLE_POS) || getRuntime()-stamp > LINEAR_SLIDES_UP){
                     TELE.addLine("Success");
                     TELE.update();
 
@@ -538,6 +543,9 @@ public class SampleAuton_Limelight extends LinearOpMode{
         robot.limelight.start();
         robot.limelight.pipelineSwitch(COLOR);
 
+
+
+
         TrajectoryActionBuilder sample0Net = robot.drive.actionBuilder(AUTON_START_POSE)
                 .strafeToLinearHeading(new Vector2d(SAMPLE_NET_X2, SAMPLE_NET_Y2), Math.toRadians(SAMPLE_NET_HEADING));
 
@@ -594,13 +602,15 @@ public class SampleAuton_Limelight extends LinearOpMode{
         if(isStopRequested()) return;
 
         if (opModeIsActive()){
-
+            startStamp = getRuntime();
+            robot.leftPTO.setPosition(LEFT_PTO_OFF);
+            robot.rightPTO.setPosition(RIGHT_PTO_OFF);
             TARGET = HIGH_SAMPLE_POS_TELE;
 
             Actions.runBlocking(
                     new ParallelAction(
                             sample0Net.build(),
-                            LinearSlidesPID(TARGET,0),
+                            LinearSlidesPID(TARGET,0.12),
                             new ExtendoIn(),
                             new upOuttakeServos()
                     )
@@ -629,7 +639,7 @@ public class SampleAuton_Limelight extends LinearOpMode{
                             new SampleHoverServos(),
                             new SequentialAction(
                                     Wait(SAMPLE_DOWN_TIME),
-                                    LinearSlidesPID(TARGET,0),
+                                    LinearSlidesPID(TARGET,-0.12),
                                     new ExtendoOut()
                             )
                     )
@@ -645,7 +655,7 @@ public class SampleAuton_Limelight extends LinearOpMode{
             Actions.runBlocking(
                     new ParallelAction(
                             firstSampleNet.build(),
-                            LinearSlidesPID(TARGET,0),
+                            LinearSlidesPID(TARGET,0.12),
                             new ExtendoIn(),
                             new upOuttakeServos()
                     )
@@ -673,7 +683,7 @@ public class SampleAuton_Limelight extends LinearOpMode{
                             new SampleHoverServos(),
                             new SequentialAction(
                                     Wait(SAMPLE_DOWN_TIME),
-                                    LinearSlidesPID(TARGET,0),
+                                    LinearSlidesPID(TARGET,-0.12),
                                     new ExtendoOut()
                             )
                     )
@@ -690,7 +700,7 @@ public class SampleAuton_Limelight extends LinearOpMode{
             Actions.runBlocking(
                     new ParallelAction(
                             secondSampleNet.build(),
-                            LinearSlidesPID(TARGET,0),
+                            LinearSlidesPID(TARGET,0.12),
                             new ExtendoIn(),
                             new upOuttakeServos()
                     )
@@ -711,26 +721,32 @@ public class SampleAuton_Limelight extends LinearOpMode{
                     new ParallelAction(
                             new SequentialAction(
                                     Wait(SAMPLE_DOWN_TIME),
-                                    LinearSlidesPID(TARGET,0)
+                                    LinearSlidesPID(TARGET,-0.12)
                             ),
                             thirdSamplePickup.build(),
-                            new Sample3HoverServos(),
-                            new ExtendoOut()
+                            new upOuttakeServos()
                     )
             );
 
 
             sleep( 100);
+            robot.extendo.setPower(0.3);
 
-
-            Actions.runBlocking(new ServosPickupSample3());
+            Actions.runBlocking(
+                    new SequentialAction(
+                            new Sample3HoverServos(),
+                            new ExtendoOut(),
+                            Wait(SAMPLE_DOWN_TIME),
+                            new ServosPickupSample3()
+                    )
+            );
 
             TARGET = HIGH_SAMPLE_POS_TELE;
 
             Actions.runBlocking(
                     new ParallelAction(
                             thirdSampleNet.build(),
-                            LinearSlidesPID(TARGET,0),
+                            LinearSlidesPID(TARGET,0.12),
                             new ExtendoIn(),
                             new upOuttakeServos()
                     )
@@ -750,32 +766,35 @@ public class SampleAuton_Limelight extends LinearOpMode{
 
             TARGET = LINEAR_SLIDES_HOVER_LIMELIGHT;
 
+
             Actions.runBlocking(
                     new SequentialAction(
                         new ParallelAction(
                                 sub.build(),
                                 new SequentialAction(
                                         new SampleHoverServos_Limelight(),
-                                        LinearSlidesPID(TARGET,0)
+                                        LinearSlidesPID(TARGET,0.08)
                                 )
                         ),
                         new ExtendoOut()
                     )
             );
-            while (!llTracker.Track()){
+            while (!llTracker.Track() && getRuntime() - startStamp < TIME_ALLOWED){
                 TARGET = LINEAR_SLIDES_PICKUP_LIMELIGHT;
             }
             stopstrafe();
             llTracker.Stop();
             llTracker.getSampleAngle();
             TARGET = LINEAR_SLIDES_PICKUP_LIMELIGHT;
+
+
             Actions.runBlocking(
                     new SequentialAction(
                             new ParallelAction(
                                     new ServosPickupSample_Limelight(),
                                     new SequentialAction(
                                             Wait(SAMPLE_SCORE_TIME),
-                                            LinearSlidesPID(TARGET,0)
+                                            LinearSlidesPID(TARGET,-0.08)
                                     )
                             ),
                             Wait(SAMPLE_SCORE_TIME),
@@ -785,13 +804,13 @@ public class SampleAuton_Limelight extends LinearOpMode{
                     )
             );
             TARGET = HIGH_SAMPLE_POS_TELE;
-            LINEAR_SLIDES_TIME = 5.0;
+            LINEAR_SLIDES_UP = 5.0;
             Actions.runBlocking(
                 new ParallelAction(
                         subScore.build(),
                         new SequentialAction(
-                                Wait(LINEAR_SLIDES_UP),
-                                LinearSlidesPID(TARGET,0)
+                                Wait(LINEAR_SLIDES_SUB),
+                                LinearSlidesPID(TARGET,0.12)
                         )
                 )
             );

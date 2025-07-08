@@ -39,6 +39,7 @@ public class Robot {
     public DigitalChannel pin10;
     public DigitalChannel pin11;
 
+
     public DcMotorEx leftPod;
     public DcMotorEx rightPod;
     public DcMotorEx sidePod;
@@ -158,6 +159,8 @@ public class Robot {
         pin01 = hardwareMap.digitalChannel.get("digital0_1");
         pin10 = hardwareMap.digitalChannel.get("digital1_0");
         pin11 = hardwareMap.digitalChannel.get("digital1_1");
+
+
 
 
 
