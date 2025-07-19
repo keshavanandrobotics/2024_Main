@@ -45,11 +45,11 @@ public class Drive_V4 extends LinearOpMode {
     private MultipleTelemetry TELE;
     public static double ESTIMATED_SPEC_TRAJ_TIME = 1.5;
     public static double ESTIMATED_GRAB_TRAJ_TIME = 1.5;
-    public static String MODE = "SAM";
+    public String MODE = DRIVE_MODE;
 
     public boolean scoreAutomation = false;
 
-    public double offset = 0;
+    public double offset = HEADING_OFFSET;
 
     public double p = 0.0003, i = 0, d = 0.00001;
 
@@ -582,11 +582,7 @@ public class Drive_V4 extends LinearOpMode {
             rx = gamepad1.left_stick_x;
             x = gamepad1.right_stick_x;
             y = -gamepad1.right_stick_y;
-        } else if (Objects.equals(mode, "STEVE")) {
-            rx = gamepad1.right_stick_x;
-            x = gamepad1.left_stick_x;
-            y = -gamepad1.left_stick_y;
-        } else if (Objects.equals(mode, "FC")) {
+        }else if (Objects.equals(mode, "FC")) {
             rx = gamepad1.left_stick_x;
             x = gamepad1.right_stick_x;
             y = -gamepad1.right_stick_y;

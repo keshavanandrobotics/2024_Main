@@ -474,6 +474,8 @@ public class SpecimenAuton extends LinearOpMode {
 
             );
 
+            HEADING_OFFSET = robot.drive.pose.heading.toDouble();
+
             sleep(10000);
 
 

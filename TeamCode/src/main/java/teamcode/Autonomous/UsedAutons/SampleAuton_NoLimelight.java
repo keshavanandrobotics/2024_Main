@@ -6,6 +6,7 @@ import static teamcode.Teleop.Singletons.VARS.AUTO_PARK_SLIDE_POS;
 import static teamcode.Teleop.Singletons.VARS.CLAW_CLOSED;
 import static teamcode.Teleop.Singletons.VARS.CLAW_OPEN;
 import static teamcode.Teleop.Singletons.VARS.EXTENDO_SAMPLE_PICKUP;
+import static teamcode.Teleop.Singletons.VARS.HEADING_OFFSET;
 import static teamcode.Teleop.Singletons.VARS.HIGH_SAMPLE_POS;
 import static teamcode.Teleop.Singletons.VARS.HIGH_SAMPLE_POS_TELE;
 import static teamcode.Teleop.Singletons.VARS.LEFT_HOLD_OFF;
@@ -689,6 +690,9 @@ public class SampleAuton_NoLimelight extends LinearOpMode{
 
                     )
             );
+
+            HEADING_OFFSET = robot.drive.pose.heading.toDouble();
+
 
 
 

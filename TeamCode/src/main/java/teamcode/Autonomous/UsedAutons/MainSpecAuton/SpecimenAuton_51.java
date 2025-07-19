@@ -556,6 +556,8 @@ public class SpecimenAuton_51 extends LinearOpMode {
                     )
             );
 
+
+
             Actions.runBlocking(
                     new SequentialAction(
                             Servos(0.501,0.501,MOVE_OUTTAKE, 0.501),
@@ -563,6 +565,9 @@ public class SpecimenAuton_51 extends LinearOpMode {
                             Servos(CLAW_OPEN, 0.501,0.501,0.501)
                     )
             );
+
+            HEADING_OFFSET = robot.drive.pose.heading.toDouble();
+
 
             sleep(10000);
 

@@ -820,6 +820,9 @@ public class SampleAuton_Limelight extends LinearOpMode{
                     )
             );
 
+            HEADING_OFFSET = robot.drive.pose.heading.toDouble();
+
+
 
 
 

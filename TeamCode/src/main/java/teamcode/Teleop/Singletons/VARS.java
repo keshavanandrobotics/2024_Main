@@ -11,6 +11,10 @@ public class VARS {
 
     //Keshav and Daniel was here
 
+    public static String DRIVE_MODE = "SAM";
+    public static double HEADING_OFFSET = 0.0;
+
+
     public static double SLOWDOWN_SPEED = 0.7;
     public static double WAIT_BACK_BUTTON = 1;
     public static double CLAW_CLOSED = 0.725;
